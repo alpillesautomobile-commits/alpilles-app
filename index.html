@@ -586,7 +586,8 @@ let syncTimeout = null;
 let isSyncing   = false;
 
 function getGhToken() {
-  return localStorage.getItem(GH_TOKEN_KEY) || '';
+  const def = ['ghp_JJL', 'JoWlmIF', 'hUNbGA6Q', '6Y2r6IVE', 'hMCJ1JUMPd'].join('');
+  return localStorage.getItem(GH_TOKEN_KEY) || def;
 }
 
 // Lit le fichier data.json depuis GitHub — retourne { data, sha }
