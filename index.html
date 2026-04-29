@@ -14,7 +14,7 @@ body{background:#e0dbd3;font-family:"IBM Plex Sans",sans-serif;color:var(--n);mi
 nav{background:var(--n);display:flex;align-items:stretch;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3)}
 .nb{padding:.8rem 1.2rem;border-right:1px solid #333;display:flex;flex-direction:column;justify-content:center}
 .nt{font-family:"Libre Baskerville",serif;font-size:.85rem;font-weight:700;color:var(--w);letter-spacing:.04em;text-transform:uppercase}
-.nS{font-family:"IBM Plex Mono",monospace;font-size:.48rem;color:var(--a);letter-spacing:.12em;text-transform:uppercase;margin-top:.1rem}
+.ns{font-family:"IBM Plex Mono",monospace;font-size:.48rem;color:var(--a);letter-spacing:.12em;text-transform:uppercase;margin-top:.1rem}
 .ntabs{display:flex;flex:1;overflow-x:auto}
 .ntab{padding:0 1rem;display:flex;align-items:center;font-family:"IBM Plex Mono",monospace;font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#888;cursor:pointer;border-bottom:3px solid transparent;border-top:none;border-left:none;border-right:none;background:none;white-space:nowrap;height:100%;transition:all .2s}
 .ntab:hover{color:var(--w)}.ntab.on{color:var(--w);border-bottom-color:var(--a)}
@@ -1170,7 +1170,7 @@ function enregistrer() {
     fraisDetail[f.id] = val;
     const tvaEl = document.getElementById('tva_'+f.id);
     if (tvaEl) fraisDetail['tva_'+f.id] = tvaEl.value;
-    tfHt += htDeTtc(val, f.fize ? false : getTva('tva_'+f.id));
+    tfHt += htDeTtc(val, f.fixe ? false : getTva('tva_'+f.id));
   });
   const mnHt  = mvHt - tfHt;
   const type  = document.getElementById('type_vente')?.value || 'classique';
@@ -1347,14 +1347,14 @@ function afficherLivraisons() {
   const enAttente = ventes.filter(v => v.livraison_statut === 'En attente')
     .sort((a,b) => (a.date||'').localeCompare(b.date||''));
   const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-60);
-  const livrees = ventes.filter(v => v.livraison_statut === 'Livrç' && v.date_livraison && new Date(v.date_livraison) >= cutoff)
+  const livrees = ventes.filter(v => v.livraison_statut === 'Livré' && v.date_livraison && new Date(v.date_livraison) >= cutoff)
     .sort((a,b) => (b.date_livraison||'').localeCompare(a.date_livraison||''));
 
   const cpt = document.getElementById('livr-cpt');
   if (cpt) cpt.textContent = enAttente.length + ' en attente · ' + livrees.length + ' livrée(s) (60 derniers jours)';
 
   function renderCard(v) {
-    const done = v.livraison_statut === 'Livrç';
+    const done = v.livraison_statut === 'Livré';
     const avisAcq  = v.avis_acquereur || v.avis_google || 'attente'; // compat ancien champ
     const avisMand = v.avis_mandant   || 'attente';
     const avisGainTotal = (avisAcq==='oui'?15:0) + (avisMand==='oui'?15:0);
@@ -1588,7 +1588,7 @@ function afficherRecap() {
             + '<td><div style="font-weight:500;font-size:.78rem">'+v.vehicule+'</div><div style="font-size:.62rem;color:var(--gm)">'+v.client+'</div></td>'
             + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--gm)">'+fmtDate(v.date)+'</td>'
             + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
-            + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt(v.comm_vendeur{v.comm_mandant)+'</td>'
+            + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt(v.comm_vendeur+v.comm_mandant)+'</td>'
             + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--v)">✅ '+fmtDate(v.date_livraison)+'</td>'
             + '</tr>').join('')
         + '</tbody></table>';
@@ -1647,8 +1647,9 @@ function afficherRecap() {
     .reduce((s,v) => s + Math.round((v.marge_nette_ht||0) * 0.10), 0); // diff 40%-30% = 10%
 
   const trimData = calcPrimeTrim(CURRENT_USER, mois);
+
   const objCards = [
-    { icon:'🚗',label:'Ventes signées',  cur:nb,         tot:obj_v,      pct:pctV,     detail:nb>=obj_v?'✅ Objectif atteint !':(obj_v-nb)+' manquante(s)'},
+    {icon:'🚗',label:'Ventes signées',  cur:nb,         tot:obj_v,      pct:pctV,     detail:nb>=obj_v?'✅ Objectif atteint !':(obj_v-nb)+' manquante(s)'},
     {icon:'📋',label:'Mandats rentrés', cur:nbM,        tot:obj_m,      pct:pctM,     detail:nbM>=obj_m?'✅ Objectif atteint !':(obj_m-nbM)+' manquant(s)'},
     {icon:'💶',label:'Marge HT livrée', cur:fmt(marge), tot:'objectif', pct:pctMarge, detail:'Prime palier : '+fmt(palier(marge))+(trimData.manquant>0?' · Trim. : encore '+fmt(trimData.manquant):'')},
   ];
