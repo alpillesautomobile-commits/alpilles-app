@@ -150,9 +150,11 @@ tbody td:not(:first-child){text-align:right}
       <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:#c8a96e;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.5rem">Qui êtes-vous ?</div>
       <div style="display:flex;flex-direction:column;gap:.6rem">
         <button onclick="selectUser('Julien')" style="background:#1a1a1a;color:#fafaf8;border:none;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">👑 Julien — Manager</button>
-        <button onclick="selectUser('Jules')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">👤 Jules</button>
+        <button onclick="selectUser('Jules')" style="background:#1a1a1a;color:#fafaf8;border:none;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">👑 Jules — Manager Aix</button>
         <button onclick="selectUser('Léo')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">👤 Léo</button>
         <button onclick="selectUser('Aurélien')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">👤 Aurélien</button>
+        <button onclick="selectUser('Tom')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">👤 Tom</button>
+        <button onclick="selectUser('Eloïs')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">👤 Eloïs</button>
       </div>
     </div>
 
@@ -218,7 +220,7 @@ tbody td:not(:first-child){text-align:right}
             <option>Agence Aix-en-Provence</option></select></div>
         <div class="fl"><label>Agent commercial</label>
           <select id="agent" onchange="calcFiche()"><option value="">— Sélectionner —</option>
-            <option>Jules</option><option>Léo</option><option>Aurélien</option><option>Julien</option></select></div>
+            <option>Jules</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Eloïs</option><option>Julien</option></select></div>
         <div class="fl"><label>Date de la vente</label><input type="date" id="date_vente" oninput="calcFiche()"></div>
         <div class="fl"><label>Date d'entrée en stock</label><input type="date" id="date_entree_stock" oninput="calcFiche()" autocomplete="off"></div>
         <div class="fl"><label>Nom du client</label><input type="text" id="client" placeholder="Nom Prénom"></div>
@@ -231,7 +233,7 @@ tbody td:not(:first-child){text-align:right}
             <option value="direct">Vente en direct (0%)</option></select></div>
         <div class="fl" id="bloc-mandant" style="display:none"><label>Agent mandant</label>
           <select id="agent_mandant"><option value="">— Sélectionner —</option>
-            <option>Jules</option><option>Léo</option><option>Aurélien</option><option>Julien</option></select></div>
+            <option>Jules</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Eloïs</option><option>Julien</option></select></div>
         <div class="fl"><label>Prix de vente TTC (€)</label><input type="number" id="prix_vente" placeholder="0" min="0" step="1" oninput="calcFiche()"></div>
         <div class="fl"><label>Prix d'achat TTC (€)</label><input type="number" id="prix_achat" placeholder="0" min="0" step="1" oninput="calcFiche()"></div>
         <div class="fl fc"><label>Marge brute véhicule — calculé auto</label><input type="text" id="marge_brute" readonly placeholder="—"></div>
@@ -332,7 +334,7 @@ tbody td:not(:first-child){text-align:right}
       <div class="gr" style="margin-bottom:.7rem">
         <div class="fl"><label>Agent</label>
           <select id="m-agent"><option value="">— Sélectionner —</option>
-            <option>Jules</option><option>Léo</option><option>Aurélien</option><option>Julien</option></select></div>
+            <option>Jules</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Eloïs</option><option>Julien</option></select></div>
         <div class="fl"><label>Date</label><input type="date" id="m-date"></div>
         <div class="fl fc"><label>Véhicule (Marque Modèle)</label><input type="text" id="m-vehicule" placeholder="ex: Peugeot 3008 2021"></div>
         <div class="fl"><label>Nom du propriétaire</label><input type="text" id="m-proprio" placeholder="Nom Prénom"></div>
@@ -415,13 +417,13 @@ tbody td:not(:first-child){text-align:right}
 <script>
 // ═══ CONSTANTES
 const TVA = 1.20;
-const AGENTS = ['Jules', 'Léo', 'Aurélien', 'Julien'];
-const MANAGERS = ['Julien']; // ← ajouter 'Jules' ici quand il sera manager Aix
+const AGENTS = ['Jules', 'Léo', 'Aurélien', 'Tom', 'Eloïs', 'Julien'];
+const MANAGERS = ['Julien', 'Jules'];
 
 // ─── PIN ────────────────────────────────────────────────────────────────────
 const PINS_KEY = 'aa_pins';
 // Codes par défaut — à changer dans Paramètres (section Codes PIN)
-const DEFAULT_PINS = { 'Julien':'1234', 'Jules':'1111', 'Léo':'2222', 'Aurélien':'3333' };
+const DEFAULT_PINS = { 'Julien':'1234', 'Jules':'1111', 'Léo':'2222', 'Aurélien':'3333', 'Tom':'4444', 'Eloïs':'5555' };
 function getPins() {
   try { const p = JSON.parse(localStorage.getItem(PINS_KEY)); if (p) return Object.assign({}, DEFAULT_PINS, p); } catch {}
   return Object.assign({}, DEFAULT_PINS);
@@ -436,7 +438,7 @@ function selectUser(nom) {
   _pinBuffer   = '';
   document.getElementById('login-step1').style.display = 'none';
   document.getElementById('login-step2').style.display = '';
-  document.getElementById('login-name-display').textContent = nom === 'Julien' ? '👑 '+nom+' — Manager' : '👤 '+nom;
+  document.getElementById('login-name-display').textContent = MANAGERS.includes(nom) ? '👑 '+nom+' — Manager' : '👤 '+nom;
   document.getElementById('pin-error').textContent = '';
   updatePinDots();
 }
