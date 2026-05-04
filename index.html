@@ -809,8 +809,7 @@ function calcTauxComm(mnHt, agent, moisRef) {
   if (mnHt < 1000) return 0.30;
   const ventes  = loadVentes();
   const mandats = loadMandats();
-  const params  = loadParams();
-  const p = params[agent] || {obj_ventes:10, obj_mandats:8};
+  const p = getObjForMonth(agent, moisRef);
   const nbV = ventes.filter(v => v.agent === agent && v.mois === moisRef).length;
   const nbM = mandats.filter(m => m.agent === agent && m.mois === moisRef).length;
   const pctV = p.obj_ventes  ? nbV / p.obj_ventes  : 0;
@@ -882,6 +881,15 @@ function saveMandats(m, newItem) {
   if (newItem) gasSaveMandat(newItem);
 }
 function saveParams(p)  { localStorage.setItem(PK, JSON.stringify(p)); }
+
+// Retourne les objectifs d'un agent pour un mois donné
+// Cherche d'abord dans les objectifs mensuels, puis dans les défauts globaux
+function getObjForMonth(agent, mois) {
+  const params = loadParams();
+  const monthly = params._monthly_obj;
+  if (monthly && monthly[mois] && monthly[mois][agent]) return monthly[mois][agent];
+  return params[agent] || {obj_ventes:10, obj_mandats:8, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:100};
+}
 
 // ═══ MANDATS
 function updateMandatBadge() {
@@ -1555,7 +1563,7 @@ function afficherRecap() {
       const av  = allV.filter(v => v.agent === a);
       const al  = allLiv.filter(v => v.agent === a);
       const am  = allM.filter(m => m.agent === a);
-      const ag  = params[a] || {obj_ventes:10,obj_mandats:8};
+      const ag  = getObjForMonth(a, mois);
       const nb  = av.length;
       const nbM = am.length;
       const mg  = al.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
@@ -1630,7 +1638,7 @@ function afficherRecap() {
   const nbM = mm.length;
   const vl  = ventes.filter(v => v.mois_livraison === mois && v.agent === CURRENT_USER);
   const marge  = vl.reduce((s,v) => s + (v.marge_nette_ht||0), 0);
-  const ag = params[CURRENT_USER] || Object.values(params)[0] || {obj_ventes:10,obj_mandats:8,prime_obj_ventes:250,prime_obj_mandats:150,bonus_dep:100};
+  const ag = getObjForMonth(CURRENT_USER, mois);
   const obj_v = ag.obj_ventes||10;
   const obj_m = ag.obj_mandats||8;
   const pctV    = obj_v ? Math.min(100,Math.round(nb/obj_v*100)) : 0;
@@ -1807,9 +1815,8 @@ function afficherDashboard() {
 function afficherAgent(vm, agent, params) {
   const zone = document.getElementById('ag-zone2');
   if (!zone) return;
-  const p = params[agent] || {obj_ventes:10,obj_mandats:8,prime_obj_ventes:250,prime_obj_mandats:150,bonus_dep:100};
-
   const moisSel    = document.getElementById('dash-mois')?.value || getMois(new Date().toISOString().slice(0,10));
+  const p = getObjForMonth(agent, moisSel);
   const tousMandats= loadMandats().filter(m => m.mois === moisSel && m.agent === agent);
 
   // Sale-month ventes → for count/objective only
@@ -2005,18 +2012,30 @@ function afficherParams() {
   const zone = document.getElementById('param-zone');
   if (!zone) return;
   const currentPins = getPins();
-  zone.innerHTML = AGENTS.map(a => {
-    const ag = p[a] || {obj_ventes:10,obj_mandats:8,prime_obj_ventes:250,prime_obj_mandats:150,bonus_dep:100};
-    return '<div class="pc"><h4>'+(MANAGERS.includes(a)?'👑':'👤')+' '+a+'</h4>'
-      + '<div class="pf"><label>Objectif ventes / mois</label><input type="number" id="pov_'+a+'" value="'+(ag.obj_ventes||10)+'" min="0" step="1"></div>'
-      + '<div class="pf"><label>Objectif mandats / mois</label><input type="number" id="pom_'+a+'" value="'+(ag.obj_mandats||8)+'" min="0" step="1"></div>'
-      + '<div class="pf"><label>Prime objectif ventes (€)</label><input type="number" id="ppv_'+a+'" value="'+(ag.prime_obj_ventes||250)+'" min="0" step="10"></div>'
-      + '<div class="pf"><label>Prime objectif mandats (€)</label><input type="number" id="ppm_'+a+'" value="'+(ag.prime_obj_mandats||150)+'" min="0" step="10"></div>'
-      + '<div class="pf"><label>Bonus par vente dépassée (€)</label><input type="number" id="ppb_'+a+'" value="'+(ag.bonus_dep||100)+'" min="0" step="10"></div>'
-      + '<div class="pf" style="border-top:1px solid var(--b);padding-top:.5rem;margin-top:.3rem"><label>🔑 Code PIN (4 chiffres)</label>'
-      + '<input type="password" id="pin_'+a+'" placeholder="••••" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" value="'+(currentPins[a]||'')+'" style="letter-spacing:.2em"></div>'
-      + '</div>';
-  }).join('');
+  const curMois = getMois(new Date().toISOString().slice(0,10));
+  // Preserve selected month if already rendered, else default to current month
+  const selMois = document.getElementById('param-mois')?.value || curMois;
+
+  zone.innerHTML = '<div style="margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">'
+    + '<label style="font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Mois des objectifs</label>'
+    + '<input type="month" id="param-mois" value="'+selMois+'" style="font-family:IBM Plex Mono,monospace;font-size:.85rem;padding:.3rem .5rem;border:1px solid var(--b);background:var(--w);color:var(--n);cursor:pointer" onchange="afficherParams()">'
+    + '<span style="font-size:.68rem;color:var(--gm);font-family:IBM Plex Mono,monospace">← Choisir le mois pour voir/modifier ses objectifs</span>'
+    + '</div>'
+    + AGENTS.map(a => {
+        const monthly = p._monthly_obj;
+        const ag = (monthly && monthly[selMois] && monthly[selMois][a])
+          ? monthly[selMois][a]
+          : (p[a] || {obj_ventes:10,obj_mandats:8,prime_obj_ventes:250,prime_obj_mandats:150,bonus_dep:100});
+        return '<div class="pc"><h4>'+(MANAGERS.includes(a)?'👑':'👤')+' '+a+'</h4>'
+          + '<div class="pf"><label>Objectif ventes / mois</label><input type="number" id="pov_'+a+'" value="'+(ag.obj_ventes||10)+'" min="0" step="1"></div>'
+          + '<div class="pf"><label>Objectif mandats / mois</label><input type="number" id="pom_'+a+'" value="'+(ag.obj_mandats||8)+'" min="0" step="1"></div>'
+          + '<div class="pf"><label>Prime objectif ventes (€)</label><input type="number" id="ppv_'+a+'" value="'+(ag.prime_obj_ventes||250)+'" min="0" step="10"></div>'
+          + '<div class="pf"><label>Prime objectif mandats (€)</label><input type="number" id="ppm_'+a+'" value="'+(ag.prime_obj_mandats||150)+'" min="0" step="10"></div>'
+          + '<div class="pf"><label>Bonus par vente dépassée (€)</label><input type="number" id="ppb_'+a+'" value="'+(ag.bonus_dep||100)+'" min="0" step="10"></div>'
+          + '<div class="pf" style="border-top:1px solid var(--b);padding-top:.5rem;margin-top:.3rem"><label>🔑 Code PIN (4 chiffres)</label>'
+          + '<input type="password" id="pin_'+a+'" placeholder="••••" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" value="'+(currentPins[a]||'')+'" style="letter-spacing:.2em"></div>'
+          + '</div>';
+      }).join('');
 }
 
 function resetDonneesLocales() {
@@ -2034,16 +2053,23 @@ function sauvegarderParams() {
   const p    = loadParams();
   const pins = getPins();
   let pinChanged = false;
+  const selMois = document.getElementById('param-mois')?.value || getMois(new Date().toISOString().slice(0,10));
+  if (!p._monthly_obj) p._monthly_obj = {};
+  if (!p._monthly_obj[selMois]) p._monthly_obj[selMois] = {};
   AGENTS.forEach(a => {
     const ov = document.getElementById('pov_'+a);
     if (!ov) return;
-    p[a] = {
+    const objData = {
       obj_ventes:        parseInt(ov.value)                                         || 0,
       obj_mandats:       parseInt(document.getElementById('pom_'+a)?.value)         || 0,
       prime_obj_ventes:  parseFloat(document.getElementById('ppv_'+a)?.value)       || 0,
       prime_obj_mandats: parseFloat(document.getElementById('ppm_'+a)?.value)       || 0,
       bonus_dep:         parseFloat(document.getElementById('ppb_'+a)?.value)       || 0,
     };
+    // Sauvegarder dans le slot mensuel
+    p._monthly_obj[selMois][a] = objData;
+    // Garder aussi les défauts globaux à jour (utilisés comme fallback pour les nouveaux mois)
+    p[a] = objData;
     const pinEl = document.getElementById('pin_'+a);
     if (pinEl) {
       const val = pinEl.value.trim();
@@ -2055,7 +2081,7 @@ function sauvegarderParams() {
   });
   saveParams(p);
   if (pinChanged) savePins(pins);
-  toast('✅ Paramètres enregistrés');
+  toast('✅ Objectifs de '+selMois+' enregistrés');
 }
 
 // ═══ INIT
