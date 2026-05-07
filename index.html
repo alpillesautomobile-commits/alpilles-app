@@ -1693,6 +1693,8 @@ function afficherRecap() {
   const nb  = vm.length;
   const nbM = mm.length;
   const vl  = ventes.filter(v => v.mois_livraison === mois && v.agent === CURRENT_USER);
+  const vlCroise = ventes.filter(v => v.mois_livraison === mois && v.type==='croise' && v.mandant===CURRENT_USER);
+  const commMRecap = vlCroise.reduce((s,v) => s+(v.comm_mandant||0), 0);
   const marge  = vl.reduce((s,v) => s + (v.marge_nette_ht||0), 0);
   const ag = getObjForMonth(CURRENT_USER, mois);
   const obj_v = ag.obj_ventes||10;
@@ -1779,6 +1781,23 @@ function afficherRecap() {
       + '</div>';
   }
 
+  // Section commissions croisées mandant (si présentes)
+  const croiseMandantHtml = vlCroise.length === 0 ? '' :
+    '<div style="margin-top:.9rem">'
+    + '<div class="stl" style="margin-bottom:.65rem">🤝 Mes commissions mandant croisé — '+lblMois(mois)+' ('+vlCroise.length+')</div>'
+    + '<div style="background:var(--w);border:1px solid var(--b);padding:.7rem .9rem;margin-bottom:.5rem">'
+    + '<table class="vt"><thead><tr><th>Véhicule</th><th>Vendu par</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Ta commission (20%)</th><th style="text-align:right">Livré le</th></tr></thead><tbody>'
+    + vlCroise.map(v => '<tr>'
+        + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
+        + '<td style="font-family:IBM Plex Mono,monospace;font-size:.7rem;color:var(--gm)">'+v.agent+'</td>'
+        + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
+        + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:700;color:var(--ad)">'+fmt(v.comm_mandant)+'</td>'
+        + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--v)">✅ '+fmtDate(v.date_livraison)+'</td>'
+        + '</tr>').join('')
+    + '</tbody></table>'
+    + '<div style="text-align:right;font-family:IBM Plex Mono,monospace;font-size:.78rem;font-weight:700;color:var(--ad);padding:.5rem 0 .1rem">Total mandant croisé : '+fmt(commMRecap)+'</div>'
+    + '</div></div>';
+
   zone.innerHTML = objHtml
     + motivHtml
     + (trimData.prime>0||trimData.manquant>0 ? '<div style="background:#fff8e8;border:1px solid var(--a);padding:.65rem .85rem;margin-bottom:1rem;font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#7a5a1a">'
@@ -1787,6 +1806,7 @@ function afficherRecap() {
       + '</div>' : '')
     + '<div style="margin-top:.9rem"><div class="stl" style="margin-bottom:.65rem">🚚 Mes livraisons de '+lblMois(mois)+' ('+vl.length+')</div>'
     + livrRecapHtml + '</div>'
+    + croiseMandantHtml
     + '<div style="margin-top:.9rem"><div class="stl" style="margin-bottom:.65rem">Mes ventes signées ce mois ('+vm.length+')</div>'
     + ventesHtml + '</div>';
 }
@@ -1880,7 +1900,7 @@ function afficherAgent(vm, agent, params) {
   const ventes    = allV.filter(v => v.agent === agent && v.mois === moisSel);
   // Delivery-month ventes → for marge, pay, commissions
   const ventesLivr= allV.filter(v => v.agent === agent && v.mois_livraison === moisSel);
-  const mandatsCroises = allV.filter(v => v.mois_livraison === moisSel && v.type==='croise' && v.agent_mandant===agent);
+  const mandatsCroises = allV.filter(v => v.mois_livraison === moisSel && v.type==='croise' && v.mandant===agent);
 
   const nb    = ventes.length;                                            // ventes signées ce mois
   const nl    = ventesLivr.length;                                        // livraisons ce mois
