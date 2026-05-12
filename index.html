@@ -867,108 +867,15 @@ function loadVentes()  { try { const _r=JSON.parse(localStorage.getItem(SK))||[]
 function loadMandats() { try { return JSON.parse(localStorage.getItem(MK)) || []; } catch { return []; } }
 function loadParams()  {
   try { const p = JSON.parse(localStorage.getItem(PK)); if (p) return p; } catch {}
-  const def = {};
-  AGENTS.forEach(a => { def[a] = {obj_ventes:10, obj_mandats:8, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:100}; });
-  return def;
-}
-function saveVentes(v, newItem)  {
-  localStorage.setItem(SK, JSON.stringify(v));
-  if (newItem) gasSaveVente(newItem);
-}
-function saveMandats(m, newItem) {
-  localStorage.setItem(MK, JSON.stringify(m));
-  if (newItem) gasSaveMandat(newItem);
-}
-function saveParams(p)  { localStorage.setItem(PK, JSON.stringify(p)); }
-
-// Retourne les objectifs d'un agent pour un mois donné
-// Cherche d'abord dans les objectifs mensuels, puis dans les défauts globaux
-function getObjForMonth(agent, mois) {
-  const params = loadParams();
-  const monthly = params._monthly_obj;
-  if (monthly && monthly[mois] && monthly[mois][agent]) return monthly[mois][agent];
-  return params[agent] || {obj_ventes:10, obj_mandats:8, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:100};
-}
-
-// ═══ MANDATS
-function updateMandatBadge() {
-  const mandats = loadMandats();
-  const curMois = getMois(new Date().toISOString().slice(0,10));
-  const n = mandats.filter(m => m.mois === curMois && m.statut === 'en_cours').length;
-  const b = document.getElementById('mand-badge');
-  if (b) { b.textContent = n; b.style.display = n > 0 ? '' : 'none'; }
-}
-
-function enregistrerMandat() {
-  const agent    = document.getElementById('m-agent')?.value;
-  const dateStr  = document.getElementById('m-date')?.value;
-  const vehicule = document.getElementById('m-vehicule')?.value?.trim();
-  const proprio  = document.getElementById('m-proprio')?.value?.trim();
-  const type     = document.getElementById('m-type')?.value || 'exclusif';
-
-  if (!agent)    return toast('Sélectionne un agent', true);
-  if (!dateStr)  return toast('Indique la date du mandat', true);
-  if (!vehicule) return toast('Indique le véhicule', true);
-  if (!proprio)  return toast('Indique le propriétaire', true);
-
-  const mandat = { id: Date.now(), date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, statut: 'en_cours' };
-  const mandats = loadMandats();
-  mandats.push(mandat);
-  saveMandats(mandats, mandat);
-  updateMandatBadge();
-  afficherMandats();
-  toast('📋 Mandat enregistré — ' + vehicule);
-
-  document.getElementById('m-agent').value = '';
-  document.getElementById('m-date').value = new Date().toISOString().slice(0,10);
-  document.getElementById('m-vehicule').value = '';
-  document.getElementById('m-proprio').value = '';
-  document.getElementById('m-type').value = 'exclusif';
-}
-
-function validerMandatVendu(id) {
-  const mandats = loadMandats();
-  const idx = mandats.findIndex(m => m.id === id);
-  if (idx < 0) return;
-  mandats[idx].statut = 'vendu';
-  saveMandats(mandats, mandats[idx]);
-  updateMandatBadge();
-  afficherMandats();
-  toast('✅ Mandat marqué vendu');
-}
-
-function supprimerMandat(id) {
-  if (!confirm('Supprimer ce mandat ?')) return;
-  addDeleted(MK, id);
-  const mandats = loadMandats().filter(m => m.id !== id);
-  saveMandats(mandats);
-  gasDeleteMandat(id);
-  updateMandatBadge();
-  afficherMandats();
-  toast('Mandat supprimé');
-}
-
-function remplirMoisMandats(selId) {
-  const ventes  = loadVentes();
-  const mandats = loadMandats();
-  const allMois = Array.from(new Set(
-    ventes.map(v => v.mois)
-    .concat(ventes.filter(v => v.mois_livraison).map(v => v.mois_livraison))
-    .concat(mandats.map(m => m.mois))
-    .filter(Boolean)
-  )).sort().reverse();
-  const curMois = getMois(new Date().toISOString().slice(0,10));
-  if (!allMois.includes(curMois)) allMois.push(curMois);
-  const sel = document.getElementById(selId);
-  if (!sel) return curMois;
-  const prev = sel.value;
-  sel.innerHTML = '';
-  allMois.forEach(m => {
-    const o = document.createElement('option');
-    o.value = m; o.textContent = lblMois(m);
-    if (m === (prev || allMois[0])) o.selected = true;
-    sel.appendChild(o);
-  });
+  // Objectifs par défaut — reflètent le pay plan réel
+  return {
+    'Jules':    {obj_ventes:9,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+    'Léo':      {obj_ventes:10, obj_mandats:14, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+    'Aurélien': {obj_ventes:6,  obj_mandats:10, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+    'Tom':      {obj_ventes:5,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+    'Julien':   {obj_ventes:9,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+  };
+});
   return sel.value;
 }
 
@@ -2173,6 +2080,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ═══ MIGRATION : correction noms corrompus dans les données stockées
 (function migrateData() {
+  // Mise à jour des objectifs de mai 2026 avec les valeurs correctes
+  try {
+    var p = JSON.parse(localStorage.getItem(PK)) || {};
+    var MAI = '2026-05';
+    var objs = {
+      'Jules':    {obj_ventes:9,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+      'Léo':      {obj_ventes:10, obj_mandats:14, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+      'Aurélien': {obj_ventes:6,  obj_mandats:10, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+      'Tom':      {obj_ventes:5,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+      'Julien':   {obj_ventes:9,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+    };
+    // Mettre à jour les globaux ET le slot mensuel
+    Object.keys(objs).forEach(function(a) { p[a] = objs[a]; });
+    if (!p._monthly_obj) p._monthly_obj = {};
+    p._monthly_obj[MAI] = JSON.parse(JSON.stringify(objs));
+    localStorage.setItem(PK, JSON.stringify(p));
+  } catch(e) {}
+  // Réassigner les mandats Eloïse
   try {
     var mandats = JSON.parse(localStorage.getItem(MK));
     if (mandats && Array.isArray(mandats)) {
@@ -2188,6 +2113,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (cm) localStorage.setItem(MK, JSON.stringify(mandats));
     }
   } catch(e) {}
+  // Réassigner les ventes Eloïse
   try {
     var ventes = JSON.parse(localStorage.getItem(SK));
     if (ventes && Array.isArray(ventes)) {
