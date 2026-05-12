@@ -2172,6 +2172,33 @@ document.addEventListener('DOMContentLoaded', function() {
   if (inp && !inp.value) inp.value = getGhToken();
 });
 
+// ═══ MIGRATION : correction noms corrompus dans les données stockées
+(function migrateData() {
+  // Corrige "Eloïs" → "Eloïse" dans ventes et mandats (corruption d'un ancien déploiement)
+  const fixName = s => (typeof s === 'string') ? s.replace(/Eloïs(?!e)/g, 'Eloïse') : s;
+  try {
+    const ventes = JSON.parse(localStorage.getItem(SK));
+    if (ventes && Array.isArray(ventes)) {
+      let changed = false;
+      ventes.forEach(v => {
+        if (v.agent && v.agent.includes('Eloïs') && !v.agent.includes('Eloïse')) { v.agent = fixName(v.agent); changed = true; }
+        if (v.mandant && v.mandant.includes('Eloïs') && !v.mandant.includes('Eloïse')) { v.mandant = fixName(v.mandant); changed = true; }
+      });
+      if (changed) localStorage.setItem(SK, JSON.stringify(ventes));
+    }
+  } catch(e) {}
+  try {
+    const mandats = JSON.parse(localStorage.getItem(MK));
+    if (mandats && Array.isArray(mandats)) {
+      let changed = false;
+      mandats.forEach(m => {
+        if (m.agent && m.agent.includes('Eloïs') && !m.agent.includes('Eloïse')) { m.agent = fixName(m.agent); changed = true; }
+      });
+      if (changed) localStorage.setItem(MK, JSON.stringify(mandats));
+    }
+  } catch(e) {}
+})();
+
 initFraisTable();
 // Forcer la date d'entrée stock à vide (certains navigateurs remplissent auto les champs date)
 document.getElementById('date_entree_stock').value = '';
