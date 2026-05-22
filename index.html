@@ -1587,8 +1587,9 @@ function afficherRecap() {
         +'</div></div>';
     }
     function buildAgenceSection(agenceName, agents) {
-      const agV=allV.filter(v=>agents.includes(v.agent));
-      const agL=allLiv.filter(v=>agents.includes(v.agent));
+      const agLabel = agenceName === 'Saint-Rémy' ? 'Agence Saint-Rémy-de-Provence' : 'Agence Aix-en-Provence';
+      const agV=allV.filter(v=>v.agence===agLabel);
+      const agL=allLiv.filter(v=>v.agence===agLabel);
       const agM=allM.filter(m=>agents.includes(m.agent));
       const agMg=agL.reduce((s,v)=>s+(v.marge_nette_ht||0),0);
       const agRs=agL.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0));return s+r;},0);
