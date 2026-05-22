@@ -419,6 +419,10 @@ tbody td:not(:first-child){text-align:right}
 const TVA = 1.20;
 const AGENTS = ['Jules', 'Léo', 'Aurélien', 'Tom', 'Nael', 'Julien'];
 const MANAGERS = ['Julien', 'Jules'];
+const AGENCES = {
+  'Saint-Rémy': ['Léo', 'Aurélien', 'Tom', 'Nael'],
+  'Aix':        ['Jules'],
+};
 
 // ─── PIN ────────────────────────────────────────────────────────────────────
 const PINS_KEY = 'aa_pins';
@@ -1560,124 +1564,47 @@ function afficherRecap() {
       + '<div class="kpi nf"><div class="kl">Résultat société HT</div><div class="kv" style="color:var(--n)">'+fmt(totalSociete)+'</div><div class="ks">Comms déduites</div></div>'
       + '</div>';
 
-    // Cartes agents
-    const agentCards = AGENTS.map(a => {
-      const av  = allV.filter(v => v.agent === a);
-      const al  = allLiv.filter(v => v.agent === a);
-      const am  = allM.filter(m => m.agent === a);
-      const ag  = getObjForMonth(a, mois);
-      const nb  = av.length;
-      const nbM = am.length;
-      const mg  = al.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
-      const rs  = al.reduce((s,v) => {
-        const r = v.resultat_societe_ht != null ? v.resultat_societe_ht : (v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0));
-        return s + r;
-      }, 0);
-      const cv  = al.reduce((s,v) => s+(v.comm_vendeur||0), 0);
-      const pctV = ag.obj_ventes ? Math.min(100,Math.round(nb/ag.obj_ventes*100)) : 0;
-      const pctM = ag.obj_mandats ? Math.min(100,Math.round(nbM/ag.obj_mandats*100)) : 0;
-      const ok = pctV >= 100;
-      return '<div style="background:var(--w);border-top:3px solid '+(ok?'var(--v)':'var(--b)')+';padding:.9rem 1rem;box-shadow:0 2px 8px rgba(0,0,0,.07)">'
-        + '<div style="font-family:Libre Baskerville,serif;font-size:.85rem;font-weight:700;margin-bottom:.65rem;padding-bottom:.4rem;border-bottom:1px solid var(--b)">👤 '+a+(ok?' <span style=\"font-size:.55rem;color:var(--v)\">✅</span>':'')+'</div>'
-        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;margin-bottom:.6rem">'
-        + '<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Ventes signées</div><div style="font-family:IBM Plex Mono,monospace;font-size:1.15rem;font-weight:700;color:'+(ok?'var(--v)':'var(--n)')+'">'+nb+'<span style="font-size:.65rem;color:var(--gm)"> / '+ag.obj_ventes+'</span></div><div style="height:4px;background:var(--gc);border-radius:2px;margin-top:.2rem"><div style="width:'+pctV+'%;height:100%;background:'+(ok?'var(--v)':'var(--a)')+'"></div></div></div>'
-        + '<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Mandats</div><div style="font-family:IBM Plex Mono,monospace;font-size:1.15rem;font-weight:700;color:'+(pctM>=100?'var(--v)':'var(--n)')+'">'+nbM+'<span style="font-size:.65rem;color:var(--gm)"> / '+ag.obj_mandats+'</span></div><div style="height:4px;background:var(--gc);border-radius:2px;margin-top:.2rem"><div style="width:'+pctM+'%;height:100%;background:'+(pctM>=100?'var(--v)':'var(--ad)')+'"></div></div></div>'
-        + '</div>'
-        + '<div style="border-top:1px solid var(--gc);padding-top:.5rem;display:grid;grid-template-columns:1fr 1fr;gap:.3rem">'
-        + '<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Marge HT livrée</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--v)">'+fmt(mg)+'</div></div>'
-        + '<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Résultat société</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--n)">'+fmt(rs)+'</div></div>'
-        + '<div style="grid-column:1/-1"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Commission à verser</div><div style="font-family:IBM Plex Mono,monospace;font-size:.78rem;color:var(--gm)">'+fmt(cv)+'</div></div>'
-        + '</div></div>';
-    }).join('');
-
-    // Tableau toutes ventes du mois
-    const allVSorted = allV.sort((a,b) => (b.date||'').localeCompare(a.date||''));
-    const allLivSorted = allLiv.sort((a,b) => (b.date_livraison||'').localeCompare(a.date_livraison||''));
-    const livrManagerHtml = allLivSorted.length === 0
-      ? '<div style="text-align:center;padding:1rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucune livraison ce mois.</div>'
-      : '<table class="vt"><thead><tr><th>Agent</th><th>Véhicule / Client</th><th style="text-align:right">Date vente</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">Livré le</th></tr></thead><tbody>'
-        + allLivSorted.map(v => '<tr>'
-            + '<td style="font-family:IBM Plex Mono,monospace;font-size:.72rem;font-weight:600">'+v.agent+'</td>'
-            + '<td><div style="font-weight:500;font-size:.78rem">'+v.vehicule+'</div><div style="font-size:.62rem;color:var(--gm)">'+v.client+'</div></td>'
-            + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--gm)">'+fmtDate(v.date)+'</td>'
-            + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
-            + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt(v.comm_vendeur+v.comm_mandant)+'</td>'
-            + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--v)">✅ '+fmtDate(v.date_livraison)+'</td>'
-            + '</tr>').join('')
-        + '</tbody></table>';
-    const tableHtml = allVSorted.length === 0
-      ? '<div style="text-align:center;padding:1.5rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucune vente ce mois.</div>'
-      : '<table class="vt"><thead><tr><th>Agent</th><th>Véhicule / Client</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Résultat société</th><th style="text-align:right">Livraison</th><th></th></tr></thead><tbody>'
-        + allVSorted.map(v => {
-            const rs2 = v.resultat_societe_ht != null ? v.resultat_societe_ht : (v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0));
-            return '<tr>'
-              + '<td style="font-family:IBM Plex Mono,monospace;font-size:.72rem;font-weight:600">'+v.agent+'</td>'
-              + '<td><div style="font-weight:500;font-size:.78rem">'+v.vehicule+'</div><div style="font-size:.62rem;color:var(--gm)">'+v.client+'</div></td>'
-              + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
-              + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600">'+fmt(rs2)+'</td>'
-              + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='Livré'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
-              + '<td style="white-space:nowrap">'
-              + '<button class="delbtn" onclick="editerVente('+v.id+')" title="Modifier" style="color:var(--a)">✏️</button> '
-              + '<button class="delbtn" onclick="supprimerVente('+v.id+')" title="Supprimer">✕</button>'
-              + '</td></tr>';
-          }).join('')
-        + '</tbody></table>';
-
-    // ── SUIVI TAUX 40% ─────────────────────────────────────────────────
-    const agents40 = AGENTS.filter(a => !MANAGERS.includes(a));
-    const suivi40Html = '<div class="stl" style="margin-bottom:.65rem">⚡ Suivi taux 40% — '+lblMois(mois)+'</div>'
-      + '<div style="background:var(--w);border:1px solid var(--b);padding:.8rem 1rem;margin-bottom:1.2rem">'
-      + '<table style="width:100%;border-collapse:collapse;font-family:IBM Plex Mono,monospace;font-size:.72rem">'
-      + '<thead><tr style="border-bottom:2px solid var(--b)">'
-      + '<th style="text-align:left;padding:.35rem .5rem;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Agent</th>'
-      + '<th style="text-align:center;padding:.35rem .5rem;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Ventes / Obj 80%</th>'
-      + '<th style="text-align:center;padding:.35rem .5rem;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Mandats / Obj 80%</th>'
-      + '<th style="text-align:center;padding:.35rem .5rem;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Taux actuel</th>'
-      + '<th style="text-align:left;padding:.35rem .5rem;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Il manque</th>'
-      + '<th style="text-align:right;padding:.35rem .5rem;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">En attente (impact)</th>'
-      + '</tr></thead><tbody>'
-      + agents40.map(a => {
-          const ag      = getObjForMonth(a, mois);
-          const nbV     = allV.filter(v => v.agent === a).length;
-          const nbM     = allM.filter(m => m.agent === a).length;
-          const seuil80V= Math.ceil((ag.obj_ventes||10) * 0.80);
-          const seuil80M= Math.ceil((ag.obj_mandats||8) * 0.80);
-          const at40    = nbV >= seuil80V && nbM >= seuil80M;
-          const manqV   = Math.max(0, seuil80V - nbV);
-          const manqM   = Math.max(0, seuil80M - nbM);
-          const attAgent= ventes.filter(v => v.livraison_statut === 'En attente' && v.agent === a && v.mois === mois);
-          const gainIf40= attAgent.filter(v => (v.marge_nette_ht||0) >= 1000).reduce((s,v) => s + Math.round((v.marge_nette_ht||0)*0.10), 0);
-          const manqParts = [];
-          if (manqV > 0) manqParts.push(manqV+' vente'+(manqV>1?'s':''));
-          if (manqM > 0) manqParts.push(manqM+' mandat'+(manqM>1?'s':''));
-          const manqStr = at40 ? '—' : (manqParts.join(' + ') || '—');
-          const pctV = ag.obj_ventes ? Math.min(100, Math.round(nbV/ag.obj_ventes*100)) : 0;
-          const pctM = ag.obj_mandats ? Math.min(100, Math.round(nbM/ag.obj_mandats*100)) : 0;
-          const rowBg = at40 ? 'background:rgba(34,139,34,.06)' : '';
-          return '<tr style="border-bottom:1px solid var(--gc);'+rowBg+'">'
-            + '<td style="padding:.4rem .5rem;font-weight:700;color:var(--n)">'+(at40?'🏆 ':'👤 ')+a+'</td>'
-            + '<td style="text-align:center;padding:.4rem .5rem">'
-            + '<span style="color:'+(nbV>=seuil80V?'var(--v)':'var(--n)')+'">'+nbV+' / '+seuil80V+'</span>'
-            + '<div style="height:3px;background:var(--gc);border-radius:2px;margin-top:.2rem;width:80px;display:inline-block;vertical-align:middle;margin-left:.3rem"><div style="width:'+pctV+'%;height:100%;background:'+(nbV>=seuil80V?'var(--v)':'var(--a)')+'"></div></div>'
-            + '</td>'
-            + '<td style="text-align:center;padding:.4rem .5rem">'
-            + '<span style="color:'+(nbM>=seuil80M?'var(--v)':'var(--n)')+'">'+nbM+' / '+seuil80M+'</span>'
-            + '<div style="height:3px;background:var(--gc);border-radius:2px;margin-top:.2rem;width:80px;display:inline-block;vertical-align:middle;margin-left:.3rem"><div style="width:'+pctM+'%;height:100%;background:'+(nbM>=seuil80M?'var(--v)':'var(--ad)')+'"></div></div>'
-            + '</td>'
-            + '<td style="text-align:center;padding:.4rem .5rem">'
-            + (at40
-              ? '<span style="background:var(--v);color:#fff;padding:.1rem .45rem;border-radius:2px;font-weight:700;font-size:.7rem">40 %</span>'
-              : '<span style="background:var(--gc);color:var(--gm);padding:.1rem .45rem;border-radius:2px;font-size:.7rem">30 %</span>')
-            + '</td>'
-            + '<td style="padding:.4rem .5rem;color:'+(at40?'var(--gm)':'var(--r)')+'">'+manqStr+'</td>'
-            + '<td style="text-align:right;padding:.4rem .5rem;color:'+(gainIf40>0?'var(--a)':'var(--gm)')+'">'+attAgent.length+' vente(s)'+(gainIf40>0?' · +'+fmt(gainIf40)+' si 40%':'')+'</td>'
-            + '</tr>';
-        }).join('')
-      + '</tbody></table></div>';
-
-    zone.innerHTML = kpiHtml
-      + '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.8rem;margin-bottom:1.2rem">'
-      + agentCards + '</div>'
+    function buildAgentCard(a) {
+      const av=allV.filter(v=>v.agent===a),al=allLiv.filter(v=>v.agent===a),am=allM.filter(m=>m.agent===a);
+      const ag=getObjForMonth(a,mois),nb=av.length,nbM=am.length;
+      const mg=al.reduce((s,v)=>s+(v.marge_nette_ht||0),0);
+      const rs=al.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0));return s+r;},0);
+      const cv=al.reduce((s,v)=>s+(v.comm_vendeur||0),0);
+      const pctV=ag.obj_ventes?Math.min(100,Math.round(nb/ag.obj_ventes*100)):0;
+      const pctM=ag.obj_mandats?Math.min(100,Math.round(nbM/ag.obj_mandats*100)):0;
+      const ok=pctV>=100;
+      return '<div style="background:var(--w);border-top:3px solid '+(ok?'var(--v)':'var(--b)')+';padding:.9rem 1rem;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:.6rem">'
+        +'<div style="font-family:Libre Baskerville,serif;font-size:.85rem;font-weight:700;margin-bottom:.65rem;padding-bottom:.4rem;border-bottom:1px solid var(--b)">👤 '+a+(ok?' <span style=\"font-size:.55rem;color:var(--v)\">✅</span>':'')+'</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;margin-bottom:.6rem">'
+        +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Ventes signées</div><div style="font-family:IBM Plex Mono,monospace;font-size:1.15rem;font-weight:700;color:'+(ok?'var(--v)':'var(--n)')+'">'+nb+'<span style="font-size:.65rem;color:var(--gm)"> / '+ag.obj_ventes+'</span></div><div style="height:4px;background:var(--gc);border-radius:2px;margin-top:.2rem"><div style="width:'+pctV+'%;height:100%;background:'+(ok?'var(--v)':'var(--a)')+'"></div></div></div>'
+        +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Mandats</div><div style="font-family:IBM Plex Mono,monospace;font-size:1.15rem;font-weight:700;color:'+(pctM>=100?'var(--v)':'var(--n)')+'">'+nbM+'<span style="font-size:.65rem;color:var(--gm)"> / '+ag.obj_mandats+'</span></div><div style="height:4px;background:var(--gc);border-radius:2px;margin-top:.2rem"><div style="width:'+pctM+'%;height:100%;background:'+(pctM>=100?'var(--v)':'var(--ad)')+'"></div></div></div>'
+        +'</div><div style="border-top:1px solid var(--gc);padding-top:.5rem;display:grid;grid-template-columns:1fr 1fr;gap:.3rem">'
+        +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Marge HT livrée</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--v)">'+fmt(mg)+'</div></div>'
+        +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Résultat société</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--n)">'+fmt(rs)+'</div></div>'
+        +'<div style="grid-column:1/-1"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Commission à verser</div><div style="font-family:IBM Plex Mono,monospace;font-size:.78rem;color:var(--gm)">'+fmt(cv)+'</div></div>'
+        +'</div></div>';
+    }
+    function buildAgenceSection(agenceName, agents) {
+      const agV=allV.filter(v=>agents.includes(v.agent));
+      const agL=allLiv.filter(v=>agents.includes(v.agent));
+      const agM=allM.filter(m=>agents.includes(m.agent));
+      const agMg=agL.reduce((s,v)=>s+(v.marge_nette_ht||0),0);
+      const agRs=agL.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0));return s+r;},0);
+      return '<div style="flex:1;min-width:260px">'
+        +'<div style="background:var(--n);color:var(--w);padding:.55rem 1rem;font-family:Libre Baskerville,serif;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.8rem">'
+        +'📍 Agence '+agenceName+'</div>'
+        +'<div style="background:var(--bg);padding:.5rem .8rem;margin-bottom:.8rem;border-left:3px solid var(--a);display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem">'
+        +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Ventes</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+agV.length+'</div></div>'
+        +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Mandats</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+agM.length+'</div></div>'
+        +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Marge HT livrée</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--v)">'+fmt(agMg)+'</div></div>'
+        +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Résultat société</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+fmt(agRs)+'</div></div>'
+        +'</div>'
+        +agents.map(a=>buildAgentCard(a)).join('')
+        +'</div>';
+    }
+    const agencesCols='<div style="display:flex;gap:1.2rem;flex-wrap:wrap;margin-bottom:1.2rem">'
+      +Object.entries(AGENCES).map(([nom,agents])=>buildAgenceSection(nom,agents)).join('')
+      +'</div>';
       + suivi40Html
       + '<div class="stl" style="margin-bottom:.65rem">🚚 Livraisons de '+lblMois(mois)+' ('+allLiv.length+') — base de calcul des commissions</div>'
     + livrManagerHtml
@@ -1859,7 +1786,7 @@ function afficherDashboard() {
       return s + r;
     }, 0);
     return '<div class="ac"><h4>'+ag+'</h4>'
-      + '<div class="ar"><span>Opérations</span><span style="font-family:IBM Plex Mono,monospace">'+va.length+'</span></div>'
+      + '<div class="ar"><span>Ventes</span><span style="font-family:IBM Plex Mono,monospace">'+va.length+'</span></div>'
       + '<div class="ar"><span>Livraisons</span><span style="font-family:IBM Plex Mono,monospace">'+vla.length+'</span></div>'
       + '<div class="ar"><span>Marge nette HT</span><span style="font-family:IBM Plex Mono,monospace;color:var(--gm)">'+fmt(m)+'</span></div>'
       + '<div class="ar"><span>Commissions versées</span><span style="font-family:IBM Plex Mono,monospace;color:var(--r)">− '+fmt(c)+'</span></div>'
