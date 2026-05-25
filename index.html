@@ -914,11 +914,13 @@ function enregistrerMandat() {
   const vehicule = document.getElementById('m-vehicule')?.value?.trim();
   const proprio  = document.getElementById('m-proprio')?.value?.trim();
   const type     = document.getElementById('m-type')?.value || 'exclusif';
+  const agence   = document.getElementById('m-agence')?.value;
   if (!agent)    return toast('Sélectionne un agent', true);
   if (!dateStr)  return toast('Indique la date du mandat', true);
   if (!vehicule) return toast('Indique le véhicule', true);
   if (!proprio)  return toast('Indique le propriétaire', true);
-  const mandat = { id: Date.now(), date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, statut: 'en_cours' };
+  if (!agence)   return toast('S�lectionne l\'agence (Aix ou Saint-R�my)', true);
+  const mandat = { id: Date.now(), date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, statut: 'en_cours' };
   const mandats = loadMandats();
   mandats.push(mandat);
   saveMandats(mandats, mandat);
@@ -930,6 +932,7 @@ function enregistrerMandat() {
   document.getElementById('m-vehicule').value = '';
   document.getElementById('m-proprio').value = '';
   document.getElementById('m-type').value = 'exclusif';
+  document.getElementById('m-agence').value = '';
 }
 
 function validerMandatVendu(id) {
@@ -1590,7 +1593,7 @@ function afficherRecap() {
       const agLabel = agenceName === 'Saint-Rémy' ? 'Agence Saint-Rémy-de-Provence' : 'Agence Aix-en-Provence';
       const agV=allV.filter(v=>v.agence===agLabel);
       const agL=allLiv.filter(v=>v.agence===agLabel);
-      const agM=allM.filter(m=>agents.includes(m.agent));
+      const agM=allM.filter(m=>m.agence===agLabel);
       const agMg=agL.reduce((s,v)=>s+(v.marge_nette_ht||0),0);
       const agRs=agL.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0));return s+r;},0);
       return '<div style="flex:1;min-width:260px">'
