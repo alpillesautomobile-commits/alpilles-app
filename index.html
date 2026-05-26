@@ -517,6 +517,7 @@ function seConnecter(nom) {
   document.getElementById('user-label').textContent = nom;
 
   const isManager = MANAGERS.includes(nom);
+  const rowOpt = document.getElementById('row-opteven'); if (rowOpt) rowOpt.style.display = isManager ? '' : 'none';
   document.getElementById('t-dashboard').style.display = isManager ? '' : 'none';
   document.getElementById('t-params').style.display = isManager ? '' : 'none';
   const bt = document.getElementById('bloc-token');
@@ -1206,7 +1207,7 @@ function enregistrer() {
   else { cv = mnHt * 0.20; cm = mnHt * 0.20; }
   const pe  = getNum('prime_excep');
   const pot = getNum('prime_opteven');
-  const msh = Math.round((mnHt - cv - cm - pe - pot) * 100) / 100;
+  const msh = Math.round((mnHt - cv - cm - pe - pot + (pot > 0 ? 380 : 0)) * 100) / 100;
 
   const vente = {
     id: Date.now(),
@@ -1385,7 +1386,7 @@ function afficherLivraisons() {
     const colAcq   = avisAcq==='oui'?'var(--v)':avisAcq==='non'?'var(--r)':'#b45309';
     const colMand  = avisMand==='oui'?'var(--v)':avisMand==='non'?'var(--r)':'#b45309';
     const agentBadge = isManager ? '<span style="background:var(--n);color:var(--w);font-family:IBM Plex Mono,monospace;font-size:.48rem;font-weight:600;padding:.1rem .32rem;margin-right:.35rem">'+v.agent+'</span>' : '';
-    const rshT = v.resultat_societe_ht != null ? v.resultat_societe_ht : (v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0));
+    const rshT = v.resultat_societe_ht != null ? v.resultat_societe_ht : (v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)+((v.prime_opteven||0)>0?380:0));
     const prRap = v.prime_rapidite || 0;
     const taux  = v.type==='classique' ? Math.round((v.comm_vendeur||0)/(v.marge_nette_ht||1)*100) : null;
 
@@ -1480,7 +1481,7 @@ function validerLivraison(id) {
     const taux = calcTauxComm(v.marge_nette_ht, v.agent, v.mois);
     cvFinal = Math.round(v.marge_nette_ht * taux * 100) / 100;
   }
-  const mshFinal = Math.round((v.marge_nette_ht - cvFinal - (v.comm_mandant||0) - (v.prime_excep||0) - (v.prime_opteven||0)) * 100) / 100;
+  const mshFinal = Math.round((v.marge_nette_ht - cvFinal - (v.comm_mandant||0) - (v.prime_excep||0) - (v.prime_opteven||0) + ((v.prime_opteven||0)>0?380:0)) * 100) / 100;
 
   ventes[idx].livraison_statut    = 'LivrÃ©';
   ventes[idx].date_livraison      = dl;
@@ -1561,7 +1562,7 @@ function afficherRecap() {
     const totalVentes   = allV.length;
     const totalMarge    = allLiv.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
     const totalSociete  = allLiv.reduce((s,v) => {
-      const r = v.resultat_societe_ht != null ? v.resultat_societe_ht : (v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0));
+      const r = v.resultat_societe_ht != null ? v.resultat_societe_ht : (v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)+((v.prime_opteven||0)>0?380:0));
       return s + r;
     }, 0);
     const totalComm     = allLiv.reduce((s,v) => s+(v.comm_vendeur||0)+(v.comm_mandant||0), 0);
@@ -1578,7 +1579,7 @@ function afficherRecap() {
       const av=allV.filter(v=>v.agent===a),al=allLiv.filter(v=>v.agent===a),am=allM.filter(m=>m.agent===a);
       const ag=getObjForMonth(a,mois),nb=av.length,nbM=am.length;
       const mg=al.reduce((s,v)=>s+(v.marge_nette_ht||0),0);
-      const rs=al.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0));return s+r;},0);
+      const rs=al.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)+((v.prime_opteven||0)>0?380:0));return s+r;},0);
       const cv=al.reduce((s,v)=>s+(v.comm_vendeur||0),0);
       const pctV=ag.obj_ventes?Math.min(100,Math.round(nb/ag.obj_ventes*100)):0;
       const pctM=ag.obj_mandats?Math.min(100,Math.round(nbM/ag.obj_mandats*100)):0;
@@ -1600,15 +1601,16 @@ function afficherRecap() {
       const agL=allLiv.filter(v=>v.agence===agLabel);
       const agM=allM.filter(m=>m.agence===agLabel);
       const agMg=agL.reduce((s,v)=>s+(v.marge_nette_ht||0),0);
-      const agRs=agL.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0));return s+r;},0);
+      const agRs=agL.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)+((v.prime_opteven||0)>0?380:0));return s+r;},0);
       return '<div style="flex:1;min-width:260px">'
         +'<div style="background:var(--n);color:var(--w);padding:.55rem 1rem;font-family:Libre Baskerville,serif;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.8rem">'
         +'ðŸ“ Agence '+agenceName+'</div>'
-        +'<div style="background:var(--bg);padding:.5rem .8rem;margin-bottom:.8rem;border-left:3px solid var(--a);display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem">'
+        +'<div style="background:var(--bg);padding:.5rem .8rem;margin-bottom:.8rem;border-left:3px solid var(--a);display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem">'
         +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Ventes</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+agV.length+'</div></div>'
         +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Mandats</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+agM.length+'</div></div>'
         +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Marge HT livrÃ©e</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--v)">'+fmt(agMg)+'</div></div>'
         +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">RÃ©sultat sociÃ©tÃ©</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+fmt(agRs)+'</div></div>'
+        +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">OPTEVEN 48</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--ad)">'+agOpt+'</div></div>'
         +'</div>'
         +agents.map(a=>buildAgentCard(a)).join('')
         +'</div>';
@@ -1771,7 +1773,7 @@ function afficherDashboard() {
   const totalSociete = vliv.reduce((s,v) => {
     const r = v.resultat_societe_ht != null
       ? v.resultat_societe_ht
-      : (v.marge_nette_ht||0) - (v.comm_vendeur||0) - (v.comm_mandant||0) - (v.prime_excep||0) - (v.prime_opteven||0);
+      : (v.marge_nette_ht||0) - (v.comm_vendeur||0) - (v.comm_mandant||0) - (v.prime_excep||0) - (v.prime_opteven||0) + ((v.prime_opteven||0)>0?380:0);
     return s + r;
   }, 0);
   const nbV   = vm.length;
@@ -1801,7 +1803,7 @@ function afficherDashboard() {
     const rs = vla.reduce((s,v) => {
       const r = v.resultat_societe_ht != null
         ? v.resultat_societe_ht
-        : (v.marge_nette_ht||0) - (v.comm_vendeur||0) - (v.comm_mandant||0) - (v.prime_excep||0) - (v.prime_opteven||0);
+        : (v.marge_nette_ht||0) - (v.comm_vendeur||0) - (v.comm_mandant||0) - (v.prime_excep||0) - (v.prime_opteven||0) + ((v.prime_opteven||0)>0?380:0);
       return s + r;
     }, 0);
     return '<div class="ac"><h4>'+ag+'</h4>'
@@ -1861,6 +1863,7 @@ function afficherAgent(vm, agent, params) {
   const primeRapid = ventesLivr.reduce((s,v) => s+(v.prime_rapidite||0), 0);
   const excep      = ventesLivr.reduce((s,v) => s+(v.prime_excep||0), 0);
   const opteven    = ventesLivr.reduce((s,v) => s+(v.prime_opteven||0), 0);
+  const nbOpt      = ventes.filter(v=>(v.prime_opteven||0)>0).length;
   const avisAtt  = ventesLivr.filter(v => {
     const acq  = v.avis_acquereur || v.avis_google || 'attente';
     const mand = v.avis_mandant   || 'attente';
@@ -1939,6 +1942,7 @@ function afficherAgent(vm, agent, params) {
     + '<div class="pr"><span style="color:var(--gm)">Prime palier marge HT '+(primePal>0?'âœ…':'â³')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(primePal>0?'var(--v)':'var(--gm)')+'">'+fmt(primePal)+'</span></div>'
     + '<div class="pr"><span style="color:var(--gm)">Primes exceptionnelles</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(excep)+'</span></div>'
     + '<div class="pr"><span style="color:var(--gm)">Prime contrat OPTEVEN 48 mois</span><span style="font-family:IBM Plex Mono,monospace;color:'+(opteven>0?'var(--v)":'var(--gm)')+'">'+fmt(opteven)+'</span></div>'
+    + (nbOpt>0?'<div class="pr"><span style="color:var(--gm)">&nbsp;&nbsp;� Contrats OPTEVEN vendus</span><span style="font-family:IBM Plex Mono,monospace;color:var(--ad)">'+nbOpt+' contrat'+(nbOpt>1?'s':'')+'</span></div>':'')
     + '<div class="pr"><span style="color:var(--gm)">Prime obj. ventes '+(nb>=obj_v?'âœ…':'â³')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(primeOv>0?'var(--v)':'var(--gm)')+'">'+fmt(primeOv)+'</span></div>'
     + '<div class="pr"><span style="color:var(--gm)">Prime obj. mandats '+(nbM>=obj_m?'âœ…':'â³')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(primeOm>0?'var(--v)':'var(--gm)')+'">'+fmt(primeOm)+'</span></div>'
     + '<div class="pr"><span style="color:var(--gm)">Bonus dÃ©passement</span><span style="font-family:IBM Plex Mono,monospace;color:'+(bonus>0?'var(--v)':'var(--gm)')+'">'+fmt(bonus)+'</span></div>'
