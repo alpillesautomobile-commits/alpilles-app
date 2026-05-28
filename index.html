@@ -335,7 +335,7 @@ tbody td:not(:first-child){text-align:right}
       <div class="stl" style="margin-bottom:.7rem">Nouveau mandat</div>
       <div class="gr" style="margin-bottom:.7rem">
         <div class="fl"><label>Agent</label>
-          <select id="m-agent"><option value="">— Sélectionner —</option>
+          <select id="m-agent" onchange="autoAgenceMandat()"><option value="">— Sélectionner —</option>
             <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option></select></div>
         <div class="fl"><label>Date</label><input type="date" id="m-date"></div>
         <div class="fl fc"><label>Véhicule (Marque Modèle)</label><input type="text" id="m-vehicule" placeholder="ex: Peugeot 3008 2021"></div>
@@ -344,6 +344,7 @@ tbody td:not(:first-child){text-align:right}
           <select id="m-type">
             <option value="exclusif">Exclusif (70%)</option>
             <option value="simple">Simple (30%)</option></select></div>
+        <div class="fl"><label>Agence</label><select id="m-agence"><option value="">— Sélectionner —</option><option value="Agence Saint-Rémy-de-Provence">Saint-Rémy-de-Provence</option><option value="Agence Aix-en-Provence">Aix-en-Provence</option></select></div>
       </div>
       <div class="acts" style="margin-bottom:0">
         <button class="btn bs" onclick="enregistrerMandat()">✔ Enregistrer le mandat</button>
@@ -544,6 +545,8 @@ function seConnecter(nom) {
   if (!MANAGERS.includes(nom)) {
     const agentSel = document.getElementById('agent');
     if (agentSel) agentSel.value = nom;
+    const mAgentSel = document.getElementById('m-agent');
+    if (mAgentSel) { mAgentSel.value = nom; autoAgenceMandat(); }
   }
 
   syncLoad();
@@ -910,6 +913,18 @@ function updateMandatBadge() {
   if (b) { b.textContent = n; b.style.display = n > 0 ? '' : 'none'; }
 }
 
+function autoAgenceMandat() {
+  const agent = document.getElementById('m-agent')?.value;
+  const agenceEl = document.getElementById('m-agence');
+  if (!agenceEl || !agent) return;
+  for (const [ag, agents] of Object.entries(AGENCES)) {
+    if (agents.includes(agent)) {
+      agenceEl.value = ag.includes('Saint') ? 'Agence Saint-Rémy-de-Provence' : 'Agence Aix-en-Provence';
+      return;
+    }
+  }
+  agenceEl.value = '';
+}
 function enregistrerMandat() {
   const agent    = document.getElementById('m-agent')?.value;
   const dateStr  = document.getElementById('m-date')?.value;
