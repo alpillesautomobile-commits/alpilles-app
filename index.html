@@ -860,22 +860,24 @@ function calcPrimeTrim(agent, moisRef) {
 
 // Prime meilleur agent du trimestre (150€ si marge la plus haute)
 function calcPrimeBestAgent(agent, moisRef) {
+  // Prime mensuelle : meilleure marge sur livraisons du mois en cours
+  // Departage a egalite : nb de ventes livrees ce mois
   const agents = AGENTS.filter(a => !MANAGERS.includes(a));
   if (!agents.includes(agent)) return false;
   const ventes = loadVentes();
   const stats = agents.map(a => {
-    const td = calcPrimeTrim(a, moisRef);
-    const nb = ventes.filter(v => v.agent === a && td.moisList.includes(v.mois_livraison)).length;
-    return { agent: a, marge: td.marge, nb };
+    const livs = ventes.filter(v => v.agent === a && v.mois_livraison === moisRef);
+    const marge = livs.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
+    return { agent: a, marge, nb: livs.length };
   });
   const maxMarge = Math.max(...stats.map(s => s.marge));
   if (maxMarge === 0) return false;
-  const topMarge = stats.filter(s => s.marge === maxMarge);
+  const top = stats.filter(s => s.marge === maxMarge);
   const mine = stats.find(s => s.agent === agent);
   if (mine.marge !== maxMarge) return false;
-  if (topMarge.length === 1) return true;
-  // Egalite sur la marge : departage par nb ventes
-  const maxNb = Math.max(...topMarge.map(s => s.nb));
+  if (top.length === 1) return true;
+  // Egalite marge : departage par nb livraisons ce mois
+  const maxNb = Math.max(...top.map(s => s.nb));
   return mine.nb === maxNb;
 }
 function toast(msg, err) {
