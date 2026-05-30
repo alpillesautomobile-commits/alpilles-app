@@ -1658,7 +1658,19 @@ function afficherRecap() {
     const venteRows = allV.map(v => '<tr><td>'+(v.date_vente||'')+'</td><td>'+(v.vehicule||'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+(v.type||'')+'</td><td><span class="tag" style="background:'+(v.livraison_statut==='Livré'?'#d1fae5':'#fff3e0')+';color:'+(v.livraison_statut==='Livré'?'#065f46':'#b45309')+'">'+( v.livraison_statut||'')+'</span></td></tr>').join('');
     const tableHtml = allV.length ? '<table class="vt"><thead><tr><th>Date</th><th>Véhicule</th><th>Client</th><th>Agent</th><th>Type</th><th>Statut</th></tr></thead><tbody>'+venteRows+'</tbody></table>' : '<div style="color:var(--gm);font-size:.75rem;font-family:IBM Plex Mono,monospace;padding:.5rem 0">Aucune vente ce mois.</div>';
 
+    // Stats personnelles si manager est aussi agent
+    let mesSectionHtml = '';
+    if (AGENTS.includes(CURRENT_USER)) {
+      const meL  = allLiv.filter(v => v.agent === CURRENT_USER);
+      const meMg = meL.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
+      const meCv = meL.reduce((s,v) => s+(v.comm_vendeur||0), 0);
+      const meTrim = calcPrimeTrim(CURRENT_USER, mois);
+      const meBest = calcPrimeBestAgent(CURRENT_USER, mois);
+      const meTot  = meCv + meTrim.prime + (meBest ? 150 : 0);
+      mesSectionHtml = '<div style="background:var(--bg);border-left:4px solid var(--a);padding:.85rem 1rem;margin-bottom:1.2rem"><div style="font-family:Libre Baskerville,serif;font-size:.82rem;font-weight:700;color:var(--n);margin-bottom:.65rem">\u{1f464} Mes stats — '+CURRENT_USER+'</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem"><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Marge livrée</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--v)">'+fmt(meMg)+'</div></div><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Commission vente</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--v)">'+fmt(meCv)+'</div></div><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:'+(meTrim.prime>0?'var(--v)':'var(--gm)')+'">Prime trimestrielle</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:'+(meTrim.prime>0?'var(--v)':'var(--gm)')+'">'+fmt(meTrim.prime)+'</div>'+(meTrim.prime===0?'<div style="font-size:.55rem;color:var(--gm)">encore '+fmt(meTrim.manquant)+'</div>':'')+'</div><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Total à verser</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+fmt(meTot)+(meBest?' <span style="font-size:.55rem;color:var(--v)">+150€ 🏆</span>':'')+'</div></div></div></div>';
+    }
     zone.innerHTML = kpiHtml
+      + mesSectionHtml
       + agencesCols
       + '<div class="stl" style="margin-bottom:.65rem">🚚 Livraisons de '+lblMois(mois)+' ('+allLiv.length+') — base de calcul des commissions</div>'
       + livrManagerHtml
