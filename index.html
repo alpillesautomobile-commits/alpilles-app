@@ -938,6 +938,27 @@ function autoAgenceMandat() {
   }
   agenceEl.value = '';
 }
+let _editingMandatId = null;
+
+function editerMandat(id) {
+  const mandats = loadMandats();
+  const m = mandats.find(x => x.id === id);
+  if (!m) return;
+  _editingMandatId = id;
+  nav('mandats');
+  const set = (sel, val) => { const el = document.getElementById(sel); if (el) el.value = val || ''; };
+  set('m-agent',   m.agent);
+  set('m-date',    m.date);
+  set('m-vehicule',m.vehicule);
+  set('m-proprio', m.proprio);
+  set('m-type',    m.type || 'exclusif');
+  set('m-agence',  m.agence);
+  const btn = document.querySelector('[onclick*="enregistrerMandat"]');
+  if (btn) btn.textContent = '\u2714 Modifier le mandat';
+  document.getElementById('m-vehicule')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  toast('\u270f\ufe0f Mandat charg\u00e9 \u2014 modifie puis valide');
+}
+
 function enregistrerMandat() {
   const agent    = document.getElementById('m-agent')?.value;
   const dateStr  = document.getElementById('m-date')?.value;
@@ -950,6 +971,20 @@ function enregistrerMandat() {
   if (!vehicule) return toast('Indique le véhicule', true);
   if (!proprio)  return toast('Indique le propriétaire', true);
   if (!agence)   return toast('S�lectionne l\'agence (Aix ou Saint-R�my)', true);
+  if (_editingMandatId) {
+    const mandats2 = loadMandats();
+    const idx2 = mandats2.findIndex(m => m.id === _editingMandatId);
+    if (idx2 >= 0) {
+      mandats2[idx2] = { ...mandats2[idx2], date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence };
+      saveMandats(mandats2, mandats2[idx2]);
+      toast('\u2705 Mandat modifi\u00e9 \u2014 ' + vehicule);
+    }
+    _editingMandatId = null;
+    const btn2 = document.querySelector('[onclick*="enregistrerMandat"]');
+    if (btn2) btn2.textContent = '\u2714 Enregistrer le mandat';
+    updateMandatBadge(); afficherMandats();
+    return;
+  }
   const mandat = { id: Date.now(), date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, statut: 'en_cours' };
   const mandats = loadMandats();
   mandats.push(mandat);
@@ -973,6 +1008,7 @@ function validerMandatVendu(id) {
   saveMandats(mandats, mandats[idx]);
   updateMandatBadge();
   afficherMandats();
+  if (document.getElementById('pg-recap')?.classList.contains('on')) afficherRecap();
   toast('Mandat marqué vendu');
 }
 
@@ -984,6 +1020,7 @@ function supprimerMandat(id) {
   gasDeleteMandat(id);
   updateMandatBadge();
   afficherMandats();
+  if (document.getElementById('pg-recap')?.classList.contains('on')) afficherRecap();
   toast('Mandat supprimé');
 }
 
@@ -1799,6 +1836,20 @@ function afficherRecap() {
     + '<div style="margin-top:.9rem"><div class="stl" style="margin-bottom:.65rem">🚚 Mes livraisons de '+lblMois(mois)+' ('+vl.length+')</div>'
     + livrRecapHtml + '</div>'
     + croiseMandantHtml
+    + '<div style="margin-top:.9rem"><div class="stl" style="margin-bottom:.65rem">\ud83d\udccb Mes mandats de '+lblMois(mois)+' ('+mm.length+')</div>'
+    + (mm.length === 0
+      ? '<div style="text-align:center;padding:1rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucun mandat ce mois. Va dans l\'onglet Mandats pour en ajouter.</div>'
+      : '<table class="vt"><thead><tr><th>Date</th><th>V\u00e9hicule</th><th>Propri\u00e9taire</th><th>Type</th><th>Statut</th><th></th></tr></thead><tbody>'
+        + mm.map(m => '<tr>'
+            + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;white-space:nowrap">'+fmtDate(m.date)+'</td>'
+            + '<td style="font-weight:500;font-size:.76rem">'+m.vehicule+'</td>'
+            + '<td style="font-size:.73rem;color:var(--gm)">'+m.proprio+'</td>'
+            + '<td>'+(m.type==='exclusif'?'<span class="tag" style="background:#fff3e0;color:#b45309">EXCL</span>':'<span class="tag" style="background:#e8f0fe;color:#1a56d6">SIMPLE</span>')+'</td>'
+            + '<td>'+(m.statut==='vendu'?'<span class="tag tgl">Vendu \u2705</span>':'<span class="tag tgcr">En cours</span>')+'</td>'
+            + '<td style="white-space:nowrap"><button class="delbtn" onclick="editerMandat('+m.id+')" title="Modifier" style="color:var(--a)"\>\u270f\ufe0f</button> '+(m.statut==='en_cours'?'<button class="btn bs" style="padding:.12rem .35rem;font-size:.5rem;margin-right:.2rem" onclick="validerMandatVendu('+m.id+')"\>\u2714 Vendu</button>':'')+'<button class="delbtn" onclick="supprimerMandat('+m.id+')" title="Supprimer"\>\u2715</button></td>'
+            + '</tr>').join('')
+        + '</tbody></table>')
+    + '</div>'
     + '<div style="margin-top:.9rem"><div class="stl" style="margin-bottom:.65rem">Mes ventes signées ce mois ('+vm.length+')</div>'
     + ventesHtml + '</div>';
 }
