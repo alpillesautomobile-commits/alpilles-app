@@ -1024,6 +1024,23 @@ function supprimerMandat(id) {
   toast('Mandat supprimé');
 }
 
+function reclamerMandat(id) {
+  const mandats = loadMandats();
+  const idx = mandats.findIndex(m => m.id === id);
+  if (idx < 0) return;
+  mandats[idx].agent = CURRENT_USER;
+  if (!mandats[idx].agence) {
+    Object.entries(AGENCES).forEach(([agNom, agents]) => {
+      if (agents.includes(CURRENT_USER)) mandats[idx].agence = 'Agence ' + agNom + (agNom === 'Saint-R\u00e9my' ? '-de-Provence' : '-en-Provence');
+    });
+  }
+  saveMandats(mandats, mandats[idx]);
+  updateMandatBadge();
+  afficherMandats();
+  if (document.getElementById('pg-recap')?.classList.contains('on')) afficherRecap();
+  toast('\u2705 Mandat attribu\u00e9 \u00e0 ' + CURRENT_USER);
+}
+
 function remplirMoisMandats(selId) {
   const ventes  = loadVentes();
   const mandats = loadMandats();
@@ -1719,6 +1736,7 @@ function afficherRecap() {
   // ── VUE AGENT ────────────────────────────────────────────────────────
   const vm  = ventes.filter(v => v.mois === mois && v.agent === CURRENT_USER);
   const mm  = mandats.filter(m => m.mois === mois && m.agent === CURRENT_USER);
+  const mmOrph = mandats.filter(m => m.mois === mois && !m.agent);
   const nb  = vm.length;
   const nbM = mm.length;
   const vl  = ventes.filter(v => v.mois_livraison === mois && v.agent === CURRENT_USER);
@@ -1836,6 +1854,9 @@ function afficherRecap() {
     + '<div style="margin-top:.9rem"><div class="stl" style="margin-bottom:.65rem">🚚 Mes livraisons de '+lblMois(mois)+' ('+vl.length+')</div>'
     + livrRecapHtml + '</div>'
     + croiseMandantHtml
+    + (mmOrph.length > 0
+      ? '<div style="background:#fff8e8;border:2px solid var(--a);padding:.75rem 1rem;margin-bottom:.8rem;border-radius:3px"><div style="font-family:IBM Plex Mono,monospace;font-size:.68rem;font-weight:700;color:#7a5a00;margin-bottom:.5rem">\u26a0\ufe0f '+mmOrph.length+' mandat(s) sans agent ce mois \u2014 est-ce les tiens ?</div><table class=\"vt\"><thead><tr><th>Date</th><th>V\u00e9hicule</th><th>Propri\u00e9taire</th><th></th></tr></thead><tbody>'+mmOrph.map(m => '<tr><td style=\"font-family:IBM Plex Mono,monospace;font-size:.68rem\">'+fmtDate(m.date)+'</td><td style=\"font-weight:500;font-size:.76rem\">'+m.vehicule+'</td><td style=\"font-size:.73rem;color:var(--gm)\">'+m.proprio+'</td><td><button class=\"btn bs\" style=\"padding:.12rem .45rem;font-size:.55rem\" onclick=\"reclamerMandat('+m.id+')\">\'C\u2019est le mien \u270b</button></td></tr>').join('')+'</tbody></table></div>'
+      : '')
     + '<div style="margin-top:.9rem"><div class="stl" style="margin-bottom:.65rem">\ud83d\udccb Mes mandats de '+lblMois(mois)+' ('+mm.length+')</div>'
     + (mm.length === 0
       ? '<div style="text-align:center;padding:1rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucun mandat ce mois. Va dans l\'onglet Mandats pour en ajouter.</div>'
