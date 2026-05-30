@@ -1612,7 +1612,7 @@ function afficherRecap() {
       const av=allV.filter(v=>v.agent===a),al=allLiv.filter(v=>v.agent===a),am=allM.filter(m=>m.agent===a);
       const ag=getObjForMonth(a,mois),nb=av.length,nbM=am.length;
       const mg=al.reduce((s,v)=>s+(v.marge_nette_ht||0),0);
-      const rs=al.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)+((v.prime_opteven||0)>0?380:0));return s+r;},0);
+      const rs=al.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)-(v.prime_rapidite||0)+((v.prime_opteven||0)>0?380:0));return s+r;},0);
       const cv=al.reduce((s,v)=>s+(v.comm_vendeur||0),0);
       const pctV=ag.obj_ventes?Math.min(100,Math.round(nb/ag.obj_ventes*100)):0;
       const pctM=ag.obj_mandats?Math.min(100,Math.round(nbM/ag.obj_mandats*100)):0;
@@ -1634,7 +1634,7 @@ function afficherRecap() {
       const agL=allLiv.filter(v=>v.agence===agLabel);
       const agM=allM.filter(m=>m.agence?m.agence===agLabel:agents.includes(m.agent));
       const agMg=agL.reduce((s,v)=>s+(v.marge_nette_ht||0),0);
-      const agRs=agL.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)+((v.prime_opteven||0)>0?380:0));return s+r;},0);
+      const agRs=agL.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)-(v.prime_rapidite||0)+((v.prime_opteven||0)>0?380:0));return s+r;},0);
       return '<div style="flex:1;min-width:260px">'
         +'<div style="background:var(--n);color:var(--w);padding:.55rem 1rem;font-family:Libre Baskerville,serif;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.8rem">'
         +'📍 Agence '+agenceName+'</div>'
