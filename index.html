@@ -960,7 +960,9 @@ function editerMandat(id) {
 }
 
 function enregistrerMandat() {
-  const agent    = document.getElementById('m-agent')?.value;
+  autoAgenceMandat();
+  let agent    = document.getElementById('m-agent')?.value;
+  if (!agent && typeof CURRENT_USER !== 'undefined' && CURRENT_USER && !MANAGERS.includes(CURRENT_USER)) agent = CURRENT_USER;
   const dateStr  = document.getElementById('m-date')?.value;
   const vehicule = document.getElementById('m-vehicule')?.value?.trim();
   const proprio  = document.getElementById('m-proprio')?.value?.trim();
@@ -1714,7 +1716,7 @@ function afficherRecap() {
 
     // Stats personnelles si manager est aussi agent
     let mesSectionHtml = '';
-    if (AGENTS.includes(CURRENT_USER)) {
+    try { if (AGENTS.includes(CURRENT_USER)) {
       const meL  = allLiv.filter(v => v.agent === CURRENT_USER);
       const meMg = meL.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
       const meCv = meL.reduce((s,v) => s+(v.comm_vendeur||0), 0);
@@ -1722,7 +1724,7 @@ function afficherRecap() {
       const meBest = calcPrimeBestAgent(CURRENT_USER, mois);
       const meTot  = meCv + meTrim.prime + (meBest ? 150 : 0);
       mesSectionHtml = '<div style="background:var(--bg);border-left:4px solid var(--a);padding:.85rem 1rem;margin-bottom:1.2rem"><div style="font-family:Libre Baskerville,serif;font-size:.82rem;font-weight:700;color:var(--n);margin-bottom:.65rem">\u{1f464} Mes stats — '+CURRENT_USER+'</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem"><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Marge livrée</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--v)">'+fmt(meMg)+'</div></div><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Commission vente</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--v)">'+fmt(meCv)+'</div></div><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:'+(meTrim.prime>0?'var(--v)':'var(--gm)')+'">Prime trimestrielle</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:'+(meTrim.prime>0?'var(--v)':'var(--gm)')+'">'+fmt(meTrim.prime)+'</div>'+(meTrim.prime===0?'<div style="font-size:.55rem;color:var(--gm)">encore '+fmt(meTrim.manquant)+'</div>':'')+'</div><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Total à verser</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+fmt(meTot)+(meBest?' <span style="font-size:.55rem;color:var(--v)">+150€ 🏆</span>':'')+'</div></div></div></div>';
-    }
+    } } catch(e) { console.error('recap err',e); }
     zone.innerHTML = kpiHtml
       + mesSectionHtml
       + agencesCols
