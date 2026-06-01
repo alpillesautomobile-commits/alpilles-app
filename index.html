@@ -618,7 +618,7 @@ async function ghRead() {
 
 // Écrit data.json dans GitHub avec le SHA courant (retry 1x si conflit SHA)
 async function ghWrite(data, sha, retries) {
-  if (retries === undefined) retries = 1;
+  if (retries === undefined) retries = 3;
   const token = getGhToken();
   if (!token) throw new Error('Token GitHub non configuré');
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
@@ -710,7 +710,7 @@ async function syncLoad() {
     if (act === 'dashboard')  afficherDashboard();
     if (act === 'mandats')    afficherMandats();
   } catch(e) {
-    showSyncStatus('⚠️ Erreur sync');
+    showSyncStatus('⚠️ ' + (e.message||'Erreur sync').substring(0,40));
     toast('❌ Erreur sync : ' + e.message, true);
     console.error('syncLoad error', e);
   } finally {
