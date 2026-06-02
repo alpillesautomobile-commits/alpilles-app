@@ -2187,7 +2187,7 @@ function afficherParams() {
 
   zone.innerHTML = '<div style="margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">'
     + '<label style="font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Mois des objectifs</label>'
-    + '<input type="month" id="param-mois" value="'+selMois+'" style="font-family:IBM Plex Mono,monospace;font-size:.85rem;padding:.3rem .5rem;border:1px solid var(--b);background:var(--w);color:var(--n);cursor:pointer" onchange="afficherParams()">'
+    + '<input type="month" id="param-mois" value="'+selMois+'" style="font-family:IBM Plex Mono,monospace;font-size:.85rem;padding:.3rem .5rem;border:1px solid var(--b);background:var(--w);color:var(--n);cursor:pointer" onchange="sauvegarderParams();afficherParams();">'
     + '<span style="font-size:.68rem;color:var(--gm);font-family:IBM Plex Mono,monospace">← Choisir le mois pour voir/modifier ses objectifs</span>'
     + '</div>'
     + AGENTS.map(a => {
