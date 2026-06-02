@@ -228,7 +228,7 @@ tbody td:not(:first-child){text-align:right}
             <option>Agence Aix-en-Provence</option></select></div>
         <div class="fl"><label>Agent commercial</label>
           <select id="agent" onchange="calcFiche()"><option value="">— Sélectionner —</option>
-            <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option></select></div>
+            <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option><option>Julia</option></select></div>
         <div class="fl"><label>Date de la vente</label><input type="date" id="date_vente" oninput="calcFiche()"></div>
         <div class="fl"><label>Date d'entrée en stock</label><input type="date" id="date_entree_stock" oninput="calcFiche()" autocomplete="off"></div>
         <div class="fl"><label>Nom du client</label><input type="text" id="client" placeholder="Nom Prénom"></div>
@@ -241,7 +241,7 @@ tbody td:not(:first-child){text-align:right}
             <option value="direct">Vente en direct (0%)</option></select></div>
         <div class="fl" id="bloc-mandant" style="display:none"><label>Agent mandant</label>
           <select id="agent_mandant"><option value="">— Sélectionner —</option>
-            <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option></select></div>
+            <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option><option>Julia</option></select></div>
         <div class="fl"><label>Prix de vente TTC (€)</label><input type="number" id="prix_vente" placeholder="0" min="0" step="1" oninput="calcFiche()"></div>
         <div class="fl"><label>Prix d'achat TTC (€)</label><input type="number" id="prix_achat" placeholder="0" min="0" step="1" oninput="calcFiche()"></div>
         <div class="fl fc"><label>Marge brute véhicule — calculé auto</label><input type="text" id="marge_brute" readonly placeholder="—"></div>
@@ -344,7 +344,7 @@ tbody td:not(:first-child){text-align:right}
       <div class="gr" style="margin-bottom:.7rem">
         <div class="fl"><label>Agent</label>
           <select id="m-agent" onchange="autoAgenceMandat()"><option value="">— Sélectionner —</option>
-            <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option></select></div>
+            <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option><option>Julia</option></select></div>
         <div class="fl"><label>Date</label><input type="date" id="m-date"></div>
         <div class="fl fc"><label>Véhicule (Marque Modèle)</label><input type="text" id="m-vehicule" placeholder="ex: Peugeot 3008 2021"></div>
         <div class="fl"><label>Nom du propriétaire</label><input type="text" id="m-proprio" placeholder="Nom Prénom"></div>
@@ -673,7 +673,14 @@ async function syncLoad() {
     const deletedM = getDeletedIds(MK);
 
     // Fusionner les listes de suppressions local + GitHub
-    if (ghData.params) saveParams(ghData.params);
+    if (ghData.params) {
+    const oldP = JSON.stringify(loadParams());
+    saveParams(ghData.params);
+    if (JSON.stringify(ghData.params) !== oldP) {
+      // Params changed — re-render current view
+      try { const btn = document.querySelector('.tab-btn.active'); if(btn) btn.click(); } catch(e){}
+    }
+  }
     const ghDeletedV = new Set([...(ghData.deleted_ventes  || []), ...deletedV]);
     const ghDeletedM = new Set([...(ghData.deleted_mandats || []), ...deletedM]);
 
