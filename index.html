@@ -862,7 +862,7 @@ function calcPrimeTrim(agent, moisRef) {
 function calcPrimeBestAgent(agent, moisRef) {
   // Prime mensuelle : meilleure marge sur livraisons du mois en cours
   // Departage a egalite : nb de ventes livrees ce mois
-  const agents = AGENTS.filter(a => !MANAGERS.includes(a));
+  const agents = AGENTS; // tous les agents incluant managers-agents
   if (!agents.includes(agent)) return false;
   const ventes = loadVentes();
   const stats = agents.map(a => {
@@ -1210,7 +1210,7 @@ function calcFiche() {
   const dateStock = document.getElementById('date_entree_stock')?.value || '';
   const prRapid   = calcPrimeRapidite(dateVente, dateStock);
   const rowRap    = document.getElementById('row-rapidite');
-  if (rowRap) rowRap.style.display = prRapid > 0 ? '' : 'none';
+  if (rowRap) rowRap.style.display = 'none'; // inclus dans commission vente
 
   if (type === 'direct') {
     cv = 0;
