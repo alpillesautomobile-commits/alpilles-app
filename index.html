@@ -212,6 +212,13 @@ tbody td:not(:first-child){text-align:right}
       <button class="btn bp" onclick="window.print()">Imprimer / PDF</button>
       <button class="btn bs" id="btn-enreg" onclick="enregistrer()">✔ Enregistrer au tableau de bord</button>
     </div>
+    <div style="margin:.6rem 0;padding:.8rem;background:#fff3e0;border-radius:10px;border:3px solid #ff9800">
+      <div style="font-weight:700;font-size:.9rem;margin-bottom:.5rem;color:#e65100">📞 Vente via téléprospectrice ? <span style="color:#d32f2f;font-size:.75rem">obligatoire</span></div>
+      <div style="display:flex;gap:.8rem">
+        <label style="cursor:pointer;display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:.9rem"><input type="radio" name="via-prosp" value="oui" onchange="calcFiche()"> ✅ OUI — commission 30%</label>
+        <label style="cursor:pointer;display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:.9rem"><input type="radio" name="via-prosp" value="non" onchange="calcFiche()"> ❌ NON — taux normal</label>
+      </div>
+    </div>
     <div class="sec">
       <div class="stl">Identification</div>
       <div class="gr">
@@ -268,7 +275,7 @@ tbody td:not(:first-child){text-align:right}
         <tr class="ct2"><td id="total-lbl">Total à verser</td><td class="cmp" id="r-total">—</td></tr>
       </tbody></table>
     </div>
-    <div style="margin:.5rem 0;padding:.5rem .8rem;background:#fff3e0;border-radius:8px;border:2px solid #ff9800"><label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;font-weight:600;font-size:.83rem"><input type="checkbox" id="via-prospectrice" onchange="calcFiche()"> 📞 Via téléprospectrice <span style="font-weight:400;color:#888;font-size:.75rem">(commission plafonnée 30%)</span></label></div>
+
     <div class="vz">
       <div class="vf"><label>Visa Julien Aranda</label><div class="vl2"></div></div>
       <div class="vf"><label>Date</label><div class="vl2"></div></div>
@@ -348,7 +355,13 @@ tbody td:not(:first-child){text-align:right}
         <div class="fl"><label>Agence</label><select id="m-agence"><option value="">— Sélectionner —</option><option value="Agence Saint-Rémy-de-Provence">Saint-Rémy-de-Provence</option><option value="Agence Aix-en-Provence">Aix-en-Provence</option></select></div>
       </div>
       <div class="acts" style="margin-bottom:0">
-        <div style="margin:.4rem 0;padding:.4rem .7rem;background:#fff3e0;border-radius:8px;border:1px solid #ff9800"><label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;font-weight:600;font-size:.82rem"><input type="checkbox" id="via-prospectrice-m"> 📞 Via téléprospectrice</label></div>
+        <div style="margin:.5rem 0;padding:.7rem .8rem;background:#fff3e0;border-radius:10px;border:3px solid #ff9800">
+          <div style="font-weight:700;font-size:.87rem;margin-bottom:.4rem;color:#e65100">📞 Mandat via téléprospectrice ? <span style="color:#d32f2f;font-size:.72rem">obligatoire</span></div>
+          <div style="display:flex;gap:.8rem">
+            <label style="cursor:pointer;display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:.87rem"><input type="radio" name="via-prosp-m" value="oui"> ✅ OUI</label>
+            <label style="cursor:pointer;display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:.87rem"><input type="radio" name="via-prosp-m" value="non"> ❌ NON</label>
+          </div>
+        </div>
         <button class="btn bs" onclick="enregistrerMandat()">✔ Enregistrer le mandat</button>
       </div>
     </div>
@@ -970,6 +983,7 @@ function enregistrerMandat() {
   const proprio  = document.getElementById('m-proprio')?.value?.trim();
   const type     = document.getElementById('m-type')?.value || 'exclusif';
   const agence   = document.getElementById('m-agence')?.value;
+  if (!document.querySelector('input[name="via-prosp-m"]:checked')) return toast('📞 Indique si mandat via téléprospectrice (OUI / NON)', true);
   if (!agent)    return toast('Sélectionne un agent', true);
   if (!dateStr)  return toast('Indique la date du mandat', true);
   if (!vehicule) return toast('Indique le véhicule', true);
@@ -989,7 +1003,7 @@ function enregistrerMandat() {
     updateMandatBadge(); afficherMandats();
     return;
   }
-  const mandat = { id: Date.now(), date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, statut: 'en_cours', via_prospectrice: document.getElementById('via-prospectrice-m')?.checked || false };
+  const mandat = { id: Date.now(), date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, statut: 'en_cours', via_prospectrice: document.querySelector('input[name="via-prosp-m"]:checked')?.value === 'oui' };
   const mandats = loadMandats();
   mandats.push(mandat);
   saveMandats(mandats, mandat);
@@ -1224,7 +1238,7 @@ function calcFiche() {
     const moisVente = dateVente ? getMois(dateVente) : getMois(new Date().toISOString().slice(0,10));
     const taux = calcTauxComm(mnHt, agent, moisVente);
     cv = mnHt * taux;
-    if (document.getElementById('via-prospectrice')?.checked) cv = Math.round(mnHt * 0.30 * 100) / 100;
+    if (document.querySelector('input[name="via-prosp"]:checked')?.value === 'oui') cv = Math.round(mnHt * 0.30 * 100) / 100;
     const pctLbl = Math.round(taux * 100) + '%';
     const condLbl = mnHt < 1000
       ? '(marge < 1 000 € → taux 30%)'
@@ -1262,6 +1276,7 @@ function enregistrer() {
   const dateStr = document.getElementById('date_vente')?.value;
   const vehicule= document.getElementById('vehicule')?.value;
 
+  if (!document.querySelector('input[name="via-prosp"]:checked')) return toast('📞 Indique si vente via téléprospectrice (OUI / NON)', true);
   if (!agent)   return toast('Sélectionne un agent', true);
   if (!agence)  return toast('Sélectionne une agence', true);
   if (!dateStr) return toast('Indique la date de la vente', true);
@@ -1308,7 +1323,7 @@ function enregistrer() {
     prime_excep: pe,
     prime_opteven: pot,
     prime_rapidite: prRapid,
-    via_prospectrice: document.getElementById('via-prospectrice')?.checked || false,
+    via_prospectrice: document.querySelector('input[name="via-prosp"]:checked')?.value === 'oui',
     date_entree_stock: dateStock,
     resultat_societe_ht: msh,
     frais_detail: fraisDetail,
@@ -1384,7 +1399,7 @@ function editerVente(id) {
       if (autresEl) autresEl.value = Math.round(residHt * TVA * 100) / 100; // repasser en TTC
     }
   }
-  const _vpEl = document.getElementById('via-prospectrice'); if (_vpEl) _vpEl.checked = v.via_prospectrice || false;
+  document.querySelectorAll('input[name="via-prosp"]').forEach(r => r.checked = (r.value === (v.via_prospectrice ? 'oui' : 'non')));
   calcFiche();
   nav('fiche');
   const btn = document.getElementById('btn-enreg');
