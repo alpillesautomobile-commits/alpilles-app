@@ -445,7 +445,7 @@ const AGENCES = {
 // ─── PIN ────────────────────────────────────────────────────────────────────
 const PINS_KEY = 'aa_pins';
 // Codes par défaut — à changer dans Paramètres (section Codes PIN)
-const DEFAULT_PINS = { 'Julien':'1234', 'Jules':'1111', 'Adrien':'6555', 'Léo':'2222', 'Aurélien':'3333', 'Tom':'4444', 'Nael':'5555' };
+const DEFAULT_PINS = { 'Julien':'1234', 'Jules':'1111', 'Adrien':'6555', 'Léo':'2222', 'Aurélien':'3333', 'Tom':'4444', 'Nael':'5555', 'Julia':'4789' };
 function getPins() {
   try { const p = JSON.parse(localStorage.getItem(PINS_KEY)); if (p) return Object.assign({}, DEFAULT_PINS, p); } catch {}
   return Object.assign({}, DEFAULT_PINS);
@@ -673,6 +673,7 @@ async function syncLoad() {
     const deletedM = getDeletedIds(MK);
 
     // Fusionner les listes de suppressions local + GitHub
+    if (ghData.pins) { localStorage.setItem('aa_pins', JSON.stringify(ghData.pins)); }
     if (ghData.params) {
     const oldP = JSON.stringify(loadParams());
     saveParams(ghData.params);
@@ -775,7 +776,8 @@ async function ghPush() {
       mandats:         Object.values(byIdM),
       deleted_ventes:  [...ghDeletedV],
       deleted_mandats: [...ghDeletedM],
-      params:          loadParams()
+      params:          loadParams(),
+      pins:            getPins()
     }, sha);
     showSyncStatus('✅ ' + new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}));
   } catch(e) {
