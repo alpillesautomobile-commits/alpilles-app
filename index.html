@@ -268,6 +268,7 @@ tbody td:not(:first-child){text-align:right}
         <tr class="ct2"><td id="total-lbl">Total à verser</td><td class="cmp" id="r-total">—</td></tr>
       </tbody></table>
     </div>
+    <div style="margin:.5rem 0;padding:.5rem .8rem;background:#fff3e0;border-radius:8px;border:2px solid #ff9800"><label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;font-weight:600;font-size:.83rem"><input type="checkbox" id="via-prospectrice" onchange="calcFiche()"> 📞 Via téléprospectrice <span style="font-weight:400;color:#888;font-size:.75rem">(commission plafonnée 30%)</span></label></div>
     <div class="vz">
       <div class="vf"><label>Visa Julien Aranda</label><div class="vl2"></div></div>
       <div class="vf"><label>Date</label><div class="vl2"></div></div>
@@ -347,6 +348,7 @@ tbody td:not(:first-child){text-align:right}
         <div class="fl"><label>Agence</label><select id="m-agence"><option value="">— Sélectionner —</option><option value="Agence Saint-Rémy-de-Provence">Saint-Rémy-de-Provence</option><option value="Agence Aix-en-Provence">Aix-en-Provence</option></select></div>
       </div>
       <div class="acts" style="margin-bottom:0">
+        <div style="margin:.4rem 0;padding:.4rem .7rem;background:#fff3e0;border-radius:8px;border:1px solid #ff9800"><label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;font-weight:600;font-size:.82rem"><input type="checkbox" id="via-prospectrice-m"> 📞 Via téléprospectrice</label></div>
         <button class="btn bs" onclick="enregistrerMandat()">✔ Enregistrer le mandat</button>
       </div>
     </div>
@@ -862,7 +864,7 @@ function calcPrimeTrim(agent, moisRef) {
 function calcPrimeBestAgent(agent, moisRef) {
   // Prime mensuelle : meilleure marge sur livraisons du mois en cours
   // Departage a egalite : nb de ventes livrees ce mois
-  const agents = AGENTS; // tous les agents incluant managers-agents
+  const agents = AGENTS.filter(a => !MANAGERS.includes(a));
   if (!agents.includes(agent)) return false;
   const ventes = loadVentes();
   const stats = agents.map(a => {
@@ -987,7 +989,7 @@ function enregistrerMandat() {
     updateMandatBadge(); afficherMandats();
     return;
   }
-  const mandat = { id: Date.now(), date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, statut: 'en_cours' };
+  const mandat = { id: Date.now(), date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, statut: 'en_cours', via_prospectrice: document.getElementById('via-prospectrice-m')?.checked || false };
   const mandats = loadMandats();
   mandats.push(mandat);
   saveMandats(mandats, mandat);
@@ -1210,7 +1212,7 @@ function calcFiche() {
   const dateStock = document.getElementById('date_entree_stock')?.value || '';
   const prRapid   = calcPrimeRapidite(dateVente, dateStock);
   const rowRap    = document.getElementById('row-rapidite');
-  if (rowRap) rowRap.style.display = 'none'; // inclus dans commission vente
+  if (rowRap) rowRap.style.display = prRapid > 0 ? '' : 'none';
 
   if (type === 'direct') {
     cv = 0;
@@ -1222,6 +1224,7 @@ function calcFiche() {
     const moisVente = dateVente ? getMois(dateVente) : getMois(new Date().toISOString().slice(0,10));
     const taux = calcTauxComm(mnHt, agent, moisVente);
     cv = mnHt * taux;
+    if (document.getElementById('via-prospectrice')?.checked) cv = Math.round(mnHt * 0.30 * 100) / 100;
     const pctLbl = Math.round(taux * 100) + '%';
     const condLbl = mnHt < 1000
       ? '(marge < 1 000 € → taux 30%)'
@@ -1305,6 +1308,7 @@ function enregistrer() {
     prime_excep: pe,
     prime_opteven: pot,
     prime_rapidite: prRapid,
+    via_prospectrice: document.getElementById('via-prospectrice')?.checked || false,
     date_entree_stock: dateStock,
     resultat_societe_ht: msh,
     frais_detail: fraisDetail,
@@ -1380,6 +1384,7 @@ function editerVente(id) {
       if (autresEl) autresEl.value = Math.round(residHt * TVA * 100) / 100; // repasser en TTC
     }
   }
+  const _vpEl = document.getElementById('via-prospectrice'); if (_vpEl) _vpEl.checked = v.via_prospectrice || false;
   calcFiche();
   nav('fiche');
   const btn = document.getElementById('btn-enreg');
@@ -1662,6 +1667,8 @@ function afficherRecap() {
       + '<div class="kpi wn"><div class="kl">En attente livraison</div><div class="kv">'+attente.length+'</div><div class="ks">Tous mois confondus</div></div>'
       + '<div class="kpi ok"><div class="kl">Marge HT livrée</div><div class="kv">'+fmt(totalMarge)+'</div><div class="ks">'+allLiv.length+' livraison(s)</div></div>'
       + '<div class="kpi nf"><div class="kl">Résultat société HT</div><div class="kv" style="color:var(--n)">'+fmt(totalSociete)+'</div><div class="ks">Comms déduites</div></div>'
+      + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800;margin-top:.4rem"><div class="kl">📞 Via téléprospectrice</div><div class="kv">'+(allLiv.filter(v=>v.via_prospectrice).length)+' vente(s)</div><div class="ks">livrées ce mois</div></div>'
+      + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800"><div class="kl">📞 Mandats prospectrice</div><div class="kv">'+(mandats.filter(m=>m.mois===mois&&m.via_prospectrice).length)+'</div><div class="ks">rentrés ce mois</div></div>'
       + '</div>';
 
     function buildAgentCard(a) {
