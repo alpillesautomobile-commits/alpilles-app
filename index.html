@@ -435,11 +435,11 @@ tbody td:not(:first-child){text-align:right}
 <script>
 // ═══ CONSTANTES
 const TVA = 1.20;
-const AGENTS = ['Jules', 'Adrien', 'Léo', 'Aurélien', 'Nael', 'Julien'];
+const AGENTS = ['Jules', 'Adrien', 'Léo', 'Aurélien', 'Nael', 'Julien', 'Julia'];
 const MANAGERS = ['Julien', 'Jules'];
 const AGENCES = {
   'Saint-Rémy': ['Léo', 'Aurélien', 'Nael', 'Julien'],
-  'Aix':        ['Jules', 'Adrien', 'Tom'],
+  'Aix':        ['Jules', 'Adrien', 'Tom', 'Julia'],
 };
 
 // ─── PIN ────────────────────────────────────────────────────────────────────
@@ -911,6 +911,7 @@ function loadParams()  {
   return {
     'Jules':    {obj_ventes:9,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
     'Adrien':   {obj_ventes:5,  obj_mandats:8,  prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+    'Julia':    {obj_ventes:0,  obj_mandats:7,  prime_obj_ventes:0,   prime_obj_mandats:150, bonus_dep:50},
     'Léo':      {obj_ventes:10, obj_mandats:14, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
     'Aurélien': {obj_ventes:6,  obj_mandats:10, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
     'Tom':      {obj_ventes:5,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
