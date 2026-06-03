@@ -917,8 +917,18 @@ function toast(msg, err) {
 function loadVentes()  { try { const _r=JSON.parse(localStorage.getItem(SK))||[]; return _r.filter(v=>!IDS_DOUBLONS.includes(Number(v.id))); } catch { return []; } }
 function loadMandats() { try { return JSON.parse(localStorage.getItem(MK)) || []; } catch { return []; } }
 function loadParams()  {
-  try { const p = JSON.parse(localStorage.getItem(PK)); if (p) return p; } catch {}
-  if (typeof EMBEDDED_PARAMS !== 'undefined' && EMBEDDED_PARAMS) { try { saveParams(EMBEDDED_PARAMS); return EMBEDDED_PARAMS; } catch(e){} }
+  // EMBEDDED_PARAMS is always the authoritative source (set by manager via Params page)
+  // Merge: EMBEDDED_PARAMS base + any local _monthly_obj overrides
+  try {
+    const local = JSON.parse(localStorage.getItem(PK));
+    if (typeof EMBEDDED_PARAMS !== 'undefined' && EMBEDDED_PARAMS) {
+      const merged = Object.assign({}, EMBEDDED_PARAMS);
+      if (local && local._monthly_obj) merged._monthly_obj = local._monthly_obj;
+      if (JSON.stringify(merged) !== JSON.stringify(local)) saveParams(merged);
+      return merged;
+    }
+    if (local) return local;
+  } catch {}
   return {
     'Jules':    {obj_ventes:9,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
     'Adrien':   {obj_ventes:5,  obj_mandats:8,  prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
