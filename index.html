@@ -446,6 +446,7 @@ const AGENCES = {
 const PINS_KEY = 'aa_pins';
 // Codes par défaut — à changer dans Paramètres (section Codes PIN)
 const DEFAULT_PINS = { 'Julien':'1234', 'Jules':'1111', 'Adrien':'6555', 'Léo':'2222', 'Aurélien':'3333', 'Tom':'4444', 'Nael':'5555', 'Julia':'4789' };
+const EMBEDDED_PARAMS = {"Jules":{"obj_ventes":9,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Léo":{"obj_ventes":10,"obj_mandats":14,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Aurélien":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Tom":{"obj_ventes":5,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Nael":{"obj_ventes":5,"obj_mandats":8,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julien":{"obj_ventes":9,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"_monthly_obj":{"2026-05":{"Jules":{"obj_ventes":9,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Adrien":{"obj_ventes":5,"obj_mandats":8,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Léo":{"obj_ventes":10,"obj_mandats":14,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Aurélien":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Tom":{"obj_ventes":5,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Nael":{"obj_ventes":5,"obj_mandats":8,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julien":{"obj_ventes":9,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50}},"2026-06":{"Léo":{"obj_ventes":8,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Naël":{"obj_ventes":6,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Nael":{"obj_ventes":6,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Aurélien":{"obj_ventes":5,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Tom":{"obj_ventes":7,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Jules":{"obj_ventes":7,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Adrien":{"obj_ventes":7,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julien":{"obj_ventes":8,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julia":{"obj_ventes":0,"obj_mandats":7,"prime_obj_ventes":0,"prime_obj_mandats":150,"bonus_dep":50}}},"Adrien":{"obj_ventes":5,"obj_mandats":8,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"LÃ©o":{"obj_ventes":10,"obj_mandats":14,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"AurÃ©lien":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"LÃƒÂ©o":{"obj_ventes":10,"obj_mandats":14,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"AurÃƒÂ©lien":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julia":{"obj_ventes":0,"obj_mandats":7,"prime_obj_ventes":0,"prime_obj_mandats":150,"bonus_dep":50}};
 function getPins() {
   try { const p = JSON.parse(localStorage.getItem(PINS_KEY)); if (p) return Object.assign({}, DEFAULT_PINS, p); } catch {}
   return Object.assign({}, DEFAULT_PINS);
@@ -917,6 +918,7 @@ function loadVentes()  { try { const _r=JSON.parse(localStorage.getItem(SK))||[]
 function loadMandats() { try { return JSON.parse(localStorage.getItem(MK)) || []; } catch { return []; } }
 function loadParams()  {
   try { const p = JSON.parse(localStorage.getItem(PK)); if (p) return p; } catch {}
+  if (typeof EMBEDDED_PARAMS !== 'undefined' && EMBEDDED_PARAMS) { try { saveParams(EMBEDDED_PARAMS); return EMBEDDED_PARAMS; } catch(e){} }
   return {
     'Jules':    {obj_ventes:9,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
     'Adrien':   {obj_ventes:5,  obj_mandats:8,  prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
@@ -2152,6 +2154,26 @@ function afficherGhStatus() {
 function afficherScriptStatus() { afficherGhStatus(); }
 function afficherTokenStatus()  { afficherGhStatus(); }
 
+async function pushEmbeddedParams(params) {
+  try {
+    const token = getGhToken();
+    if (!token) return;
+    const r = await fetch('https://api.github.com/repos/alpillesautomobile-commits/alpilles-app/contents/index.html', {
+      headers: { Authorization: 'token ' + token, Accept: 'application/vnd.github.v3+json' }
+    });
+    const j = await r.json();
+    const raw = atob(j.content.replace(/\n/g,''));
+    const bytes = new Uint8Array(raw.length); for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+    let src = new TextDecoder().decode(bytes);
+    src = src.replace(/const EMBEDDED_PARAMS = \{[^;]+\};/, 'const EMBEDDED_PARAMS = '+JSON.stringify(params)+';');
+    const enc = new TextEncoder().encode(src);
+    let b64=''; for(let i=0;i<enc.length;i+=3072) b64+=btoa(String.fromCharCode(...enc.slice(i,i+3072)));
+    await fetch('https://api.github.com/repos/alpillesautomobile-commits/alpilles-app/contents/index.html', {
+      method:'PUT', headers:{Authorization:'token '+token,'Content-Type':'application/json'},
+      body: JSON.stringify({message:'sync: update embedded params', content:b64, sha:j.sha})
+    });
+  } catch(e) { console.warn('pushEmbeddedParams err', e); }
+}
 function sauvegarderToken() {
   const val = document.getElementById('script-url-input')?.value?.trim();
   if (!val) return toast('Colle le token GitHub avant d\'enregistrer', true);
@@ -2263,6 +2285,7 @@ function sauvegarderParams() {
   saveParams(p);
   if (pinChanged) savePins(pins);
   ghPush();
+  pushEmbeddedParams(p);
   toast('✅ Objectifs de '+selMois+' enregistrés');
 }
 
