@@ -1806,7 +1806,7 @@ function afficherRecap() {
   const manqueM  = Math.max(0, seuil80M - nbM);
   const alreadyAt40 = (pctV >= 80 && pctM >= 80);
   // Estimate gain if switched to 40%: pending deliveries (En attente) with marge >= 1000
-  const attenteAgent = ventes.filter(v => v.livraison_statut === 'En attente');
+  const attenteAgent = ventes.filter(v => v.livraison_statut === 'En attente' && v.agent === CURRENT_USER);
   const gainPotentiel = attenteAgent
     .filter(v => (v.marge_nette_ht||0) >= 1000)
     .reduce((s,v) => s + Math.round((v.marge_nette_ht||0) * 0.10), 0); // diff 40%-30% = 10%
