@@ -1899,6 +1899,7 @@ function afficherRecap() {
     + (trimData.prime>0||trimData.manquant>0 ? '<div style="background:#fff8e8;border:1px solid var(--a);padding:.65rem .85rem;margin-bottom:1rem;font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#7a5a1a">'
       + '📊 <strong>Prime trimestrielle</strong> : marge sur 3 mois = '+fmt(trimData.marge)
       + (trimData.prime>0 ? ' — <strong style="color:var(--v)">Prime : '+fmt(trimData.prime)+(calcPrimeBestAgent(CURRENT_USER,mois)?' + 150 € (meilleur agent)':'')+'</strong>' : ' — encore '+fmt(trimData.manquant)+' pour atteindre le palier '+fmt(trimData.prochainPalier)+'€')
+      + '<div style="font-size:.75rem;opacity:.6;margin-top:.3rem">Mois comptés : '+trimData.moisList.slice().sort().map(m=>lblMois(m)).join(' • ')+'</div>'
       + '</div>' : '')
     + '<div style="margin-top:.9rem"><div class="stl" style="margin-bottom:.65rem">🚚 Mes livraisons de '+lblMois(mois)+' ('+vl.length+')</div>'
     + livrRecapHtml + '</div>'
