@@ -1730,7 +1730,7 @@ function afficherRecap() {
       const manqueV=Math.max(0,seuil80V-nb);
       const manqueM=Math.max(0,seuil80M-nbM);
       const at40=(ag.obj_ventes?nb/ag.obj_ventes:1)>=.8&&(ag.obj_mandats?nbM/ag.obj_mandats:1)>=.8;
-      const pendingA=ventes.filter(v=>v.agent===a&&v.livraison_statut==='En attente'&&(v.marge_nette_ht||0)>=1000);
+      const pendingA=ventes.filter(v=>v.agent===a&&v.mois===mois&&v.livraison_statut==='En attente');
       const gainPotA=pendingA.reduce((s,v)=>s+Math.round((v.marge_nette_ht||0)*.10),0);
       const manqueV100=ag.obj_ventes?Math.max(0,ag.obj_ventes-nb):0;
       const manqueM100=ag.obj_mandats?Math.max(0,ag.obj_mandats-nbM):0;
@@ -1750,7 +1750,7 @@ function afficherRecap() {
             ? '<span style="color:#16a34a">&#9989; <strong>Taux 40% débloqué!</strong></span>'
             : '<span style="color:#c87000">&#127919; Il manque <strong>'+manqueV+'</strong> vente(s) et <strong>'+manqueM+'</strong> mandat(s) pour débloquer le 40%</span>'
           )
-          +(gainPotA>0?' &nbsp;<span style="opacity:.8">— gain potentiel si livrés : <strong>+'+fmt(gainPotA)+' €</strong></span>':'')
+          +(gainPotA>0?' &nbsp;<span style="opacity:.8">— gain potentiel si livrés : <strong>+'+fmt(gainPotA)+'</strong></span>':'')
           +'</div>'
           : '')
         +(manqueV100>0||manqueM100>0||elig100
@@ -1838,9 +1838,8 @@ function afficherRecap() {
   const manqueM  = Math.max(0, seuil80M - nbM);
   const alreadyAt40 = (pctV >= 80 && pctM >= 80);
   // Estimate gain if switched to 40%: pending deliveries (En attente) with marge >= 1000
-  const attenteAgent = ventes.filter(v => v.livraison_statut === 'En attente' && v.agent === CURRENT_USER);
+  const attenteAgent = ventes.filter(v => v.livraison_statut === 'En attente' && v.agent === CURRENT_USER && v.mois === mois);
   const gainPotentiel = attenteAgent
-    .filter(v => (v.marge_nette_ht||0) >= 1000)
     .reduce((s,v) => s + Math.round((v.marge_nette_ht||0) * 0.10), 0); // diff 40%-30% = 10%
 
   const trimData = calcPrimeTrim(CURRENT_USER, mois);
@@ -1898,8 +1897,8 @@ function afficherRecap() {
     motivHtml = '<div style="background:linear-gradient(135deg,#fff8e8,#fff3d0);border:2px solid var(--a);padding:.85rem 1rem;margin-bottom:1rem;border-radius:3px">'
       + '<div style="font-family:IBM Plex Mono,monospace;font-size:.68rem;font-weight:700;color:#7a5a00;margin-bottom:.35rem">🚀 TON POTENTIEL DE GAIN</div>'
       + (manqueStr ? '<div style="font-size:.78rem;color:var(--n);margin-bottom:.3rem">Il te manque encore <strong>' + manqueStr + '</strong> pour passer à <strong style="color:var(--v)">40 %</strong> de commission.</div>' : '')
-      + '<div style="font-size:.78rem;color:var(--n);margin-bottom:.3rem">Sur tes <strong>' + attenteAgent.filter(v=>(v.marge_nette_ht||0)>=1000).length + ' vente(s) en attente</strong> avec marge ≥ 1 000 €, tu pourrais débloquer <strong style="color:var(--v);font-family:IBM Plex Mono,monospace">+' + fmt(gainPotentiel) + '</strong> supplémentaires.</div>'
-      + (attenteAgent.filter(v=>(v.marge_nette_ht||0)>=1000).length===0?'<div style="font-size:.73rem;color:var(--gm)">Tu n\'as pas encore de ventes en attente avec marge ≥ 1 000 €.</div>':'')
+      + '<div style="font-size:.78rem;color:var(--n);margin-bottom:.3rem">Sur tes <strong>' + attenteAgent.length + ' vente(s) en attente</strong> (mois en cours), tu pourrais débloquer <strong style="color:var(--v);font-family:IBM Plex Mono,monospace">+' + fmt(gainPotentiel) + '</strong> supplémentaires'+(((obj_v?nb>=obj_v:true)&&(obj_m?nbM>=obj_m:true))?' • +150€ si meilleur agent !':'')+' .</div>'
+      + (attenteAgent.length===0?'<div style="font-size:.73rem;color:var(--gm)">Tu n\'as pas encore de ventes en attente avec marge ≥ 1 000 €.</div>':'')
       + '<div style="font-size:.68rem;color:var(--gm);margin-top:.25rem;font-family:IBM Plex Mono,monospace">⚡ Le taux 40 % se débloque quand tu atteins 80 % de tes objectifs ventes ET mandats.</div>'
       + '</div>';
   } else if (alreadyAt40) {
