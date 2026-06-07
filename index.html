@@ -1738,19 +1738,10 @@ function afficherRecap() {
         +(at40||manqueV>0||manqueM>0||gainPotA>0
           ? '<div style="grid-column:1/-1;margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.8rem;background:'+(at40?'rgba(34,197,94,.12)':'rgba(255,140,0,.12)')+';border:1px solid '+(at40?'rgba(34,197,94,.3)':'rgba(255,140,0,.3)')+'">'
           +(at40
-            ? '<span style="color:#16a34a">&#9989; <strong>Taux 40% d\'bloqu\'!</strong></span>'
-            : '<span style="color:#c87000">&#127919; Il manque <strong>'+manqueV+'</strong> vente(s) et <strong>'+manqueM+'</strong> mandat(s) pour d\'bloquer le 40%</span>'
+            ? '<span style="color:#16a34a">&#9989; <strong>Taux 40% débloqué!</strong></span>'
+            : '<span style="color:#c87000">&#127919; Il manque <strong>'+manqueV+'</strong> vente(s) et <strong>'+manqueM+'</strong> mandat(s) pour débloquer le 40%</span>'
           )
-          +(gainPotA>0?' &nbsp;<span style="opacity:.8">— gain potentiel si livr\'s : <strong>+'+fmt(gainPotA)+' €</strong></span>':'')
-          +'</div>'
-          : '')
-        +(at40||manqueV>0||manqueM>0||gainPotA>0
-          ? '<div style="grid-column:1/-1;margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.8rem;background:'+(at40?'rgba(34,197,94,.12)':'rgba(255,140,0,.12)')+';border:1px solid '+(at40?'rgba(34,197,94,.3)':'rgba(255,140,0,.3)')+'">'
-          +(at40
-            ? '<span style="color:#16a34a">&#9989; <strong>Taux 40% d\'bloqu\'!</strong></span>'
-            : '<span style="color:#c87000">&#127919; Il manque <strong>'+manqueV+'</strong> vente(s) et <strong>'+manqueM+'</strong> mandat(s) pour d\'bloquer le 40%</span>'
-          )
-          +(gainPotA>0?' &nbsp;<span style="opacity:.8">— gain potentiel si livr\'s : <strong>+'+fmt(gainPotA)+' €</strong></span>':'')
+          +(gainPotA>0?' &nbsp;<span style="opacity:.8">— gain potentiel si livrés : <strong>+'+fmt(gainPotA)+' €</strong></span>':'')
           +'</div>'
           : '')
         +'</div></div>';
