@@ -1921,7 +1921,27 @@ function afficherRecap() {
         + '</tbody></table>')
     + '</div>'
     + '<div style="margin-top:.9rem"><div class="stl" style="margin-bottom:.65rem">Mes ventes signées ce mois ('+vm.length+')</div>'
-    + ventesHtml + '</div>';
+    + ventesHtml
+    + (() => {
+        const seuil80V = ag.obj_ventes  ? Math.ceil(ag.obj_ventes  * 0.8) : 0;
+        const seuil80M = ag.obj_mandats ? Math.ceil(ag.obj_mandats * 0.8) : 0;
+        const manqueV  = ag.obj_ventes  ? Math.max(0, seuil80V - nb)  : 0;
+        const manqueM  = ag.obj_mandats ? Math.max(0, seuil80M - nbM) : 0;
+        const at40     = (ag.obj_ventes?nb/ag.obj_ventes:1) >= 0.8 && (ag.obj_mandats?nbM/ag.obj_mandats:1) >= 0.8;
+        const pending  = allV.filter(v => v.agent===a && v.livraison_statut==='En attente' && (v.marge_nette_ht||0)>=1000);
+        const gainPot  = pending.reduce((s,v) => s + Math.round((v.marge_nette_ht||0)*0.10), 0);
+        if (at40) return '<div style="margin:.5rem 1rem .7rem;padding:.5rem .8rem;background:#e8f5e9;border-radius:8px;border:1px solid #a5d6a7;font-size:.75rem;color:#2e7d32;font-weight:600">✅ 40% débloqué ce mois</div>';
+        const parts = [];
+        if (manqueV > 0) parts.push(manqueV+' vente'+(manqueV>1?'s':''));
+        if (manqueM > 0) parts.push(manqueM+' mandat'+(manqueM>1?'s':''));
+        const manqueStr = parts.join(' + ');
+        return '<div style="margin:.5rem 1rem .7rem;padding:.5rem .8rem;background:#fff3e0;border-radius:8px;border:1px solid #ffb74d;font-size:.75rem">'
+          + '<span style="color:#e65100;font-weight:700">🎯 '+(manqueStr?'Il manque '+manqueStr+' pour 40%':'Objectifs atteints !')+'</span>'
+          + (gainPot>0 ? '<span style="float:right;color:#2e7d32;font-weight:700">+'+gainPot.toLocaleString('fr-FR')+'€ potentiel</span>' : '')
+          + (pending.length>0 ? '<div style="color:#555;margin-top:.2rem;font-size:.7rem">'+pending.length+' vente'+(pending.length>1?'s':'')+' en attente éligible'+(pending.length>1?'s':'')+' (marge ≥1000€)</div>' : '')
+          + '</div>';
+      })()
+    + '</div>';
 }
 // ═══ DASHBOARD
 let curAgentTab = AGENTS[0];
