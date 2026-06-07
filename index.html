@@ -887,25 +887,31 @@ function calcPrimeTrim(agent, moisRef) {
 
 // Prime meilleur agent du trimestre (150€ si marge la plus haute)
 function calcPrimeBestAgent(agent, moisRef) {
-  // Prime mensuelle : meilleure marge sur livraisons du mois en cours
-  // Departage a egalite : nb de ventes livrees ce mois
-  const agents = AGENTS.filter(a => !MANAGERS.includes(a));
-  if (!agents.includes(agent)) return false;
-  const ventes = loadVentes();
-  const stats = agents.map(a => {
-    const livs = ventes.filter(v => v.agent === a && v.mois_livraison === moisRef);
-    const marge = livs.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
-    return { agent: a, marge, nb: livs.length };
+  // A partir de juin 2026 : 100% obj ventes + mandats requis pour etre eligible
+  // Gagnant : + de ventes; egalite: mandats; puis marge HT
+  const agts = AGENTS.filter(a => !MANAGERS.includes(a));
+  if (!agts.includes(agent)) return false;
+  const mois = moisRef || remplirMois();
+  const stats = agts.map(a => {
+    const obj = getObjForMonth(a, mois);
+    const nbV = ventes.filter(v => v.agent===a && v.mois===mois).length;
+    const nbM = mandats.filter(m => m.agent===a && m.mois===mois).length;
+    const mg  = ventes.filter(v => v.agent===a && v.mois_livraison===mois)
+                       .reduce((s,v)=>s+(v.marge_nette_ht||0),0);
+    const ok = (obj.obj_ventes  ? nbV >= obj.obj_ventes  : true) &&
+               (obj.obj_mandats ? nbM >= obj.obj_mandats : true);
+    return { agent:a, nbV, nbM, mg, ok };
   });
-  const maxMarge = Math.max(...stats.map(s => s.marge));
-  if (maxMarge === 0) return false;
-  const top = stats.filter(s => s.marge === maxMarge);
+  const elig = stats.filter(s => s.ok);
+  if (!elig.length) return false;
+  let top = [...elig];
+  const maxV = Math.max(...top.map(s=>s.nbV));
+  top = top.filter(s => s.nbV === maxV);
+  if (top.length>1) { const mxM=Math.max(...top.map(s=>s.nbM)); top=top.filter(s=>s.nbM===mxM); }
+  if (top.length>1) { const mxG=Math.max(...top.map(s=>s.mg));  top=top.filter(s=>s.mg===mxG); }
   const mine = stats.find(s => s.agent === agent);
-  if (mine.marge !== maxMarge) return false;
-  if (top.length === 1) return true;
-  // Egalite marge : departage par nb livraisons ce mois
-  const maxNb = Math.max(...top.map(s => s.nb));
-  return mine.nb === maxNb;
+  if (!mine.ok) return false;
+  return top.length===1 && top[0].agent===agent;
 }
 function toast(msg, err) {
   const e = document.getElementById('toast'); if (!e) return;
@@ -1726,6 +1732,9 @@ function afficherRecap() {
       const at40=(ag.obj_ventes?nb/ag.obj_ventes:1)>=.8&&(ag.obj_mandats?nbM/ag.obj_mandats:1)>=.8;
       const pendingA=ventes.filter(v=>v.agent===a&&v.livraison_statut==='En attente'&&(v.marge_nette_ht||0)>=1000);
       const gainPotA=pendingA.reduce((s,v)=>s+Math.round((v.marge_nette_ht||0)*.10),0);
+      const manqueV100=ag.obj_ventes?Math.max(0,ag.obj_ventes-nb):0;
+      const manqueM100=ag.obj_mandats?Math.max(0,ag.obj_mandats-nbM):0;
+      const elig100=(ag.obj_ventes?nb>=ag.obj_ventes:true)&&(ag.obj_mandats?nbM>=ag.obj_mandats:true);
       return '<div style="background:var(--w);border-top:3px solid '+(ok?'var(--v)':'var(--b)')+';padding:.9rem 1rem;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:.6rem">'
         +'<div style="font-family:Libre Baskerville,serif;font-size:.85rem;font-weight:700;margin-bottom:.65rem;padding-bottom:.4rem;border-bottom:1px solid var(--b)">👤 '+a+(ok?' <span style=\"font-size:.55rem;color:var(--v)\">✅</span>':'')+'</div>'
         +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;margin-bottom:.6rem">'
@@ -1744,7 +1753,14 @@ function afficherRecap() {
           +(gainPotA>0?' &nbsp;<span style="opacity:.8">— gain potentiel si livrés : <strong>+'+fmt(gainPotA)+' €</strong></span>':'')
           +'</div>'
           : '')
-        +'</div></div>';
+        +(manqueV100>0||manqueM100>0||elig100
+                    ? '<div style="grid-column:1/-1;margin-top:.3rem;padding:.4rem .6rem;border-radius:6px;font-size:.75rem;background:'+(elig100?'rgba(234,179,8,.12)':'rgba(245,158,11,.08)')+';border:1px solid '+(elig100?'rgba(234,179,8,.4)':'rgba(245,158,11,.25)')+'">'
+                    +(elig100
+                      ? '🏆 Éligible prime 150€ — doit finir 1er en ventes'
+                      : '🏆 Il manque '+manqueV100+' vente(s) et '+manqueM100+' mandat(s) pour prime 150€'
+                    )+'</div>'
+                    : '')
+                  +'</div></div>';
     }
     function buildAgenceSection(agenceName, agents) {
       const agLabel = agenceName === 'Saint-Rémy' ? 'Agence Saint-Rémy-de-Provence' : 'Agence Aix-en-Provence';
@@ -1910,8 +1926,37 @@ function afficherRecap() {
     + '<div style="text-align:right;font-family:IBM Plex Mono,monospace;font-size:.78rem;font-weight:700;color:var(--ad);padding:.5rem 0 .1rem">Total mandant croisé : '+fmt(commMRecap)+'</div>'
     + '</div></div>';
 
-  zone.innerHTML = objHtml
+    // Meilleur agent motivational block
+  const manqueV100 = obj_v ? Math.max(0, obj_v - nb) : 0;
+  const manqueM100 = obj_m ? Math.max(0, obj_m - nbM) : 0;
+  const eligible100 = (obj_v ? nb >= obj_v : true) && (obj_m ? nbM >= obj_m : true);
+  const isBestAgent = eligible100 && calcPrimeBestAgent(CURRENT_USER, mois);
+  const isAgentOnly = AGENTS.filter(a=>!MANAGERS.includes(a)).includes(CURRENT_USER);
+  let motivBestHtml = '';
+  if (isAgentOnly) {
+    if (!eligible100) {
+      const parts100=[];
+      if(manqueV100>0) parts100.push(manqueV100+' vente'+(manqueV100>1?'s':''));
+      if(manqueM100>0) parts100.push(manqueM100+' mandat'+(manqueM100>1?'s':''));
+      motivBestHtml = '<div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #f59e0b;padding:.85rem 1rem;margin-bottom:1rem;border-radius:8px">'
+        + '<div style="font-size:.58rem;font-weight:700;color:#92400e;margin-bottom:.35rem">🏆 PRIME MEILLEUR AGENT — 150 €</div>'
+        + '<div style="font-size:.78rem;color:var(--n)">Il te reste <strong>'+parts100.join(' + ')+'</strong> pour tre ligible (éligibilité = 100% objectifs).</div>'
+        + '</div>';
+    } else if (isBestAgent) {
+      motivBestHtml = '<div style="background:linear-gradient(135deg,#fef9c3,#fefce8);border:2px solid #eab308;padding:.85rem 1rem;margin-bottom:1rem;border-radius:8px">'
+        + '<div style="font-size:.58rem;font-weight:700;color:#713f12;margin-bottom:.35rem">🏆 MEILLEUR AGENT DU MOIS !</div>'
+        + '<div style="font-size:.78rem;color:var(--n)">Tu décroches la prime de <strong>+150 €</strong> — félicitations !</div>'
+        + '</div>';
+    } else {
+      motivBestHtml = '<div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #22c55e;padding:.85rem 1rem;margin-bottom:1rem;border-radius:8px">'
+        + '<div style="font-size:.58rem;font-weight:700;color:#14532d;margin-bottom:.35rem">🏆 ÉLIGIBLE — PRIME MEILLEUR AGENT</div>'
+        + '<div style="font-size:.78rem;color:var(--n)">Objectifs 100% atteints ! Plus de ventes que les autres = <strong>+150 €</strong>.</div>'
+        + '</div>';
+    }
+  }
+zone.innerHTML = objHtml
     + motivHtml
+    + motivBestHtml
     + (trimData.prime>0||trimData.manquant>0 ? '<div style="background:#fff8e8;border:1px solid var(--a);padding:.65rem .85rem;margin-bottom:1rem;font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#7a5a1a">'
       + '📊 <strong>Prime trimestrielle</strong> : marge sur 3 mois = '+fmt(trimData.marge)
       + (trimData.prime>0 ? ' — <strong style="color:var(--v)">Prime : '+fmt(trimData.prime)+(calcPrimeBestAgent(CURRENT_USER,mois)?' + 150 € (meilleur agent)':'')+'</strong>' : ' — encore '+fmt(trimData.manquant)+' pour atteindre le palier '+fmt(trimData.prochainPalier)+'€')
