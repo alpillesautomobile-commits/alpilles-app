@@ -1719,6 +1719,13 @@ function afficherRecap() {
       const pctV=ag.obj_ventes?Math.min(100,Math.round(nb/ag.obj_ventes*100)):0;
       const pctM=ag.obj_mandats?Math.min(100,Math.round(nbM/ag.obj_mandats*100)):0;
       const ok=pctV>=100;
+      const seuil80V=ag.obj_ventes?Math.ceil(ag.obj_ventes*.8):0;
+      const seuil80M=ag.obj_mandats?Math.ceil(ag.obj_mandats*.8):0;
+      const manqueV=Math.max(0,seuil80V-nb);
+      const manqueM=Math.max(0,seuil80M-nbM);
+      const at40=(ag.obj_ventes?nb/ag.obj_ventes:1)>=.8&&(ag.obj_mandats?nbM/ag.obj_mandats:1)>=.8;
+      const pendingA=ventes.filter(v=>v.agent===a&&v.livraison_statut==='En attente'&&(v.marge_nette_ht||0)>=1000);
+      const gainPotA=pendingA.reduce((s,v)=>s+Math.round((v.marge_nette_ht||0)*.10),0);
       return '<div style="background:var(--w);border-top:3px solid '+(ok?'var(--v)':'var(--b)')+';padding:.9rem 1rem;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:.6rem">'
         +'<div style="font-family:Libre Baskerville,serif;font-size:.85rem;font-weight:700;margin-bottom:.65rem;padding-bottom:.4rem;border-bottom:1px solid var(--b)">👤 '+a+(ok?' <span style=\"font-size:.55rem;color:var(--v)\">✅</span>':'')+'</div>'
         +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;margin-bottom:.6rem">'
@@ -1728,6 +1735,24 @@ function afficherRecap() {
         +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Marge HT livrée</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--v)">'+fmt(mg)+'</div></div>'
         +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Résultat société</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--n)">'+fmt(rs)+'</div></div>'
         +'<div style="grid-column:1/-1"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Commission à verser</div><div style="font-family:IBM Plex Mono,monospace;font-size:.78rem;color:var(--gm)">'+fmt(cv)+'</div></div>'
+        +(at40||manqueV>0||manqueM>0||gainPotA>0
+          ? '<div style="grid-column:1/-1;margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.8rem;background:'+(at40?'rgba(34,197,94,.12)':'rgba(255,140,0,.12)')+';border:1px solid '+(at40?'rgba(34,197,94,.3)':'rgba(255,140,0,.3)')+'">'
+          +(at40
+            ? '<span style="color:#16a34a">&#9989; <strong>Taux 40% d\'bloqu\'!</strong></span>'
+            : '<span style="color:#c87000">&#127919; Il manque <strong>'+manqueV+'</strong> vente(s) et <strong>'+manqueM+'</strong> mandat(s) pour d\'bloquer le 40%</span>'
+          )
+          +(gainPotA>0?' &nbsp;<span style="opacity:.8">— gain potentiel si livr\'s : <strong>+'+fmt(gainPotA)+' €</strong></span>':'')
+          +'</div>'
+          : '')
+        +(at40||manqueV>0||manqueM>0||gainPotA>0
+          ? '<div style="grid-column:1/-1;margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.8rem;background:'+(at40?'rgba(34,197,94,.12)':'rgba(255,140,0,.12)')+';border:1px solid '+(at40?'rgba(34,197,94,.3)':'rgba(255,140,0,.3)')+'">'
+          +(at40
+            ? '<span style="color:#16a34a">&#9989; <strong>Taux 40% d\'bloqu\'!</strong></span>'
+            : '<span style="color:#c87000">&#127919; Il manque <strong>'+manqueV+'</strong> vente(s) et <strong>'+manqueM+'</strong> mandat(s) pour d\'bloquer le 40%</span>'
+          )
+          +(gainPotA>0?' &nbsp;<span style="opacity:.8">— gain potentiel si livr\'s : <strong>+'+fmt(gainPotA)+' €</strong></span>':'')
+          +'</div>'
+          : '')
         +'</div></div>';
     }
     function buildAgenceSection(agenceName, agents) {
