@@ -849,8 +849,8 @@ function calcTauxComm(mnHt, agent, moisRef) {
   const p = getObjForMonth(agent, moisRef);
   const nbV = ventes.filter(v => v.agent === agent && v.mois === moisRef).length;
   const nbM = mandats.filter(m => m.agent === agent && m.mois === moisRef).length;
-  const pctV = p.obj_ventes  ? nbV / p.obj_ventes  : 0;
-  const pctM = p.obj_mandats ? nbM / p.obj_mandats : 0;
+  const pctV = p.obj_ventes  ? nbV / p.obj_ventes  : 1; // pas d'objectif ventes = toujours ok
+  const pctM = p.obj_mandats ? nbM / p.obj_mandats : 1; // pas d'objectif mandats = toujours ok
   // 40% uniquement si TOUS DEUX >= 80% objectif
   return (pctV >= 0.80 && pctM >= 0.80) ? 0.40 : 0.30;
 }
