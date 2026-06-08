@@ -1990,7 +1990,7 @@ zone.innerHTML = objHtml
         const manqueV  = ag.obj_ventes  ? Math.max(0, seuil80V - nb)  : 0;
         const manqueM  = ag.obj_mandats ? Math.max(0, seuil80M - nbM) : 0;
         const at40     = (ag.obj_ventes?nb/ag.obj_ventes:1) >= 0.8 && (ag.obj_mandats?nbM/ag.obj_mandats:1) >= 0.8;
-        const pending  = allV.filter(v => v.agent===a && v.livraison_statut==='En attente' && (v.marge_nette_ht||0)>=1000);
+        const pending  = attenteAgent.filter(v => (v.marge_nette_ht||0) >= 1000);
         const gainPot  = pending.reduce((s,v) => s + Math.round((v.marge_nette_ht||0)*0.10), 0);
         if (at40) return '<div style="margin:.5rem 1rem .7rem;padding:.5rem .8rem;background:#e8f5e9;border-radius:8px;border:1px solid #a5d6a7;font-size:.75rem;color:#2e7d32;font-weight:600">✅ 40% débloqué ce mois</div>';
         const parts = [];
