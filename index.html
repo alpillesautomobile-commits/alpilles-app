@@ -892,6 +892,8 @@ function calcPrimeBestAgent(agent, moisRef) {
   const agts = AGENTS.filter(a => !MANAGERS.includes(a));
   if (!agts.includes(agent)) return false;
   const mois = moisRef || remplirMois();
+  const ventes  = loadVentes();
+  const mandats = loadMandats();
   const stats = agts.map(a => {
     const obj = getObjForMonth(a, mois);
     const nbV = ventes.filter(v => v.agent===a && v.mois===mois).length;
