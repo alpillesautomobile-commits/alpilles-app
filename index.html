@@ -1351,10 +1351,10 @@ function enregistrer() {
     vehicule, type, mandant,
     prix_vente: pv, prix_achat: pa,
     marge_nette_ht: mnHt, total_frais_ht: tfHt,
-    comm_vendeur: cv, comm_mandant: cm,
+    comm_vendeur: cv + prRapid, comm_mandant: cm,
     prime_excep: pe,
     prime_opteven: pot,
-    prime_rapidite: prRapid,
+    prime_rapidite: 0,
     via_prospectrice: document.querySelector('input[name="via-prosp"]:checked')?.value === 'oui',
     date_entree_stock: dateStock,
     resultat_societe_ht: msh,
@@ -1374,7 +1374,7 @@ function enregistrer() {
     ventes[idx] = { ...existing, date: dateStr, mois: moisVente, agence, agent,
       client: document.getElementById('client')?.value || '', vehicule, type, mandant,
       prix_vente: pv, prix_achat: pa, marge_nette_ht: mnHt, total_frais_ht: tfHt,
-      comm_vendeur: cv, comm_mandant: cm, prime_excep: pe, prime_opteven: pot, prime_rapidite: prRapid,
+      comm_vendeur: cv + prRapid, comm_mandant: cm, prime_excep: pe, prime_opteven: pot, prime_rapidite: 0,
       date_entree_stock: dateStock, resultat_societe_ht: msh, frais_detail: fraisDetail };
     localStorage.setItem(SK, JSON.stringify(ventes));
     gasUpdateVente(ventes[idx]);
@@ -2185,10 +2185,9 @@ function afficherAgent(vm, agent, params) {
     + '<div>'
     + '<div class="stl" style="margin-bottom:.65rem">Paye ce mois</div>'
     + '<div style="background:var(--bg);padding:.85rem .95rem;border:1px solid var(--b)">'
-    + '<div class="pr"><span style="color:var(--gm)">Commission vendeur</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(comm)+'</span></div>'
+    + '<div class="pr"><span style="color:var(--gm)">Commission vendeur</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(comm+primeRapid)+'</span></div>'
     + (commM>0?'<div class="pr"><span style="color:var(--gm)">Commission mandant</span><span style="font-family:IBM Plex Mono,monospace;color:var(--ad)">'+fmt(commM)+'</span></div>':'')
     + '<div class="pr"><span style="color:var(--gm)">Primes avis Google'+(avisAtt?' ('+avisAtt+' att.)':'')+'</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(avisGain)+'</span></div>'
-    + '<div class="pr"><span style="color:var(--gm)">Prime rapidité (≤15j)</span><span style="font-family:IBM Plex Mono,monospace;color:'+(primeRapid>0?'var(--v)':'var(--gm)')+'">'+fmt(primeRapid)+'</span></div>'
     + '<div class="pr"><span style="color:var(--gm)">Prime palier marge HT '+(primePal>0?'✅':'⏳')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(primePal>0?'var(--v)':'var(--gm)')+'">'+fmt(primePal)+'</span></div>'
     + '<div class="pr"><span style="color:var(--gm)">Primes exceptionnelles</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(excep)+'</span></div>'
     + '<div class="pr"><span style="color:var(--gm)">Prime contrat OPTEVEN 48 mois</span><span style="font-family:IBM Plex Mono,monospace;color:'+(opteven>0?'var(--v)':'var(--gm)')+'">'+fmt(opteven)+'</span></div>'
