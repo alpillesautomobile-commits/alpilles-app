@@ -1341,7 +1341,7 @@ function enregistrer() {
   else { cv = mnHt * 0.20; cm = mnHt * 0.20; }
   const pe  = getNum('prime_excep');
   const pot = getNum('prime_opteven');
-  const msh = Math.round((mnHt - cv - cm - pe - pot + (pot > 0 ? 380 : 0)) * 100) / 100;
+  const msh = Math.round((mnHt - cv - cm - pe - pot + (pot > 0 ? 480 : 0)) * 100) / 100;
 
   const vente = {
     id: Date.now(),
