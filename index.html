@@ -1744,6 +1744,8 @@ function afficherRecap() {
       + '</div>';
 
     function buildAgentCard(a) {
+      const rangA = getRangAgent(a, mois);
+      const rangAOrd = rangA===1?'1er':rangA?rangA+'e':'';
       const av=allV.filter(v=>v.agent===a),al=allLiv.filter(v=>v.agent===a),am=allM.filter(m=>m.agent===a);
       const ag=getObjForMonth(a,mois),nb=av.length,nbM=am.length;
       const mg=al.reduce((s,v)=>s+(v.marge_nette_ht||0),0);
@@ -1763,7 +1765,7 @@ function afficherRecap() {
       const manqueM100=ag.obj_mandats?Math.max(0,ag.obj_mandats-nbM):0;
       const elig100=(ag.obj_ventes?nb>=ag.obj_ventes:true)&&(ag.obj_mandats?nbM>=ag.obj_mandats:true);
       return '<div style="background:var(--w);border-top:3px solid '+(ok?'var(--v)':'var(--b)')+';padding:.9rem 1rem;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:.6rem">'
-        +'<div style="font-family:Libre Baskerville,serif;font-size:.85rem;font-weight:700;margin-bottom:.65rem;padding-bottom:.4rem;border-bottom:1px solid var(--b)">👤 '+a+(ok?' <span style=\"font-size:.55rem;color:var(--v)\">✅</span>':'')+'</div>'
+        +'<div style="font-family:Libre Baskerville,serif;font-size:.85rem;font-weight:700;margin-bottom:.65rem;padding-bottom:.4rem;border-bottom:1px solid var(--b)">👤 '+a+(ok?' <span style=\"font-size:.55rem;color:var(--v)\">✅</span>':'')+'</div>'+(rangA?'<div style="text-align:right;font-size:.72rem;font-weight:600;color:var(--v);margin:-.2rem 0 .4rem">🏅 '+rangAOrd+' / 8 vendeurs</div>':'')
         +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;margin-bottom:.6rem">'
         +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Ventes signées</div><div style="font-family:IBM Plex Mono,monospace;font-size:1.15rem;font-weight:700;color:'+(ok?'var(--v)':'var(--n)')+'">'+nb+'<span style="font-size:.65rem;color:var(--gm)"> / '+ag.obj_ventes+'</span></div><div style="height:4px;background:var(--gc);border-radius:2px;margin-top:.2rem"><div style="width:'+pctV+'%;height:100%;background:'+(ok?'var(--v)':'var(--a)')+'"></div></div></div>'
         +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Mandats</div><div style="font-family:IBM Plex Mono,monospace;font-size:1.15rem;font-weight:700;color:'+(pctM>=100?'var(--v)':'var(--n)')+'">'+nbM+'<span style="font-size:.65rem;color:var(--gm)"> / '+ag.obj_mandats+'</span></div><div style="height:4px;background:var(--gc);border-radius:2px;margin-top:.2rem"><div style="width:'+pctM+'%;height:100%;background:'+(pctM>=100?'var(--v)':'var(--ad)')+'"></div></div></div>'
