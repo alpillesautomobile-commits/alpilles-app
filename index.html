@@ -915,6 +915,30 @@ function calcPrimeBestAgent(agent, moisRef) {
   if (!mine.ok) return false;
   return top.length===1 && top[0].agent===agent;
 }
+function getRangAgent(agent, moisRef) {
+  if (!agts.includes(agent)) return null;
+  const mois = moisRef || remplirMois();
+  const ventes  = loadVentes();
+  const mandats = loadMandats();
+  const stats = agts.map(a => {
+    const obj = getObjForMonth(a, mois);
+    const nbV = ventes.filter(v => v.agent===a && v.mois===mois).length;
+    const nbM = mandats.filter(m => m.agent===a && m.mois===mois).length;
+    const mg  = ventes.filter(v => v.agent===a && v.mois_livraison===mois).reduce((s,v)=>s+(v.marge_nette_ht||0),0);
+    const ok  = (obj.obj_ventes ? nbV >= obj.obj_ventes : true) && (obj.obj_mandats ? nbM >= obj.obj_mandats : true);
+    return { agent:a, nbV, nbM, mg, ok };
+  });
+  stats.sort((a,b) => {
+    if (a.ok && !b.ok) return -1;
+    if (!a.ok && b.ok) return 1;
+    if (a.nbV !== b.nbV) return b.nbV - a.nbV;
+    if (a.nbM !== b.nbM) return b.nbM - a.nbM;
+    return b.mg - a.mg;
+  });
+  const idx = stats.findIndex(s => s.agent === agent);
+  return idx >= 0 ? idx + 1 : null;
+}
+
 function toast(msg, err) {
   const e = document.getElementById('toast'); if (!e) return;
   e.textContent = msg; e.className = 'toast on' + (err ? ' err' : '');
@@ -1839,6 +1863,9 @@ function afficherRecap() {
   const manqueV  = Math.max(0, seuil80V - nb);
   const manqueM  = Math.max(0, seuil80M - nbM);
   const alreadyAt40 = (pctV >= 80 && pctM >= 80);
+  const rang = getRangAgent(CURRENT_USER, mois);
+  const rangOrd = rang===1?'1er':rang+(rang>1?'e':'');
+  const rangLabel = rang ? 'Position actuelle : '+rangOrd+' / '+agts.length : '';
   // Estimate gain if switched to 40%: pending deliveries (En attente) with marge >= 1000
   const attenteAgent = ventes.filter(v => v.livraison_statut === 'En attente' && v.agent === CURRENT_USER && v.mois === mois);
   const gainPotentiel = attenteAgent
@@ -1892,7 +1919,7 @@ function afficherRecap() {
 
   // Motivational message
   let motivHtml = '';
-  if (!alreadyAt40 && gainPotentiel > 0) {
+  if (!alreadyAt40) {
     const parts = [];
     if (manqueV > 0) parts.push(manqueV + ' vente' + (manqueV>1?'s':''));
     if (manqueM > 0) parts.push(manqueM + ' mandat' + (manqueM>1?'s':''));
@@ -1900,7 +1927,7 @@ function afficherRecap() {
     motivHtml = '<div style="background:linear-gradient(135deg,#fff8e8,#fff3d0);border:2px solid var(--a);padding:.85rem 1rem;margin-bottom:1rem;border-radius:3px">'
       + '<div style="font-family:IBM Plex Mono,monospace;font-size:.68rem;font-weight:700;color:#7a5a00;margin-bottom:.35rem">🚀 TON POTENTIEL DE GAIN</div>'
       + (manqueStr ? '<div style="font-size:.78rem;color:var(--n);margin-bottom:.3rem">Il te manque encore <strong>' + manqueStr + '</strong> pour passer à <strong style="color:var(--v)">40 %</strong> de commission.</div>' : '')
-      + '<div style="font-size:.78rem;color:var(--n);margin-bottom:.3rem">Sur tes <strong>' + attenteAgent.filter(v=>(v.marge_nette_ht||0)>=1000).length + ' vente(s) en attente</strong> (≥1000€, mois en cours), tu pourrais débloquer <strong style="color:var(--v);font-family:IBM Plex Mono,monospace">+' + fmt(gainPotentiel) + '</strong> supplémentaires'+(((obj_v?nb>=obj_v:true)&&(obj_m?nbM>=obj_m:true))?' • +150€ si meilleur agent !':'')+' .</div>'
+      + '<div style="font-size:.78rem;color:var(--n);margin-bottom:.3rem">Sur tes <strong>' + attenteAgent.filter(v=>(v.marge_nette_ht||0)>=1000).length + ' vente(s) en attente</strong> (≥1000€, mois en cours), tu pourrais débloquer <strong style="color:var(--v);font-family:IBM Plex Mono,monospace">+' + fmt(gainPotentiel) + '</strong> supplémentaires'+(((obj_v?nb>=obj_v:true)&&(obj_m?nbM>=obj_m:true))?' • +150€ si meilleur agent !':'')+' .</div>' + (rangLabel ? '<div style="text-align:right;font-size:.73rem;color:var(--gm);margin-top:.2rem">🏅 '+rangLabel+'</div>' : '')
       + (attenteAgent.filter(v=>(v.marge_nette_ht||0)>=1000).length===0?'<div style="font-size:.73rem;color:var(--gm)">Tu n\'as pas encore de ventes en attente avec marge ≥ 1 000 €.</div>':'')
       + '<div style="font-size:.68rem;color:var(--gm);margin-top:.25rem;font-family:IBM Plex Mono,monospace">⚡ Le taux 40 % se débloque quand tu atteins 80 % de tes objectifs ventes ET mandats.</div>'
       + '</div>';
