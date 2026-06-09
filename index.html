@@ -916,6 +916,7 @@ function calcPrimeBestAgent(agent, moisRef) {
   return top.length===1 && top[0].agent===agent;
 }
 function getRangAgent(agent, moisRef) {
+  const agts = AGENTS.filter(a => !MANAGERS.includes(a));
   if (!agts.includes(agent)) return null;
   const mois = moisRef || remplirMois();
   const ventes  = loadVentes();
@@ -1865,7 +1866,7 @@ function afficherRecap() {
   const alreadyAt40 = (pctV >= 80 && pctM >= 80);
   const rang = getRangAgent(CURRENT_USER, mois);
   const rangOrd = rang===1?'1er':rang+(rang>1?'e':'');
-  const rangLabel = rang ? 'Position actuelle : '+rangOrd+' / '+agts.length : '';
+  const rangLabel = rang ? 'Position actuelle : '+rangOrd+' / '+AGENTS.filter(a=>!MANAGERS.includes(a)).length : '';
   // Estimate gain if switched to 40%: pending deliveries (En attente) with marge >= 1000
   const attenteAgent = ventes.filter(v => v.livraison_statut === 'En attente' && v.agent === CURRENT_USER && v.mois === mois);
   const gainPotentiel = attenteAgent
