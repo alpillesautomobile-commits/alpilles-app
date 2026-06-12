@@ -1533,14 +1533,14 @@ function afficherLivraisons() {
   const enAttente = ventes.filter(v => v.livraison_statut === 'En attente')
     .sort((a,b) => (a.date||'').localeCompare(b.date||''));
   const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-60);
-  const livrees = ventes.filter(v => v.livraison_statut === 'Livré' && v.date_livraison && new Date(v.date_livraison) >= cutoff)
+  const livrees = ventes.filter(v => v.livraison_statut === 'Livrée' && v.date_livraison && new Date(v.date_livraison) >= cutoff)
     .sort((a,b) => (b.date_livraison||'').localeCompare(a.date_livraison||''));
 
   const cpt = document.getElementById('livr-cpt');
   if (cpt) cpt.textContent = enAttente.length + ' en attente · ' + livrees.length + ' livrée(s) (60 derniers jours)';
 
   function renderCard(v) {
-    const done = v.livraison_statut === 'Livré';
+    const done = v.livraison_statut === 'Livrée';
     const avisAcq  = v.avis_acquereur || v.avis_google || 'attente'; // compat ancien champ
     const avisMand = v.avis_mandant   || 'attente';
     const avisGainTotal = (avisAcq==='oui'?15:0) + (avisMand==='oui'?15:0);
@@ -1583,7 +1583,7 @@ function afficherLivraisons() {
     return '<div class="lc'+(done?' ld':'')+'">'
       + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.9rem;flex-wrap:wrap">'
       + '<div style="flex:1">'
-      + '<div style="font-weight:600;font-size:.88rem;margin-bottom:.22rem">'+agentBadge+v.vehicule+' <span class="tag '+(done?'tgl':'tga')+'">'+(done?'Livré':'En attente')+'</span></div>'
+      + '<div style="font-weight:600;font-size:.88rem;margin-bottom:.22rem">'+agentBadge+v.vehicule+' <span class="tag '+(done?'tgl':'tga')+'">'+(done?'Livrée':'En attente')+'</span></div>'
       + '<div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:var(--gm)">Client : '+(v.client||'—')+' · Signé le '+fmtDate(v.date)+'</div>'
       + '<div style="display:flex;gap:1.2rem;margin:.3rem 0;flex-wrap:wrap;align-items:baseline">'
       + '<span style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--v)">Marge : '+fmt(v.marge_nette_ht)+'</span>'
@@ -1598,7 +1598,7 @@ function afficherLivraisons() {
           + '<button class="btn bs" style="width:100%" onclick="validerLivraison('+v.id+')">✔ Valider la livraison</button>'
           + '<button class="btn" style="width:100%;font-size:.52rem" onclick="editerVente('+v.id+')">✏️ Modifier la fiche</button>'
           + '<button class="btn bd" style="width:100%;font-size:.52rem" onclick="supprimerVente('+v.id+')">✕ Supprimer</button>'
-        : '<span style="font-family:IBM Plex Mono,monospace;font-size:.68rem;color:var(--v);text-align:right">✅ Livré le<br>'+fmtDate(v.date_livraison)+'</span>'
+        : '<span style="font-family:IBM Plex Mono,monospace;font-size:.68rem;color:var(--v);text-align:right">✅ Livrée le<br>'+fmtDate(v.date_livraison)+'</span>'
           + '<button class="btn" style="width:100%;font-size:.52rem;margin-top:.3rem" onclick="editerVente('+v.id+')">✏️ Modifier</button>'
           + '<button class="btn bd" style="width:100%;font-size:.52rem" onclick="annulerLivraison('+v.id+')">Annuler livraison</button>')
       + '</div></div></div>';
@@ -1649,7 +1649,7 @@ function validerLivraison(id) {
   }
   const mshFinal = Math.round((v.marge_nette_ht - cvFinal - (v.comm_mandant||0) - (v.prime_excep||0) - (v.prime_opteven||0) - (v.prime_rapidite||0) + ((v.prime_opteven||0)>0?380:0)) * 100) / 100;
 
-  ventes[idx].livraison_statut    = 'Livré';
+  ventes[idx].livraison_statut    = 'Livrée';
   ventes[idx].date_livraison      = dl;
   ventes[idx].mois_livraison      = moisLiv;
   ventes[idx].comm_vendeur        = cvFinal;
@@ -1819,7 +1819,7 @@ function afficherRecap() {
     const livrRows = allLiv.map(v => '<tr><td>'+(v.date_livraison||v.date_vente||'')+'</td><td>'+(v.vehicule||'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+fmt(v.marge_nette_ht||0)+'</td><td>'+fmt(v.comm_vendeur||0)+'</td></tr>').join('');
     const livrManagerHtml = allLiv.length ? '<table class="vt"><thead><tr><th>Livraison</th><th>Véhicule</th><th>Client</th><th>Agent</th><th>Marge HT</th><th>Commission</th></tr></thead><tbody>'+livrRows+'</tbody></table>' : '<div style="color:var(--gm);font-size:.75rem;font-family:IBM Plex Mono,monospace;padding:.5rem 0">Aucune livraison ce mois.</div>';
 
-    const venteRows = allV.map(v => '<tr><td>'+(v.date_vente||'')+'</td><td>'+(v.vehicule||'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+(v.type||'')+'</td><td><span class="tag" style="background:'+(v.livraison_statut==='Livré'?'#d1fae5':'#fff3e0')+';color:'+(v.livraison_statut==='Livré'?'#065f46':'#b45309')+'">'+( v.livraison_statut||'')+'</span></td></tr>').join('');
+    const venteRows = allV.map(v => '<tr><td>'+(v.date_vente||'')+'</td><td>'+(v.vehicule||'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+(v.type||'')+'</td><td><span class="tag" style="background:'+(v.livraison_statut==='Livrée'?'#d1fae5':'#fff3e0')+';color:'+(v.livraison_statut==='Livrée'?'#065f46':'#b45309')+'">'+( v.livraison_statut||'')+'</span></td></tr>').join('');
     const tableHtml = allV.length ? '<table class="vt"><thead><tr><th>Date</th><th>Véhicule</th><th>Client</th><th>Agent</th><th>Type</th><th>Statut</th></tr></thead><tbody>'+venteRows+'</tbody></table>' : '<div style="color:var(--gm);font-size:.75rem;font-family:IBM Plex Mono,monospace;padding:.5rem 0">Aucune vente ce mois.</div>';
 
     // Stats personnelles si manager est aussi agent
@@ -1902,7 +1902,7 @@ function afficherRecap() {
       + vm.map(v => '<tr>'
           + '<td><div style="font-weight:500">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
-          + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='Livré'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
+          + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='Livrée'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
           + '<td style="white-space:nowrap">'
           + '<button class="delbtn" onclick="editerVente('+v.id+')" title="Modifier" style="color:var(--a)">✏️</button> '
           + '<button class="delbtn" onclick="supprimerVenteRecap('+v.id+')" title="Supprimer">✕</button>'
@@ -1911,7 +1911,7 @@ function afficherRecap() {
 
   const livrRecapHtml = vl.length === 0
     ? '<div style="text-align:center;padding:1rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucune livraison ce mois.</div>'
-    : '<table class="vt"><thead><tr><th>Véhicule</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">Livré le</th></tr></thead><tbody>'
+    : '<table class="vt"><thead><tr><th>Véhicule</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">Livrée le</th></tr></thead><tbody>'
       + vl.map(v => '<tr>'
           + '<td><div style="font-weight:500">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+' · vendu le '+fmtDate(v.date)+'</div></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
@@ -1946,7 +1946,7 @@ function afficherRecap() {
     '<div style="margin-top:.9rem">'
     + '<div class="stl" style="margin-bottom:.65rem">🤝 Mes commissions mandant croisé — '+lblMois(mois)+' ('+vlCroise.length+')</div>'
     + '<div style="background:var(--w);border:1px solid var(--b);padding:.7rem .9rem;margin-bottom:.5rem">'
-    + '<table class="vt"><thead><tr><th>Véhicule</th><th>Vendu par</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Ta commission (20%)</th><th style="text-align:right">Livré le</th></tr></thead><tbody>'
+    + '<table class="vt"><thead><tr><th>Véhicule</th><th>Vendu par</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Ta commission (20%)</th><th style="text-align:right">Livrée le</th></tr></thead><tbody>'
     + vlCroise.map(v => '<tr>'
         + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
         + '<td style="font-family:IBM Plex Mono,monospace;font-size:.7rem;color:var(--gm)">'+v.agent+'</td>'
@@ -2173,14 +2173,14 @@ function afficherAgent(vm, agent, params) {
           + '<td><span class="tag '+(v.type==='classique'?'tgc':v.type==='stock'?'tgs':'tgcr')+'">'+v.type+'</span></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:'+(v.marge_nette_ht>=0?'var(--v)':'var(--r)')+'">'+fmt(v.marge_nette_ht)+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right">'+fmt(v.comm_vendeur)+'</td>'
-          + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='Livré'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
+          + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='Livrée'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
           + '<td><button class="delbtn" onclick="supprimerVente('+v.id+')" title="Supprimer">✕</button></td>'
           + '</tr>').join('')
       + '</tbody></table>';
 
   const livrHtml = ventesLivr.length === 0
     ? '<div style="text-align:center;padding:1rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucune livraison ce mois pour cet agent.</div>'
-    : '<table class="vt"><thead><tr><th>Date vente</th><th>Véhicule</th><th>Type</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">Livré le</th></tr></thead><tbody>'
+    : '<table class="vt"><thead><tr><th>Date vente</th><th>Véhicule</th><th>Type</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">Livrée le</th></tr></thead><tbody>'
       + ventesLivr.map(v => '<tr>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;white-space:nowrap">'+fmtDate(v.date)+'</td>'
           + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
