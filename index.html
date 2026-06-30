@@ -1711,6 +1711,8 @@ function toggleAvisMand(id, val) {
 
 // ═══ RECAP AGENT
 function afficherRecap() {
+  window.getJulesPaye=function(mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');return parseFloat(p[mois])||0;};
+  window.saveJulesPaye=function(val,mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');p[mois]=parseFloat(val)||0;localStorage.setItem('aa_jules_paye',JSON.stringify(p));try{afficherDashboard();}catch(e){}};
   const mois   = remplirMoisMandats('recap-mois');
   const ventes = loadVentes();
   const mandats= loadMandats();
@@ -1744,9 +1746,6 @@ function afficherRecap() {
       + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800"><div class="kl">📞 Mandats prospectrice</div><div class="kv">'+(mandats.filter(m=>m.mois===mois&&m.via_prospectrice).length)+'</div><div class="ks">rentrés ce mois</div></div>'
       + (CURRENT_USER==='Jules'?'<div class="kpi" style="grid-column:1/-1;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3)"><div class="kl">Paye mensuelle</div><div class="kv" style="color:#6366f1">'+fmt(getJulesPaye(mois))+'</div><div class="ks">ce mois</div></div>':'')
       + '</div>';
-
-    window.getJulesPaye=function(mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');return parseFloat(p[mois])||0;};
-    window.saveJulesPaye=function(val,mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');p[mois]=parseFloat(val)||0;localStorage.setItem('aa_jules_paye',JSON.stringify(p));try{afficherDashboard();}catch(e){}};
 
     function buildAgentCard(a) {
       const rangA = getRangAgent(a, mois);
