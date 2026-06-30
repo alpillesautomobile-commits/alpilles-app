@@ -2229,9 +2229,20 @@ function afficherAgent(vm, agent, params) {
     + '<div class="stl" style="margin-bottom:.65rem">Paye ce mois</div>'
     + '<div style="background:var(--bg);padding:.85rem .95rem;border:1px solid var(--b)">'
     + '<div class="pr"><span style="color:var(--gm)">Commission vendeur</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(comm+primeRapid)+'</span></div>'
-    + (excep>0?'<div class="pr"><span style="color:var(--gm)">Prime exceptionnelle</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(excep)+'</span></div>':'')
-    + (nbOpt>0?'<div class="pr"><span style="color:var(--gm)">Opteven vendus</span><span style="font-family:IBM Plex Mono,monospace">'+nbOpt+'</span></div>':'')
+    + (commM>0?'<div class="pr"><span style="color:var(--gm)">Commission mandant</span><span style="font-family:IBM Plex Mono,monospace;color:var(--ad)">'+fmt(commM)+'</span></div>':'')
+    + '<div class="pr"><span style="color:var(--gm)">Primes avis Google'+(avisAtt?' ('+avisAtt+' att.)':'')+'</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(avisGain)+'</span></div>'
+    + '<div class="pr"><span style="color:var(--gm)">Prime palier marge HT '+(primePal>0?'✅':'⏳')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(primePal>0?'var(--v)':'var(--gm)')+'">'+fmt(primePal)+'</span></div>'
+    + '<div class="pr"><span style="color:var(--gm)">Primes exceptionnelles</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(excep)+'</span></div>'
+    + (nbOpt>0?'<div class="pr"><span style="color:var(--gm)">&nbsp;&nbsp;� Contrats OPTEVEN vendus</span><span style="font-family:IBM Plex Mono,monospace;color:var(--ad)">'+nbOpt+' contrat'+(nbOpt>1?'s':'')+'</span></div>':'')
+    + '<div class="pr"><span style="color:var(--gm)">Prime obj. ventes '+(nb>=obj_v?'✅':'⏳')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(primeOv>0?'var(--v)':'var(--gm)')+'">'+fmt(primeOv)+'</span></div>'
+    + '<div class="pr"><span style="color:var(--gm)">Prime obj. mandats '+(nbM>=obj_m?'✅':'⏳')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(primeOm>0?'var(--v)':'var(--gm)')+'">'+fmt(primeOm)+'</span></div>'
+    + '<div class="pr"><span style="color:var(--gm)">Bonus dépassement</span><span style="font-family:IBM Plex Mono,monospace;color:'+(bonus>0?'var(--v)':'var(--gm)')+'">'+fmt(bonus)+'</span></div>'
+    + '<div class="pr"><span style="color:var(--gm)">Prime trimestrielle '+(trimData.prime>0?'✅':'⏳')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(trimData.prime>0?'var(--v)':'var(--gm)')+'">'+fmt(trimData.prime)+'</span></div>'
+    + (isBest?'<div class="pr"><span style="color:var(--gm)">🏆 Meilleur agent</span><span style="font-family:IBM Plex Mono,monospace;color:var(--v)">'+fmt(150)+'</span></div>':'')
     + '</div>'
+    + (trimData.manquant>0?'<div style="background:#fff8e8;border:1px solid var(--a);padding:.65rem .85rem;margin-top:.5rem;font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#7a5a1a">'
+      + '📊 <strong>Prime trimestrielle :</strong> '+fmt(trimData.marge)+' sur 3 mois — il manque '+fmt(trimData.manquant)+' pour atteindre le palier '+fmt(trimData.prochainPalier)+' €'
+      + '</div>':'')
     + '<div class="ptot"><span>💰 TOTAL À VERSER</span><span>'+fmt(total)+'</span></div>'
     + '</div></div>'
     + '<div class="stl" style="margin-top:1.1rem;margin-bottom:.65rem">🚚 Livraisons de '+agent+' en '+lblMois(moisSel)+' ('+ventesLivr.length+')</div>'
