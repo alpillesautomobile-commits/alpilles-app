@@ -1924,7 +1924,7 @@ function afficherRecap() {
       + vl.map(v => '<tr>'
           + '<td><div style="font-weight:500">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+' · vendu le '+fmtDate(v.date)+'</div></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
-          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt(v.comm_vendeur)+'</td>'
+          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((v.comm_vendeur||0)+(v.prime_rapidite||0))+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--v)">✅ '+fmtDate(v.date_livraison)+'</td>'
           + '</tr>').join('')
       + '</tbody></table>';
@@ -2185,7 +2185,7 @@ function afficherAgent(vm, agent, params) {
           + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
           + '<td><span class="tag '+(v.type==='classique'?'tgc':v.type==='stock'?'tgs':'tgcr')+'">'+v.type+'</span></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:'+(v.marge_nette_ht>=0?'var(--v)':'var(--r)')+'">'+fmt(v.marge_nette_ht)+'</td>'
-          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right">'+fmt(v.comm_vendeur)+'</td>'
+          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right">'+fmt((v.comm_vendeur||0)+(v.prime_rapidite||0))+'</td>'
           + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='Livrée'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
           + '<td><button class="delbtn" onclick="supprimerVente('+v.id+')" title="Supprimer">✕</button></td>'
           + '</tr>').join('')
@@ -2199,7 +2199,7 @@ function afficherAgent(vm, agent, params) {
           + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
           + '<td><span class="tag '+(v.type==='classique'?'tgc':v.type==='stock'?'tgs':'tgcr')+'">'+v.type+'</span></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:'+(v.marge_nette_ht>=0?'var(--v)':'var(--r)')+'">'+fmt(v.marge_nette_ht)+'</td>'
-          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt(v.comm_vendeur)+'</td>'
+          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((v.comm_vendeur||0)+(v.prime_rapidite||0))+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--v)">✅ '+fmtDate(v.date_livraison)+'</td>'
           + '</tr>').join('')
       + '</tbody></table>';
