@@ -2156,7 +2156,7 @@ function afficherAgent(vm, agent, params) {
   const primeRapid = ventesLivr.reduce((s,v) => s+(v.prime_rapidite||0), 0);
   const excep      = ventesLivr.reduce((s,v) => s+(v.prime_excep||0), 0);
   const opteven    = ventesLivr.reduce((s,v) => s+(v.prime_opteven||0), 0);
-  const nbOpt      = ventes.filter(v=>(v.prime_opteven||0)>0).length;
+  const nbOpt      = ventesLivr.filter(v=>(v.prime_opteven||0)>0).length;
   const avisAtt  = ventesLivr.filter(v => {
     const acq  = v.avis_acquereur || v.avis_google || 'attente';
     const mand = v.avis_mandant   || 'attente';
