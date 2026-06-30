@@ -844,7 +844,7 @@ function palier(m) {
 // Taux de commission classique : 30% ou 40% selon marge et objectifs du mois
 // agent = nom, moisRef = 'YYYY-MM' du mois de livraison
 function calcTauxComm(mnHt, agent, moisRef) {
-  if (mnHt < 1000) return 0.30;
+  if (mnHt * 0.30 < 1000) return 0.30;
   const ventes  = loadVentes();
   const mandats = loadMandats();
   const p = getObjForMonth(agent, moisRef);
