@@ -1745,8 +1745,8 @@ function afficherRecap() {
       + (CURRENT_USER==='Jules'?'<div class="kpi" style="grid-column:1/-1;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3)"><div class="kl">Paye mensuelle</div><div class="kv" style="color:#6366f1">'+fmt(getJulesPaye(mois))+'</div><div class="ks">ce mois</div></div>':'')
       + '</div>';
 
-    function getJulesPaye(mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');return parseFloat(p[mois])||0;}
-    function saveJulesPaye(val,mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');p[mois]=parseFloat(val)||0;localStorage.setItem('aa_jules_paye',JSON.stringify(p));try{afficherDashboard();}catch(e){}}
+    window.getJulesPaye=function(mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');return parseFloat(p[mois])||0;};
+    window.saveJulesPaye=function(val,mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');p[mois]=parseFloat(val)||0;localStorage.setItem('aa_jules_paye',JSON.stringify(p));try{afficherDashboard();}catch(e){}};
 
     function buildAgentCard(a) {
       const rangA = getRangAgent(a, mois);
