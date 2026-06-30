@@ -2155,9 +2155,12 @@ function afficherAgent(vm, agent, params) {
   }, 0);
   const primeRapid = ventesLivr.reduce((s,v) => s+(v.prime_rapidite||0), 0);
   const excep      = ventesLivr.reduce((s,v) => s+(v.prime_excep||0), 0);
-  const opteven    = ventesLivr.reduce((s,v) => s+(v.prime_opteven||0), 0);
   const nbOpt      = ventesLivr.filter(v=>(v.prime_opteven||0)>0).length;
   const nbOptVendu = ventes.filter(v=>(v.prime_opteven||0)>0).length;
+  const _gOpt      = (params||{})._global||{};
+  const opteven    = moisSel>='2026-07'
+    ? (nbOpt>=(_gOpt.palier_opteven||4) ? nbOpt*(_gOpt.comm_opteven_haut||150) : nbOpt*(_gOpt.comm_opteven_bas||100))
+    : ventesLivr.reduce((s,v)=>s+(v.prime_opteven||0),0);
   const avisAtt  = ventesLivr.filter(v => {
     const acq  = v.avis_acquereur || v.avis_google || 'attente';
     const mand = v.avis_mandant   || 'attente';
@@ -2375,7 +2378,13 @@ function afficherParams() {
           + '<div class="pf" style="border-top:1px solid var(--b);padding-top:.5rem;margin-top:.3rem"><label>🔑 Code PIN (4 chiffres)</label>'
           + '<input type="password" id="pin_'+a+'" placeholder="••••" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" value="'+(currentPins[a]||'')+'" style="letter-spacing:.2em"></div>'
           + '</div>';
-      }).join('');
+      }).join('')
+  + '<div style="margin-top:1.5rem;border-top:2px solid var(--b);padding-top:1rem">'
+  + '<p style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gm);margin-bottom:.6rem">&#9881;&#65039; Barème OPTEVEN (global — actif à partir de juillet 2026)</p>'
+  + '<div class="pf"><label>Palier (nb contrats pour passer au tarif haut)</label><input type="number" id="palier-opteven" value="'+(p._global&&p._global.palier_opteven!=null?p._global.palier_opteven:4)+'" min="1" step="1"></div>'
+  + '<div class="pf"><label>Tarif bas — en dessous du palier (€/contrat)</label><input type="number" id="comm-opteven-bas" value="'+(p._global&&p._global.comm_opteven_bas!=null?p._global.comm_opteven_bas:100)+'"></div>'
+  + '<div class="pf"><label>Tarif haut — au palier et au-dessus, rétroactif (€/contrat)</label><input type="number" id="comm-opteven-haut" value="'+(p._global&&p._global.comm_opteven_haut!=null?p._global.comm_opteven_haut:150)+'"></div>'
+  + '</div>';
 }
 
 function resetDonneesLocales() {
@@ -2419,6 +2428,11 @@ function sauvegarderParams() {
       }
     }
   });
+  // Opteven global
+  const _gEl1 = document.getElementById('palier-opteven');
+  const _gEl2 = document.getElementById('comm-opteven-bas');
+  const _gEl3 = document.getElementById('comm-opteven-haut');
+  if (_gEl1) { p._global = p._global||{}; p._global.palier_opteven = parseInt(_gEl1.value)||4; p._global.comm_opteven_bas = parseInt(_gEl2.value)||100; p._global.comm_opteven_haut = parseInt(_gEl3.value)||150; }
   saveParams(p);
   if (pinChanged) savePins(pins);
   ghPush();
