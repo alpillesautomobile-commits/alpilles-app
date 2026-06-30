@@ -2171,7 +2171,7 @@ function afficherAgent(vm, agent, params) {
   const trimData = calcPrimeTrim(agent, moisSel);
   const isBest   = calcPrimeBestAgent(agent, moisSel);
   const primeBest= isBest ? 150 : 0;
-  const total    = comm+primeRapid+excep;
+  const total    = comm+commM+avisGain+primeRapid+excep+opteven+primePal+primeOv+primeOm+bonus+trimData.prime+primeBest;
   const pctV     = obj_v?Math.min(100,Math.round(nb/obj_v*100)):0;
   const pctMarg  = Math.min(100,Math.round(marge/25000*100));
   const pctMand  = obj_m?Math.min(100,Math.round(nbM/obj_m*100)):0;
