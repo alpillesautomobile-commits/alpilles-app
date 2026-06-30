@@ -1758,7 +1758,7 @@ function afficherRecap() {
       const ag=getObjForMonth(a,mois),nb=av.length,nbM=am.length;
       const mg=al.reduce((s,v)=>s+(v.marge_nette_ht||0),0);
       const rs=al.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)-(v.prime_rapidite||0)+((v.prime_opteven||0)>0?380:0));return s+r;},0);
-      const at40Manual=getUnlock40(a,mois);const cv=at40Manual?al.reduce((s,v)=>{var m=v.marge_nette_ht||0;return s+(v.via_prospectrice?m*.30:m<1000?m*.30:m*.40);},0):al.reduce((s,v)=>s+(v.comm_vendeur||0),0);
+      const at40Manual=getUnlock40(a,mois);const cv=at40Manual?al.reduce((s,v)=>{var m=v.marge_nette_ht||0;return s+(v.via_prospectrice?m*.30:m*.40);},0):al.reduce((s,v)=>s+(v.comm_vendeur||0),0);
       const pctV=ag.obj_ventes?Math.min(100,Math.round(nb/ag.obj_ventes*100)):0;
       const pctM=ag.obj_mandats?Math.min(100,Math.round(nbM/ag.obj_mandats*100)):0;
       const ok=pctV>=100;
