@@ -1713,6 +1713,10 @@ function toggleAvisMand(id, val) {
 function afficherRecap() {
   window.getJulesPaye=function(mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');return parseFloat(p[mois])||0;};
   window.saveJulesPaye=function(val,mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');p[mois]=parseFloat(val)||0;localStorage.setItem('aa_jules_paye',JSON.stringify(p));try{afficherDashboard();}catch(e){}};
+  window.getUnlock40=function(ag,mo){var p=JSON.parse(localStorage.getItem('aa_unlock40')||'{}');return !!(p[mo]&&p[mo][ag]);};
+  window.setUnlock40=function(ag,mo,val){var p=JSON.parse(localStorage.getItem('aa_unlock40')||'{}');if(!p[mo])p[mo]={};p[mo][ag]=!!val;localStorage.setItem('aa_unlock40',JSON.stringify(p));try{afficherDashboard();}catch(e){}return false;};
+  window.getPrime=function(ag,mo){var p=JSON.parse(localStorage.getItem('aa_prime_ex')||'{}');return(p[mo]&&p[mo][ag])||0;};
+  window.setPrime=function(ag,mo,val){var p=JSON.parse(localStorage.getItem('aa_prime_ex')||'{}');if(!p[mo])p[mo]={};p[mo][ag]=parseFloat(val)||0;localStorage.setItem('aa_prime_ex',JSON.stringify(p));try{afficherDashboard();}catch(e){}};
   const mois   = remplirMoisMandats('recap-mois');
   const ventes = loadVentes();
   const mandats= loadMandats();
@@ -1754,7 +1758,7 @@ function afficherRecap() {
       const ag=getObjForMonth(a,mois),nb=av.length,nbM=am.length;
       const mg=al.reduce((s,v)=>s+(v.marge_nette_ht||0),0);
       const rs=al.reduce((s,v)=>{const r=v.resultat_societe_ht!=null?v.resultat_societe_ht:(v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)-(v.prime_rapidite||0)+((v.prime_opteven||0)>0?380:0));return s+r;},0);
-      const cv=al.reduce((s,v)=>s+(v.comm_vendeur||0),0);
+      const at40Manual=getUnlock40(a,mois);const cv=at40Manual?al.reduce((s,v)=>{var m=v.marge_nette_ht||0;return s+(v.via_prospectrice?m*.30:m<1000?m*.30:m*.40);},0):al.reduce((s,v)=>s+(v.comm_vendeur||0),0);
       const pctV=ag.obj_ventes?Math.min(100,Math.round(nb/ag.obj_ventes*100)):0;
       const pctM=ag.obj_mandats?Math.min(100,Math.round(nbM/ag.obj_mandats*100)):0;
       const ok=pctV>=100;
@@ -1762,7 +1766,7 @@ function afficherRecap() {
       const seuil80M=ag.obj_mandats?Math.ceil(ag.obj_mandats*.8):0;
       const manqueV=Math.max(0,seuil80V-nb);
       const manqueM=Math.max(0,seuil80M-nbM);
-      const at40=(ag.obj_ventes?nb/ag.obj_ventes:1)>=.8&&(ag.obj_mandats?nbM/ag.obj_mandats:1)>=.8;
+      const at40=at40Manual||(ag.obj_ventes?nb/ag.obj_ventes:1)>=.8&&(ag.obj_mandats?nbM/ag.obj_mandats:1)>=.8;
       const pendingA=ventes.filter(v=>v.agent===a&&v.mois===mois&&v.livraison_statut==='En attente'&&(v.marge_nette_ht||0)>=1000);
       const gainPotA=pendingA.reduce((s,v)=>s+Math.round((v.marge_nette_ht||0)*.10),0);
       const manqueV100=ag.obj_ventes?Math.max(0,ag.obj_ventes-nb):0;
@@ -1777,7 +1781,7 @@ function afficherRecap() {
         +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Marge HT livrée</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--v)">'+fmt(mg)+'</div></div>'
         +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Résultat société</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--n)">'+(CURRENT_USER==='Jules'?'':fmt(rs))+'</div></div>'
         +'<div style="grid-column:1/-1"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Commission à verser</div><div style="font-family:IBM Plex Mono,monospace;font-size:.78rem;color:var(--gm)">'+fmt(cv)+'</div></div>'
-        +(CURRENT_USER==='Julien'?'<div style="grid-column:1/-1;margin-top:.5rem;padding:.4rem .6rem;border-radius:6px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3)"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6366f1;margin-bottom:.3rem">Paye mensuelle Jules</div><div style="display:flex;align-items:center;gap:.5rem"><input type="number" id="julesPaye_'+mois+'" value="'+getJulesPaye(mois)+'" style="width:90px;padding:.2rem .4rem;border:1px solid #6366f1;border-radius:4px;font-family:IBM Plex Mono,monospace;font-size:.78rem" onchange="saveJulesPaye(this.value,\''+mois+'\')" ><span style="font-size:.75rem;color:#555">&#8364;</span></div></div>':'')
+        +(CURRENT_USER==='Julien'?'<div style="grid-column:1/-1;margin-top:.4rem;padding:.3rem .5rem;border-radius:6px;background:'+(at40Manual?'rgba(34,197,94,.1)':'rgba(200,200,200,.1)')+';border:1px solid '+(at40Manual?'rgba(34,197,94,.3)':'rgba(200,200,200,.4)')+'"><button onclick="setUnlock40(\''+a+'\',' +'\''+mois+'\','+!at40Manual+')" style="font-size:.72rem;padding:.15rem .45rem;border-radius:4px;border:none;background:'+(at40Manual?'rgba(34,197,94,.2)':'#e5e7eb')+';cursor:pointer;color:'+(at40Manual?'#166534':'#374151')+'">'+( at40Manual?'&#10003; 40% d&#233;bloqu&#233; &#8212; Verrouiller':'&#128274; D&#233;bloquer les 40%')+'</button></div><div style="grid-column:1/-1;margin-top:.3rem;padding:.4rem .6rem;border-radius:6px;background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.3)"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#a16207;margin-bottom:.3rem">Prime exceptionnelle</div><div style="display:flex;align-items:center;gap:.5rem"><input type="number" id="prime_'+a+'_'+mois+'" value="'+getPrime(a,mois)+'" style="width:90px;padding:.2rem .4rem;border:1px solid #ca8a04;border-radius:4px;font-family:IBM Plex Mono,monospace;font-size:.78rem" onchange="setPrime(\''+a+'\',\''+mois+'\',this.value)"><span style="font-size:.75rem;color:#555">&#8364;</span></div></div>'+(a==='Jules'?'<div style="grid-column:1/-1;margin-top:.3rem;padding:.4rem .6rem;border-radius:6px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3)"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6366f1;margin-bottom:.3rem">Paye mensuelle Jules</div><div style="display:flex;align-items:center;gap:.5rem"><input type="number" id="julesPaye_'+mois+'" value="'+getJulesPaye(mois)+'" style="width:90px;padding:.2rem .4rem;border:1px solid #6366f1;border-radius:4px;font-family:IBM Plex Mono,monospace;font-size:.78rem" onchange="saveJulesPaye(this.value,\''+mois+'\')"><span style="font-size:.75rem;color:#555">&#8364;</span></div></div>':''):'')
         +(at40||manqueV>0||manqueM>0||gainPotA>0
           ? '<div style="grid-column:1/-1;margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.8rem;background:'+(at40?'rgba(34,197,94,.12)':'rgba(255,140,0,.12)')+';border:1px solid '+(at40?'rgba(34,197,94,.3)':'rgba(255,140,0,.3)')+'">'
           +(at40
