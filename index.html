@@ -1534,14 +1534,14 @@ function afficherLivraisons() {
   const enAttente = ventes.filter(v => v.livraison_statut === 'En attente')
     .sort((a,b) => (a.date||'').localeCompare(b.date||''));
   const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-60);
-  const livrees = ventes.filter(v => v.livraison_statut === 'Livrée' && v.date_livraison && new Date(v.date_livraison) >= cutoff)
+  const livrees = ventes.filter(v => ['Livré','Livrée'].includes(v.livraison_statut) && v.date_livraison && new Date(v.date_livraison) >= cutoff)
     .sort((a,b) => (b.date_livraison||'').localeCompare(a.date_livraison||''));
 
   const cpt = document.getElementById('livr-cpt');
   if (cpt) cpt.textContent = enAttente.length + ' en attente · ' + livrees.length + ' livrée(s) (60 derniers jours)';
 
   function renderCard(v) {
-    const done = v.livraison_statut === 'Livrée';
+    const done = ['Livré','Livrée'].includes(v.livraison_statut);
     const avisAcq  = v.avis_acquereur || v.avis_google || 'attente'; // compat ancien champ
     const avisMand = v.avis_mandant   || 'attente';
     const avisGainTotal = (avisAcq==='oui'?15:0) + (avisMand==='oui'?15:0);
