@@ -1588,7 +1588,7 @@ function afficherLivraisons() {
       + '<div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:var(--gm)">Client : '+(v.client||'—')+' · Signé le '+fmtDate(v.date)+'</div>'
       + '<div style="display:flex;gap:1.2rem;margin:.3rem 0;flex-wrap:wrap;align-items:baseline">'
       + '<span style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--v)">Marge : '+fmt(v.marge_nette_ht)+'</span>'
-      + '<span style="font-family:IBM Plex Mono,monospace;font-size:.72rem;color:var(--gm)">Résultat société : <strong style="color:var(--n)">'+fmt(rshT)+'</strong></span>'
+      + '<span style="font-family:IBM Plex Mono,monospace;font-size:.72rem;color:var(--gm)">Résultat société : <strong style="color:var(--n)">'+(CURRENT_USER==='Jules'?'':fmt(rshT))+'</strong></span>'
       + '</div>'
       + '<div style="background:var(--bg);border:1px solid var(--b);padding:.5rem .7rem">'
       + '<div style="font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);margin-bottom:.22rem">Checklist & Avis Google</div>'
@@ -1610,7 +1610,7 @@ function afficherLivraisons() {
     const at=enAttente.filter(v=>aOf(v)===ag),lv=livrees.filter(v=>aOf(v)===ag);
     if(!at.length&&!lv.length)return '';
     const uid=ag.replace(/[^a-z]/gi,'_');
-    let s='<div style="margin-bottom:1.2rem"><div style="background:'+col+';color:#fff;font-weight:700;font-size:.78rem;padding:.5rem .9rem;margin-bottom:.8rem">'+lbl+' · '+at.length+' en attente · '+lv.length+' livrée(s)</div>';
+    let s='<div style="margin-bottom:1.2rem"><div style="background:'+col+';color:#fff;font-weight:700;font-size:.78rem;padding:.5rem .9rem;margin-bottom:.8rem">'+lbl+' · '+at.length+' en attente · '+lv.length+' livrée(s)'+(CURRENT_USER==='Jules'?'':'<span style="font-size:.72rem;color:#555;margin-left:.3rem">('+fmt(at.reduce((s,v)=>s+(v.resultat_societe_ht||0),0))+')</span>')+'</div>';
     s+=at.length?'<div class="stl" style="margin-bottom:.6rem;color:var(--r)">🚚 À livrer ('+at.length+')</div>'+at.map(renderCard).join(''):'<div style="background:var(--vl);border:1px solid var(--v);padding:.6rem .9rem;font-size:.72rem;color:var(--v);margin-bottom:.8rem;font-family:IBM Plex Mono,monospace">✅ Aucune en attente</div>';
     if(lv.length)s+='<div style="margin-top:.8rem"><button onclick="(function(){var z=document.getElementById(\'lsec_'+uid+'\');var o=z.style.display!==\'none\';z.style.display=o?\'none\':\'\';this.textContent=o?\'▶ Livrées ('+lv.length+')\':\'▼ Livrées ('+lv.length+')\'}).call(this)" style="background:none;border:none;cursor:pointer;font-size:.75rem;font-weight:600;color:var(--gm);padding:.3rem 0">▶ Livrées récemment ('+lv.length+')</button><div id="lsec_'+uid+'" style="display:none">'+lv.map(renderCard).join('')+'</div></div>';
     return s+'</div>';
@@ -1772,7 +1772,7 @@ function afficherRecap() {
         +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Mandats</div><div style="font-family:IBM Plex Mono,monospace;font-size:1.15rem;font-weight:700;color:'+(pctM>=100?'var(--v)':'var(--n)')+'">'+nbM+'<span style="font-size:.65rem;color:var(--gm)"> / '+ag.obj_mandats+'</span></div><div style="height:4px;background:var(--gc);border-radius:2px;margin-top:.2rem"><div style="width:'+pctM+'%;height:100%;background:'+(pctM>=100?'var(--v)':'var(--ad)')+'"></div></div></div>'
         +'</div><div style="border-top:1px solid var(--gc);padding-top:.5rem;display:grid;grid-template-columns:1fr 1fr;gap:.3rem">'
         +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Marge HT livrée</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--v)">'+fmt(mg)+'</div></div>'
-        +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Résultat société</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--n)">'+fmt(rs)+'</div></div>'
+        +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Résultat société</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--n)">'+(CURRENT_USER==='Jules'?'':fmt(rs))+'</div></div>'
         +'<div style="grid-column:1/-1"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Commission à verser</div><div style="font-family:IBM Plex Mono,monospace;font-size:.78rem;color:var(--gm)">'+fmt(cv)+'</div></div>'
         +(at40||manqueV>0||manqueM>0||gainPotA>0
           ? '<div style="grid-column:1/-1;margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.8rem;background:'+(at40?'rgba(34,197,94,.12)':'rgba(255,140,0,.12)')+';border:1px solid '+(at40?'rgba(34,197,94,.3)':'rgba(255,140,0,.3)')+'">'
@@ -2092,7 +2092,7 @@ function afficherDashboard() {
       + '<div class="ar"><span>Livraisons</span><span style="font-family:IBM Plex Mono,monospace">'+vla.length+'</span></div>'
       + '<div class="ar"><span>Marge nette HT</span><span style="font-family:IBM Plex Mono,monospace;color:var(--gm)">'+fmt(m)+'</span></div>'
       + '<div class="ar"><span>Commissions versées</span><span style="font-family:IBM Plex Mono,monospace;color:var(--r)">− '+fmt(c)+'</span></div>'
-      + '<div class="ar" style="border-top:1px solid var(--b);padding-top:.3rem;margin-top:.15rem"><span style="font-weight:600">Résultat société HT</span><span style="font-family:IBM Plex Mono,monospace;font-weight:700;color:#1a56d6">'+fmt(rs)+'</span></div>'
+      + '<div class="ar" style="border-top:1px solid var(--b);padding-top:.3rem;margin-top:.15rem"><span style="font-weight:600">Résultat société HT</span><span style="font-family:IBM Plex Mono,monospace;font-weight:700;color:#1a56d6">'+(CURRENT_USER==='Jules'?'':fmt(rs))+'</span></div>'
       + '</div>';
   }).join('');
 
