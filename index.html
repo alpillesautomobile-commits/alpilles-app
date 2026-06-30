@@ -1742,7 +1742,11 @@ function afficherRecap() {
       + '<div class="kpi nf"><div class="kl">Résultat société HT</div><div class="kv" style="color:var(--n)">'+fmt(totalSociete)+'</div><div class="ks">Comms déduites</div></div>'
       + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800;margin-top:.4rem"><div class="kl">📞 Via téléprospectrice</div><div class="kv">'+(allLiv.filter(v=>v.via_prospectrice).length)+' vente(s)</div><div class="ks">livrées ce mois</div></div>'
       + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800"><div class="kl">📞 Mandats prospectrice</div><div class="kv">'+(mandats.filter(m=>m.mois===mois&&m.via_prospectrice).length)+'</div><div class="ks">rentrés ce mois</div></div>'
+      + (CURRENT_USER==='Jules'?'<div class="kpi" style="grid-column:1/-1;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3)"><div class="kl">Paye mensuelle</div><div class="kv" style="color:#6366f1">'+fmt(getJulesPaye(mois))+'</div><div class="ks">ce mois</div></div>':'')
       + '</div>';
+
+    function getJulesPaye(mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');return parseFloat(p[mois])||0;}
+    function saveJulesPaye(val,mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');p[mois]=parseFloat(val)||0;localStorage.setItem('aa_jules_paye',JSON.stringify(p));try{afficherDashboard();}catch(e){}}
 
     function buildAgentCard(a) {
       const rangA = getRangAgent(a, mois);
@@ -1774,6 +1778,7 @@ function afficherRecap() {
         +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Marge HT livrée</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--v)">'+fmt(mg)+'</div></div>'
         +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Résultat société</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--n)">'+(CURRENT_USER==='Jules'?'':fmt(rs))+'</div></div>'
         +'<div style="grid-column:1/-1"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Commission à verser</div><div style="font-family:IBM Plex Mono,monospace;font-size:.78rem;color:var(--gm)">'+fmt(cv)+'</div></div>'
+        +(CURRENT_USER==='Julien'?'<div style="grid-column:1/-1;margin-top:.5rem;padding:.4rem .6rem;border-radius:6px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3)"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6366f1;margin-bottom:.3rem">Paye mensuelle Jules</div><div style="display:flex;align-items:center;gap:.5rem"><input type="number" id="julesPaye_'+mois+'" value="'+getJulesPaye(mois)+'" style="width:90px;padding:.2rem .4rem;border:1px solid #6366f1;border-radius:4px;font-family:IBM Plex Mono,monospace;font-size:.78rem" onchange="saveJulesPaye(this.value,\''+mois+'\')" ><span style="font-size:.75rem;color:#555">&#8364;</span></div></div>':'')
         +(at40||manqueV>0||manqueM>0||gainPotA>0
           ? '<div style="grid-column:1/-1;margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.8rem;background:'+(at40?'rgba(34,197,94,.12)':'rgba(255,140,0,.12)')+';border:1px solid '+(at40?'rgba(34,197,94,.3)':'rgba(255,140,0,.3)')+'">'
           +(at40
