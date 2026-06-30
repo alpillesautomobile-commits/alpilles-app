@@ -1645,8 +1645,8 @@ function validerLivraison(id) {
   // en avril sont payées à 40% même si elles sont livrées en mai.
   let cvFinal = v.comm_vendeur;
   if (v.type === 'classique') {
-    const taux = calcTauxComm(v.marge_nette_ht, v.agent, v.mois);
-    cvFinal = Math.round(v.marge_nette_ht * taux * 100) / 100;
+    const taux = getUnlock40(v.agent,v.mois)?0.40:calcTauxComm(v.marge_nette_ht, v.agent, v.mois);
+    cvFinal = Math.max(v.comm_vendeur, Math.round(v.marge_nette_ht * taux * 100) / 100);
   }
   const mshFinal = Math.round((v.marge_nette_ht - cvFinal - (v.comm_mandant||0) - (v.prime_excep||0) - (v.prime_opteven||0) - (v.prime_rapidite||0) + ((v.prime_opteven||0)>0?380:0)) * 100) / 100;
 
