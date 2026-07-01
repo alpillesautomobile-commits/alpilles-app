@@ -1712,6 +1712,41 @@ function toggleAvisMand(id, val) {
 // ═══ UNLOCK40 HELPERS (top-level for afficherAgent)
 function getUnlock40(ag,mo){var p=JSON.parse(localStorage.getItem('aa_unlock40')||'{}'  );return !!(p[mo]&&p[mo][ag]);}
 function saveUnlock40(ag,mo,val){var p=JSON.parse(localStorage.getItem('aa_unlock40')||'{}'  );if(!p[mo])p[mo]={};p[mo][ag]=!!val;localStorage.setItem('aa_unlock40',JSON.stringify(p));try{afficherDashboard();}catch(e){}}
+function calcPayeTotal(agent,moisSel){
+  try{
+    var tousMandats=loadMandats().filter(function(m){return m.mois===moisSel&&m.agent===agent;});
+    var allV=loadVentes();
+    var ventes=allV.filter(function(v){return v.agent===agent&&v.mois===moisSel;});
+    var ventesLivr=allV.filter(function(v){return v.agent===agent&&v.mois_livraison===moisSel;});
+    var mandatsCroisees=allV.filter(function(v){return v.mois_livraison===moisSel&&v.type==='croise'&&v.mandant===agent;});
+    var p=getObjForMonth(agent,moisSel);
+    var nb=ventes.length;var nbM=tousMandats.length;
+    var marge=ventesLivr.reduce(function(s,v){return s+(v.marge_nette_ht||0);},0);
+    var at40=getUnlock40(agent,moisSel)||(nb/(p.obj_ventes||10)>=0.8&&nbM/(p.obj_mandats||8)>=0.8);
+    var comm=ventesLivr.reduce(function(s,v){
+      if(!at40||v.via_prospectrice||v.type!=='classique')return s+(v.comm_vendeur||0);
+      return s+Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40);
+    },0);
+    var commM=mandatsCroisees.reduce(function(s,v){return s+(v.comm_mandant||0);},0);
+    var avisGain=ventesLivr.reduce(function(s,v){
+      var acq=v.avis_acquereur||v.avis_google||'attente';
+      var mand=v.avis_mandant||'attente';
+      return s+(acq==='oui'?15:0)+(mand==='oui'?15:0);
+    },0);
+    var primeRapid=ventesLivr.reduce(function(s,v){return s+(v.prime_rapidite||0);},0);
+    var excep=ventesLivr.reduce(function(s,v){return s+(v.prime_excep||0);},0);
+    var opteven=ventesLivr.reduce(function(s,v){return s+(v.prime_opteven||0);},0);
+    var obj_v=p.obj_ventes||10;var obj_m=p.obj_mandats||8;
+    var primeOv=nb>=obj_v?(p.prime_obj_ventes||250):0;
+    var primeOm=nbM>=obj_m?(p.prime_obj_mandats||150):0;
+    var bonus=nb>obj_v?((nb-obj_v)*(p.bonus_dep||100)):0;
+    var primePal=palier(marge);
+    var trimData=calcPrimeTrim(agent,moisSel);
+    var isBest=calcPrimeBestAgent(agent,moisSel);
+    var primeBest=isBest?150:0;
+    return comm+commM+avisGain+primeRapid+excep+opteven+primePal+primeOv+primeOm+bonus+(trimData?trimData.prime||0:0)+primeBest;
+  }catch(e){return 0;}
+}
 // ═══ RECAP AGENT
 function afficherRecap() {
   window.getJulesPaye=function(mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');return parseFloat(p[mois])||0;};
@@ -1739,7 +1774,7 @@ function afficherRecap() {
     const totalMarge    = allLiv.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
     window._recapTotalMarge = totalMarge;
     const _prRecap = JSON.parse(localStorage.getItem('aa_paye_reel')||'{}');
-    const totalVerse = AGENTS.reduce((s,a) => s+((_prRecap[mois]&&_prRecap[mois][a]!==undefined)?parseFloat(_prRecap[mois][a])||0:0), 0);
+    const totalVerse = AGENTS.reduce((s,a) => {const ov=(_prRecap[mois]&&_prRecap[mois][a]!==undefined)?parseFloat(_prRecap[mois][a]):null;return s+(ov!==null?ov:calcPayeTotal(a,mois));}, 0);
     const totalSociete  = allLiv.reduce((s,v) => {
       const r = v.resultat_societe_ht != null ? v.resultat_societe_ht : (v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)+((v.prime_opteven||0)>0?380:0));
       return s + r;
@@ -1752,8 +1787,8 @@ function afficherRecap() {
       + '<div class="kpi wn"><div class="kl">En attente livraison</div><div class="kv">'+attente.length+'</div><div class="ks">Tous mois confondus</div></div>'
       + '<div class="kpi ok"><div class="kl">Marge HT livrée</div><div class="kv">'+fmt(totalMarge)+'</div><div class="ks">'+allLiv.length+' livraison(s)</div></div>'
       + '<div class="kpi nf"><div class="kl">Résultat société HT</div><div class="kv" style="color:var(--n)">'+fmt(totalSociete)+'</div><div class="ks">Comms déduites</div></div>'
-      + '<div class="kpi" style="border:2px solid #2a9"><div class="kl">Résultat net réel</div><div class="kv" id="recap-resultat-net" style="color:#2a9">'+fmt(totalMarge-totalVerse)+'</div><div class="ks">Marge − versements</div></div>'
-      + '<div class="kpi"><div class="kl">Total versé agents</div><div class="kv" id="recap-total-verse" style="color:var(--gm)">'+fmt(totalVerse)+'</div><div class="ks">Saisi manuellement</div></div>'
+      + '<div class="kpi" style="border:2px solid #2a9"><div class="kl">Résultat net réel</div><div class="kv" id="recap-resultat-net" style="color:#2a9">'+fmt(totalMarge-totalVerse)+'</div><div class="ks">Marge − paye complète</div></div>'
+      + '<div class="kpi"><div class="kl">Total versé agents</div><div class="kv" id="recap-total-verse" style="color:var(--gm)">'+fmt(totalVerse)+'</div><div class="ks">Calculé auto · modifiable</div></div>'
       + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800;margin-top:.4rem"><div class="kl">📞 Via téléprospectrice</div><div class="kv">'+(allLiv.filter(v=>v.via_prospectrice).length)+' vente(s)</div><div class="ks">livrées ce mois</div></div>'
       + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800"><div class="kl">📞 Mandats prospectrice</div><div class="kv">'+(mandats.filter(m=>m.mois===mois&&m.via_prospectrice).length)+'</div><div class="ks">rentrés ce mois</div></div>'
       + (CURRENT_USER==='Jules'?'<div class="kpi" style="grid-column:1/-1;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3)"><div class="kl">Paye mensuelle</div><div class="kv" style="color:#6366f1">'+fmt(getJulesPaye(mois))+'</div><div class="ks">ce mois</div></div>':'')
@@ -1806,7 +1841,7 @@ function afficherRecap() {
                       : '🏆 Il manque '+manqueV100+' vente(s) et '+manqueM100+' mandat(s) pour prime 150€'
                     )+'</div>'
                     : '')
-                  +'<div style="border-top:1px solid rgba(255,255,255,.12);padding:.3rem .7rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem">'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em">Versé agent</span>'+'<div style="display:flex;align-items:center;gap:.25rem">'+'<input type="number" id="paye-reel-'+a+'" value="'+(window.getPayeReel?window.getPayeReel(a,mois)||0:0)+'" step="1" style="width:88px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:.76rem;padding:.18rem .4rem;border-radius:3px;text-align:right;font-family:IBM Plex Mono,monospace" onchange="savePayeReel(\''+a+'\',\''+mois+'\',this.value)">'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5)">€</span>'+'</div></div>'+'</div></div>';
+                  +'<div style="border-top:1px solid rgba(255,255,255,.12);padding:.3rem .7rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem">'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em">Versé agent</span>'+'<div style="display:flex;align-items:center;gap:.25rem">'+'<input type="number" id="paye-reel-'+a+'" value="'+((_prRecap[mois]&&_prRecap[mois][a]!==undefined)?parseFloat(_prRecap[mois][a]):Math.round(calcPayeTotal(a,mois)*100)/100)+'" step="1" style="width:88px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:.76rem;padding:.18rem .4rem;border-radius:3px;text-align:right;font-family:IBM Plex Mono,monospace" onchange="savePayeReel(\''+a+'\',\''+mois+'\',this.value)">'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5)">€</span>'+'</div></div>'+'</div></div>';
     }
     function buildAgenceSection(agenceName, agents) {
       const agLabel = agenceName === 'Saint-Rémy' ? 'Agence Saint-Rémy-de-Provence' : 'Agence Aix-en-Provence';
