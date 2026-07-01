@@ -2242,7 +2242,8 @@ function afficherAgent(vm, agent, params) {
     + '<div>'
     + '<div class="stl" style="margin-bottom:.65rem">Paye ce mois</div>'
     + '<div style="background:var(--bg);padding:.85rem .95rem;border:1px solid var(--b)">'
-    + '<div class="pr"><span style="color:var(--gm)">Commission vendeur</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(comm+primeRapid)+'</span></div>'
+    + '<div class="pr"><span style="color:var(--gm)">Commission vendeur</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(comm)+'</span></div>'
+    + (primeRapid>0?'<div class="pr"><span style="color:var(--gm)">Prime rapidité</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(primeRapid)+'</span></div>':'')
     + (commM>0?'<div class="pr"><span style="color:var(--gm)">Commission mandant</span><span style="font-family:IBM Plex Mono,monospace;color:var(--ad)">'+fmt(commM)+'</span></div>':'')
     + '<div class="pr"><span style="color:var(--gm)">Primes avis Google'+(avisAtt?' ('+avisAtt+' att.)':'')+'</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(avisGain)+'</span></div>'
     + '<div class="pr"><span style="color:var(--gm)">Prime palier marge HT '+(primePal>0?'✅':'⏳')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(primePal>0?'var(--v)':'var(--gm)')+'">'+fmt(primePal)+'</span></div>'
