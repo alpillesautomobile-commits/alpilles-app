@@ -1825,10 +1825,10 @@ function afficherRecap() {
       +Object.entries(AGENCES).map(([nom,agents])=>buildAgenceSection(nom,agents)).join('')
       +'</div>';
 
-    const livrRows = allLiv.map(v => {const b=v.comm_vendeur||0;const cDisp=(getUnlock40(v.agent,v.mois)&&!v.via_prospectrice&&v.type==='classique'?Math.max(b,(v.marge_nette_ht||0)*.40):b)+(v.prime_rapidite||0);return '<tr><td>'+(v.date_livraison||v.date_vente||'')+'</td><td>'+(v.vehicule||'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+fmt(v.marge_nette_ht||0)+'</td><td>'+fmt(cDisp)+'</td></tr>';}).join('');
+    const livrRows = allLiv.map(v => {const b=v.comm_vendeur||0;const cDisp=(getUnlock40(v.agent,v.mois)&&!v.via_prospectrice&&v.type==='classique'?Math.max(b,(v.marge_nette_ht||0)*.40):b)+(v.prime_rapidite||0);return '<tr><td>'+(v.date_livraison||v.date_vente||'')+'</td><td>'+(v.vehicule||'')+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+fmt(v.marge_nette_ht||0)+'</td><td>'+fmt(cDisp)+'</td></tr>';}).join('');
     const livrManagerHtml = allLiv.length ? '<table class="vt"><thead><tr><th>Livraison</th><th>Véhicule</th><th>Client</th><th>Agent</th><th>Marge HT</th><th>Commission</th></tr></thead><tbody>'+livrRows+'</tbody></table>' : '<div style="color:var(--gm);font-size:.75rem;font-family:IBM Plex Mono,monospace;padding:.5rem 0">Aucune livraison ce mois.</div>';
 
-    const venteRows = allV.map(v => '<tr><td>'+(v.date_vente||'')+'</td><td>'+(v.vehicule||'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+(v.type||'')+'</td><td><span class="tag" style="background:'+(v.livraison_statut==='Livrée'?'#d1fae5':'#fff3e0')+';color:'+(v.livraison_statut==='Livrée'?'#065f46':'#b45309')+'">'+( v.livraison_statut||'')+'</span></td></tr>').join('');
+    const venteRows = allV.map(v => '<tr><td>'+(v.date_vente||'')+'</td><td>'+(v.vehicule||'')+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+(v.type||'')+'</td><td><span class="tag" style="background:'+(v.livraison_statut==='Livrée'?'#d1fae5':'#fff3e0')+';color:'+(v.livraison_statut==='Livrée'?'#065f46':'#b45309')+'">'+( v.livraison_statut||'')+'</span></td></tr>').join('');
     const tableHtml = allV.length ? '<table class="vt"><thead><tr><th>Date</th><th>Véhicule</th><th>Client</th><th>Agent</th><th>Type</th><th>Statut</th></tr></thead><tbody>'+venteRows+'</tbody></table>' : '<div style="color:var(--gm);font-size:.75rem;font-family:IBM Plex Mono,monospace;padding:.5rem 0">Aucune vente ce mois.</div>';
 
     // Stats personnelles si manager est aussi agent
@@ -1909,7 +1909,7 @@ function afficherRecap() {
     ? '<div style="text-align:center;padding:1.5rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucune vente ce mois.</div>'
     : '<table class="vt"><thead><tr><th>Véhicule</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Livraison</th><th></th></tr></thead><tbody>'
       + vm.map(v => '<tr>'
-          + '<td><div style="font-weight:500">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
+          + '<td><div style="font-weight:500">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
           + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='Livrée'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
           + '<td style="white-space:nowrap">'
@@ -1922,7 +1922,7 @@ function afficherRecap() {
     ? '<div style="text-align:center;padding:1rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucune livraison ce mois.</div>'
     : '<table class="vt"><thead><tr><th>Véhicule</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">Livrée le</th></tr></thead><tbody>'
       + vl.map(v => '<tr>'
-          + '<td><div style="font-weight:500">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+' · vendu le '+fmtDate(v.date)+'</div></td>'
+          + '<td><div style="font-weight:500">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+' · vendu le '+fmtDate(v.date)+'</div></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((v.comm_vendeur||0)+(v.prime_rapidite||0))+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--v)">✅ '+fmtDate(v.date_livraison)+'</td>'
@@ -1957,7 +1957,7 @@ function afficherRecap() {
     + '<div style="background:var(--w);border:1px solid var(--b);padding:.7rem .9rem;margin-bottom:.5rem">'
     + '<table class="vt"><thead><tr><th>Véhicule</th><th>Vendu par</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Ta commission (20%)</th><th style="text-align:right">Livrée le</th></tr></thead><tbody>'
     + vlCroise.map(v => '<tr>'
-        + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
+        + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
         + '<td style="font-family:IBM Plex Mono,monospace;font-size:.7rem;color:var(--gm)">'+v.agent+'</td>'
         + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
         + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:700;color:var(--ad)">'+fmt(v.comm_mandant)+'</td>'
@@ -2186,7 +2186,7 @@ function afficherAgent(vm, agent, params) {
     : '<table class="vt"><thead><tr><th>Date</th><th>Véhicule</th><th>Type</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">Statut</th><th></th></tr></thead><tbody>'
       + ventes.map(v => '<tr>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;white-space:nowrap">'+fmtDate(v.date)+'</td>'
-          + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
+          + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
           + '<td><span class="tag '+(v.type==='classique'?'tgc':v.type==='stock'?'tgs':'tgcr')+'">'+v.type+'</span></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:'+(v.marge_nette_ht>=0?'var(--v)':'var(--r)')+'">'+fmt(v.marge_nette_ht)+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right">'+fmt((v.comm_vendeur||0)+(v.prime_rapidite||0))+'</td>'
@@ -2200,7 +2200,7 @@ function afficherAgent(vm, agent, params) {
     : '<table class="vt"><thead><tr><th>Date vente</th><th>Véhicule</th><th>Type</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">Livrée le</th></tr></thead><tbody>'
       + ventesLivr.map(v => '<tr>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;white-space:nowrap">'+fmtDate(v.date)+'</td>'
-          + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
+          + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
           + '<td><span class="tag '+(v.type==='classique'?'tgc':v.type==='stock'?'tgs':'tgcr')+'">'+v.type+'</span></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:'+(v.marge_nette_ht>=0?'var(--v)':'var(--r)')+'">'+fmt(v.marge_nette_ht)+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((v.comm_vendeur||0)+(v.prime_rapidite||0))+'</td>'
@@ -2209,7 +2209,7 @@ function afficherAgent(vm, agent, params) {
       + '</tbody></table>';
 
   window._payData=window._payData||{};
-  window._payData[agent]={agent,moisSel,comm:comm||0,commM:commM||0,avisGain:avisGain||0,avisAtt:avisAtt||0,primePal:primePal||0,excep:excep||0,primeOv:primeOv||0,primeOm:primeOm||0,bonus:bonus||0,trimData:{prime:trimData.prime||0,manquant:trimData.manquant||0,prochainPalier:trimData.prochainPalier||0},primeBest:primeBest||0,primeRapid:primeRapid||0,opteven:opteven||0,nbOpt:nbOpt||0,nbOptVendu:nbOptVendu||0,total:total||0,nb:nb||0,nbM:nbM||0,ventes:ventesLivr.map(v=>({voiture:v.voiture||'',type:v.type||'classique',margeHT:v.marge_nette_ht||0,comm:(v.comm_vendeur||0)+(v.prime_rapidite||0),dateLivr:v.date_livraison||''}))};
+  window._payData[agent]={agent,moisSel,comm:comm||0,commM:commM||0,avisGain:avisGain||0,avisAtt:avisAtt||0,primePal:primePal||0,excep:excep||0,primeOv:primeOv||0,primeOm:primeOm||0,bonus:bonus||0,trimData:{prime:trimData.prime||0,manquant:trimData.manquant||0,prochainPalier:trimData.prochainPalier||0},primeBest:primeBest||0,primeRapid:primeRapid||0,opteven:opteven||0,nbOpt:nbOpt||0,nbOptVendu:nbOptVendu||0,total:total||0,nb:nb||0,nbM:nbM||0,ventes:ventesLivr.map(v=>({voiture:v.vehicule||'',hasOpt:(v.prime_opteven||0)>0,type:v.type||'classique',margeHT:v.marge_nette_ht||0,comm:(v.comm_vendeur||0)+(v.prime_rapidite||0),dateLivr:v.date_livraison||''}))};
   zone.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem">'
     + '<div>'
     + '<div class="stl" style="margin-bottom:.65rem">Progression</div>'
@@ -2477,7 +2477,7 @@ function imprimerFiche(agent) {
   var vHtml = d.ventes.map(function(v){
     return '<tr style="border-bottom:1px solid #2a2a35">'
       +'<td style="padding:.4rem .55rem;font-size:.73rem;color:#7ab;text-transform:uppercase;letter-spacing:.04em">'+v.type+'</td>'
-      +'<td style="padding:.4rem .55rem;font-size:.84rem">'+v.voiture+'</td>'
+      +'<td style="padding:.4rem .55rem;font-size:.84rem">'+v.voiture+(v.hasOpt?' <span style="color:#2a9;font-weight:700;font-size:.7rem">OPTEVEN</span>':'')+'</td>'
       +'<td style="padding:.4rem .55rem;font-family:IBM Plex Mono,monospace;font-size:.82rem;color:#aaa">'+fm(v.margeHT)+'</td>'
       +'<td style="padding:.4rem .55rem;font-family:IBM Plex Mono,monospace;font-size:.83rem;color:#d4af37">'+fm(v.comm)+'</td>'
       +'<td style="padding:.4rem .55rem;font-size:.8rem;color:#5c9">✅ '+fd(v.dateLivr)+'</td>'
