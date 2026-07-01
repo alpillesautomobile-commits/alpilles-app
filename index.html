@@ -1377,10 +1377,10 @@ function enregistrer() {
     vehicule, type, mandant,
     prix_vente: pv, prix_achat: pa,
     marge_nette_ht: mnHt, total_frais_ht: tfHt,
-    comm_vendeur: cv + prRapid, comm_mandant: cm,
+    comm_vendeur: cv, comm_mandant: cm,
     prime_excep: pe,
     prime_opteven: pot,
-    prime_rapidite: 0,
+    prime_rapidite: prRapid,
     via_prospectrice: document.querySelector('input[name="via-prosp"]:checked')?.value === 'oui',
     date_entree_stock: dateStock,
     resultat_societe_ht: msh,
@@ -1400,7 +1400,7 @@ function enregistrer() {
     ventes[idx] = { ...existing, date: dateStr, mois: moisVente, agence, agent,
       client: document.getElementById('client')?.value || '', vehicule, type, mandant,
       prix_vente: pv, prix_achat: pa, marge_nette_ht: mnHt, total_frais_ht: tfHt,
-      comm_vendeur: cv + prRapid, comm_mandant: cm, prime_excep: pe, prime_opteven: pot, prime_rapidite: 0,
+      comm_vendeur: cv, comm_mandant: cm, prime_excep: pe, prime_opteven: pot, prime_rapidite: prRapid,
       date_entree_stock: dateStock, resultat_societe_ht: msh, frais_detail: fraisDetail };
     localStorage.setItem(SK, JSON.stringify(ventes));
     gasUpdateVente(ventes[idx]);
