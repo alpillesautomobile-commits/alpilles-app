@@ -1709,6 +1709,9 @@ function toggleAvisMand(id, val) {
   toast(val === 'oui' ? '✅ Avis mandant +15 € ajouté' : 'Avis mandant mis à jour');
 }
 
+// ═══ UNLOCK40 HELPERS (top-level for afficherAgent)
+function getUnlock40(ag,mo){var p=JSON.parse(localStorage.getItem('aa_unlock40')||'{}'  );return !!(p[mo]&&p[mo][ag]);}
+function saveUnlock40(ag,mo,val){var p=JSON.parse(localStorage.getItem('aa_unlock40')||'{}'  );if(!p[mo])p[mo]={};p[mo][ag]=!!val;localStorage.setItem('aa_unlock40',JSON.stringify(p));try{afficherDashboard();}catch(e){}}
 // ═══ RECAP AGENT
 function afficherRecap() {
   window.getJulesPaye=function(mois){var p=JSON.parse(localStorage.getItem('aa_jules_paye')||'{}');return parseFloat(p[mois])||0;};
