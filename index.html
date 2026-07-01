@@ -1734,6 +1734,9 @@ function afficherRecap() {
 
     const totalVentes   = allV.length;
     const totalMarge    = allLiv.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
+    window._recapTotalMarge = totalMarge;
+    const _prRecap = JSON.parse(localStorage.getItem('aa_paye_reel')||'{}');
+    const totalVerse = AGENTS.reduce((s,a) => s+((_prRecap[mois]&&_prRecap[mois][a]!==undefined)?parseFloat(_prRecap[mois][a])||0:0), 0);
     const totalSociete  = allLiv.reduce((s,v) => {
       const r = v.resultat_societe_ht != null ? v.resultat_societe_ht : (v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)+((v.prime_opteven||0)>0?380:0));
       return s + r;
@@ -1746,6 +1749,8 @@ function afficherRecap() {
       + '<div class="kpi wn"><div class="kl">En attente livraison</div><div class="kv">'+attente.length+'</div><div class="ks">Tous mois confondus</div></div>'
       + '<div class="kpi ok"><div class="kl">Marge HT livrée</div><div class="kv">'+fmt(totalMarge)+'</div><div class="ks">'+allLiv.length+' livraison(s)</div></div>'
       + '<div class="kpi nf"><div class="kl">Résultat société HT</div><div class="kv" style="color:var(--n)">'+fmt(totalSociete)+'</div><div class="ks">Comms déduites</div></div>'
+      + '<div class="kpi" style="border:2px solid #2a9"><div class="kl">Résultat net réel</div><div class="kv" id="recap-resultat-net" style="color:#2a9">'+fmt(totalMarge-totalVerse)+'</div><div class="ks">Marge − versements</div></div>'
+      + '<div class="kpi"><div class="kl">Total versé agents</div><div class="kv" id="recap-total-verse" style="color:var(--gm)">'+fmt(totalVerse)+'</div><div class="ks">Saisi manuellement</div></div>'
       + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800;margin-top:.4rem"><div class="kl">📞 Via téléprospectrice</div><div class="kv">'+(allLiv.filter(v=>v.via_prospectrice).length)+' vente(s)</div><div class="ks">livrées ce mois</div></div>'
       + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800"><div class="kl">📞 Mandats prospectrice</div><div class="kv">'+(mandats.filter(m=>m.mois===mois&&m.via_prospectrice).length)+'</div><div class="ks">rentrés ce mois</div></div>'
       + (CURRENT_USER==='Jules'?'<div class="kpi" style="grid-column:1/-1;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3)"><div class="kl">Paye mensuelle</div><div class="kv" style="color:#6366f1">'+fmt(getJulesPaye(mois))+'</div><div class="ks">ce mois</div></div>':'')
@@ -1798,7 +1803,7 @@ function afficherRecap() {
                       : '🏆 Il manque '+manqueV100+' vente(s) et '+manqueM100+' mandat(s) pour prime 150€'
                     )+'</div>'
                     : '')
-                  +'</div></div>';
+                  +'<div style="border-top:1px solid rgba(255,255,255,.12);padding:.3rem .7rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem">'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em">Versé agent</span>'+'<div style="display:flex;align-items:center;gap:.25rem">'+'<input type="number" id="paye-reel-'+a+'" value="'+(window.getPayeReel?window.getPayeReel(a,mois)||0:0)+'" step="1" style="width:88px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:.76rem;padding:.18rem .4rem;border-radius:3px;text-align:right;font-family:IBM Plex Mono,monospace" onchange="savePayeReel(\''+a+'\',\''+mois+'\',this.value)">'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5)">€</span>'+'</div></div>'+'</div></div>';
     }
     function buildAgenceSection(agenceName, agents) {
       const agLabel = agenceName === 'Saint-Rémy' ? 'Agence Saint-Rémy-de-Provence' : 'Agence Aix-en-Provence';
