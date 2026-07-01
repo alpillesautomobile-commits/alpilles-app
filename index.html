@@ -1786,7 +1786,6 @@ function afficherRecap() {
       + '<div class="kpi hl"><div class="kl">Ventes signées</div><div class="kv">'+totalVentes+'</div><div class="ks">'+lblMois(mois)+'</div></div>'
       + '<div class="kpi wn"><div class="kl">En attente livraison</div><div class="kv">'+attente.length+'</div><div class="ks">Tous mois confondus</div></div>'
       + '<div class="kpi ok"><div class="kl">Marge HT livrée</div><div class="kv">'+fmt(totalMarge)+'</div><div class="ks">'+allLiv.length+' livraison(s)</div></div>'
-      + '<div class="kpi nf"><div class="kl">Résultat société HT</div><div class="kv" style="color:var(--n)">'+fmt(totalSociete)+'</div><div class="ks">Comms déduites</div></div>'
       + '<div class="kpi" style="border:2px solid #2a9"><div class="kl">Résultat net réel</div><div class="kv" id="recap-resultat-net" style="color:#2a9">'+fmt(totalMarge-totalVerse)+'</div><div class="ks">Marge − paye complète</div></div>'
       + '<div class="kpi"><div class="kl">Total versé agents</div><div class="kv" id="recap-total-verse" style="color:var(--gm)">'+fmt(totalVerse)+'</div><div class="ks">Calculé auto · modifiable</div></div>'
       + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800;margin-top:.4rem"><div class="kl">📞 Via téléprospectrice</div><div class="kv">'+(allLiv.filter(v=>v.via_prospectrice).length)+' vente(s)</div><div class="ks">livrées ce mois</div></div>'
