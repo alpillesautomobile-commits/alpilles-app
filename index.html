@@ -1440,7 +1440,7 @@ function editerVente(id) {
     const e = document.getElementById('f_'+f.id);
     if (!e) return;
     if (v.frais_detail) {
-      e.value = v.frais_detail[f.id] || '';
+      e.value = (v.frais_detail[f.id] !== undefined && v.frais_detail[f.id] !== '') ? v.frais_detail[f.id] : (f.id === 'nettoyage' ? 6 : '');
       const tvaEl = document.getElementById('tva_'+f.id);
       if (tvaEl && v.frais_detail['tva_'+f.id]) tvaEl.value = v.frais_detail['tva_'+f.id];
     } else {
@@ -1492,6 +1492,7 @@ function resetFiche(silent) {
   if (CURRENT_USER && !MANAGERS.includes(CURRENT_USER)) {
     const agentSel = document.getElementById('agent'); if (agentSel) agentSel.value = CURRENT_USER;
   }
+  var fNet = document.getElementById('f_nettoyage'); if(fNet && !parseFloat(fNet.value)) fNet.value = 6;
   calcFiche();
 }
 
