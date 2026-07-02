@@ -2353,7 +2353,7 @@ async function pushEmbeddedParams(params) {
     const raw = atob(j.content.replace(/\n/g,''));
     const bytes = new Uint8Array(raw.length); for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
     let src = new TextDecoder().decode(bytes);
-    src = src.replace(/const EMBEDDED_PARAMS = \{[^;]+\};/, 'const EMBEDDED_PARAMS = '+JSON.stringify(params)+';');
+    src = src.replace(/(?:const )?EMBEDDED_PARAMS = (?:undefined|\{[^;]+\});/, 'const EMBEDDED_PARAMS = '+JSON.stringify(params)+';');
     const enc = new TextEncoder().encode(src);
     let b64=''; for(let i=0;i<enc.length;i+=3072) b64+=btoa(String.fromCharCode(...enc.slice(i,i+3072)));
     await fetch('https://api.github.com/repos/alpillesautomobile-commits/alpilles-app/contents/index.html', {
