@@ -1842,7 +1842,7 @@ function afficherRecap() {
                       : '🏆 Il manque '+manqueV100+' vente(s) et '+manqueM100+' mandat(s) pour prime 150€'
                     )+'</div>'
                     : '')
-                  +'<div style="border-top:1px solid rgba(255,255,255,.12);padding:.3rem .7rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem">'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em">Versé agent</span>'+'<div style="display:flex;align-items:center;gap:.25rem">'+'<input type="number" id="paye-reel-'+a+'" value="'+((_prRecap[mois]&&_prRecap[mois][a]!==undefined)?parseFloat(_prRecap[mois][a]):Math.round(calcPayeTotal(a,mois)*100)/100)+'" step="1" style="width:88px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:.76rem;padding:.18rem .4rem;border-radius:3px;text-align:right;font-family:IBM Plex Mono,monospace" >'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5)">€</span><button onclick="savePayeReel(\''+ a +'\',\''+mois+'\',parseFloat(document.getElementById('paye-reel-'+a).value)||0)" style="margin-left:.3rem;padding:.15rem .55rem;background:#16a34a;border:none;border-radius:4px;color:#fff;font-weight:700;cursor:pointer;font-size:.85rem">✓</button>'+'</div></div>'+'</div></div>';
+                  +'<div style="border-top:1px solid rgba(255,255,255,.12);padding:.3rem .7rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem">'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em">Versé agent</span>'+'<div style="display:flex;align-items:center;gap:.25rem">'+'<input type="number" id="paye-reel-'+a+'" value="'+((_prRecap[mois]&&_prRecap[mois][a]!==undefined)?parseFloat(_prRecap[mois][a]):Math.round(calcPayeTotal(a,mois)*100)/100)+'" step="1" style="width:88px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:.76rem;padding:.18rem .4rem;border-radius:3px;text-align:right;font-family:IBM Plex Mono,monospace" >'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5)">€</span><button onclick="savePayeReel(\''+ a +'\',\''+mois+'\',parseFloat(document.getElementById(\'paye-reel-\'+a).value)||0)" style="margin-left:.3rem;padding:.15rem .55rem;background:#16a34a;border:none;border-radius:4px;color:#fff;font-weight:700;cursor:pointer;font-size:.85rem">✓</button>'+'</div></div>'+'</div></div>';
     }
     function buildAgenceSection(agenceName, agents) {
       const agLabel = agenceName === 'Saint-Rémy' ? 'Agence Saint-Rémy-de-Provence' : 'Agence Aix-en-Provence';
@@ -2564,8 +2564,7 @@ function imprimerFiche(agent) {
       :'')
     +'<div style="margin-top:1.4rem;font-size:.7rem;color:#3a3a4a;border-top:1px solid #252530;padding-top:.65rem;text-align:right">'
     +'Généré le '+new Date().toLocaleDateString('fr-FR')+' — Alpilles Automobile</div>'
-    +'</div><scr'+'ipt>window.onload=function(){window.print();}<\/scr'+'ipt>
-</html>';
+    +'</div><scr'+'ipt>window.onload=function(){window.print();}<\/scr'+'ipt></html>';
   var w = window.open('','_blank','width=780,height=950');
   if (w) { w.document.write(pg); w.document.close(); }
 }
