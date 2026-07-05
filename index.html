@@ -901,8 +901,8 @@ function calcPrimeBestAgent(agent, moisRef) {
     const nbM = mandats.filter(m => m.agent===a && m.mois===mois).length;
     const mg  = ventes.filter(v => v.agent===a && v.mois_livraison===mois)
                        .reduce((s,v)=>s+(v.marge_nette_ht||0),0);
-    const ok = (obj.obj_ventes  ? nbV >= obj.obj_ventes  : true) &&
-               (obj.obj_mandats ? nbM >= obj.obj_mandats : true);
+    const ok = (obj.obj_ventes  ? nbV >= obj.obj_ventes  : false) &&
+               (obj.obj_mandats ? nbM >= obj.obj_mandats : false);
     return { agent:a, nbV, nbM, mg, ok };
   });
   const elig = stats.filter(s => s.ok);
@@ -2102,7 +2102,7 @@ function afficherDashboard() {
   const vliv  = ventes.filter(v => v.mois_livraison === mois); // véhicules livrés ce mois (tous mois de vente confondus)
 
   const totalMarge   = vliv.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
-  const totalComm    = vliv.reduce((s,v) => s+(v.comm_vendeur||0)+(v.comm_mandant||0)+(v.prime_excep||0)+(v.prime_opteven||0)+(v.prime_rapidite||0), 0);
+  const totalComm    = AGENTS.reduce((s,a)=>s+calcPayeTotal(a,moisSel),0);
   const totalSociete = vliv.reduce((s,v) => {
     const r = v.resultat_societe_ht != null
       ? v.resultat_societe_ht
