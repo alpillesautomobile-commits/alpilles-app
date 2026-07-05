@@ -1755,6 +1755,7 @@ function afficherRecap() {
   window.getUnlock40=function(ag,mo){var p=JSON.parse(localStorage.getItem('aa_unlock40')||'{}');return !!(p[mo]&&p[mo][ag]);};
   window.setUnlock40=function(ag,mo,val){var p=JSON.parse(localStorage.getItem('aa_unlock40')||'{}');if(!p[mo])p[mo]={};p[mo][ag]=!!val;localStorage.setItem('aa_unlock40',JSON.stringify(p));try{afficherDashboard();}catch(e){}return false;};
   window.getPrime=function(ag,mo){var p=JSON.parse(localStorage.getItem('aa_prime_ex')||'{}');return(p[mo]&&p[mo][ag])||0;};
+  window.savePayeReel=function(ag,mo,val){var pr=JSON.parse(localStorage.getItem('aa_paye_reel')||'{}'  );if(!pr[mo])pr[mo]={};pr[mo][ag]=parseFloat(val)||0;localStorage.setItem('aa_paye_reel',JSON.stringify(pr));afficherRecap();};
   window.setPrime=function(ag,mo,val){var p=JSON.parse(localStorage.getItem('aa_prime_ex')||'{}');if(!p[mo])p[mo]={};p[mo][ag]=parseFloat(val)||0;localStorage.setItem('aa_prime_ex',JSON.stringify(p));try{afficherDashboard();}catch(e){}};
   const mois   = remplirMoisMandats('recap-mois');
   const ventes = loadVentes();
@@ -2494,6 +2495,7 @@ function sauvegarderParams() {
 function imprimerFiche(agent) {
   var d = window._payData && window._payData[agent];
   if (!d) { alert('Ouvrez d\'abord l\'onglet de cet agent'); return; }
+  var _prImp=JSON.parse(localStorage.getItem('aa_paye_reel')||'{}');var _prMois=d.moisSel;if(_prImp[_prMois]&&_prImp[_prMois][agent]!==undefined)d=Object.assign({},d,{total:_prImp[_prMois][agent]});
   var mn = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
   var mp = d.moisSel.split('-');
   var ml = mn[parseInt(mp[1])-1]+' '+mp[0];
