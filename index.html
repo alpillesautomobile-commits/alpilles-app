@@ -2139,14 +2139,13 @@ function afficherBilan() {
   var agAg={};
   function nAgt(n){
     if(!n) return n;
+    var w={8364:0x80,8218:0x82,402:0x83,8222:0x84,8230:0x85,8224:0x86,8225:0x87,710:0x88,8240:0x89,352:0x8A,8249:0x8B,338:0x8C,381:0x8E,8216:0x91,8217:0x92,8220:0x93,8221:0x94,8226:0x95,8211:0x96,8212:0x97,732:0x98,8482:0x99,353:0x9A,8250:0x9B,339:0x9C,382:0x9E,376:0x9F};
+    function bv(c){return w[c]!==undefined?w[c]:c;}
     var r='',i=0;
     while(i<n.length){
       var c0=n.charCodeAt(i);
-      if(i+3<n.length&&c0===0xC3&&n.charCodeAt(i+1)>=0x80&&n.charCodeAt(i+1)<=0x9F&&n.charCodeAt(i+2)===0xC2&&n.charCodeAt(i+3)>=0x80&&n.charCodeAt(i+3)<=0xBF){
-        r+=String.fromCharCode(((n.charCodeAt(i+1)+0x40)&0x1F)<<6|(n.charCodeAt(i+3)&0x3F));i+=4;
-      }else if(i+1<n.length&&c0>=0xC2&&c0<=0xDF&&n.charCodeAt(i+1)>=0x80&&n.charCodeAt(i+1)<=0xBF){
-        r+=String.fromCharCode((c0&0x1F)<<6|(n.charCodeAt(i+1)&0x3F));i+=2;
-      }else{r+=n[i];i++;}
+      if(i+3<n.length&&c0===0xC3){var b1=bv(n.charCodeAt(i+1));if(b1>=0x80&&b1<=0x9F&&n.charCodeAt(i+2)===0xC2&&n.charCodeAt(i+3)>=0x80&&n.charCodeAt(i+3)<=0xBF){r+=String.fromCharCode(((b1+0x40)&0x1F)<<6|(n.charCodeAt(i+3)&0x3F));i+=4;continue;}}
+      if(i+1<n.length&&c0>=0xC2&&c0<=0xDF&&n.charCodeAt(i+1)>=0x80&&n.charCodeAt(i+1)<=0xBF){r+=String.fromCharCode((c0&0x1F)<<6|(n.charCodeAt(i+1)&0x3F));i+=2;}else{r+=n[i];i++;}
     }
     return r;
   }
