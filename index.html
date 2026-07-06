@@ -147,13 +147,13 @@ tbody td:not(:first-child){text-align:right}
 
     <!-- Ãtape 1 : choix du nom -->
     <div id="login-step1">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:#c8a96e;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.5rem">Qui Ãªtes-vous ?</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:#c8a96e;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.5rem">Qui êtes-vous ?</div>
       <div style="display:flex;flex-direction:column;gap:.6rem">
         <button onclick="selectUser('Julien')" style="background:#1a1a1a;color:#fafaf8;border:none;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">ð Julien â Manager</button>
         <button onclick="selectUser('Jules')" style="background:#1a1a1a;color:#fafaf8;border:none;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">ð Jules â Manager Aix</button>
         <button onclick="selectUser('Adrien')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">ð¤ Adrien</button>
-        <button onclick="selectUser('LÃ©o')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">ð¤ LÃ©o</button>
-        <button onclick="selectUser('AurÃ©lien')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">ð¤ AurÃ©lien</button>
+        <button onclick="selectUser('Léo')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">ð¤ Léo</button>
+        <button onclick="selectUser('Aurélien')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">ð¤ Aurélien</button>
         <button onclick="selectUser('Tom')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">ð¤ Tom</button>
         <button onclick="selectUser('Nael')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">ð¤ Nael</button>
         <button onclick="selectUser('Jeremy')" style="background:transparent;color:#1a1a1a;border:1.5px solid #1a1a1a;padding:.75rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:left">ð¤ Jeremy</button>
@@ -186,14 +186,14 @@ tbody td:not(:first-child){text-align:right}
 </div>
 
 <nav>
-  <div class="nb"><div class="nt">Alpilles Automobile</div><div class="ns">Saint-RÃ©my Â· Aix</div></div>
+  <div class="nb"><div class="nt">Alpilles Automobile</div><div class="ns">Saint-Rémy · Aix</div></div>
   <div class="ntabs">
     <button class="ntab on" onclick="nav('fiche')" id="t-fiche">ð Nouvelle vente</button>
     <button class="ntab" onclick="nav('livraisons')" id="t-livraisons">ð Livraisons <span class="nbg" id="livr-badge" style="display:none"></span></button>
-    <button class="ntab" onclick="nav('recap')" id="t-recap">ð Mon rÃ©cap</button>
+    <button class="ntab" onclick="nav('recap')" id="t-recap">ð Mon récap</button>
     <button class="ntab" onclick="nav('dashboard')" id="t-dashboard">ð Tableau de bord</button>
     <button class="ntab" onclick="nav('mandats')" id="t-mandats">ð Mandats <span class="nbg" id="mand-badge" style="display:none"></span></button>
-    <button class="ntab" onclick="nav('params')" id="t-params">âï¸ ParamÃ¨tres</button>
+    <button class="ntab" onclick="nav('params')" id="t-params">âï¸ Paramètres</button>
     <button class="ntab" onclick="syncLoad()" style="margin-left:auto;color:var(--a)">ð Sync</button>
     <span id="sync-status" style="display:flex;align-items:center;padding:0 .8rem;font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--a);white-space:nowrap"></span>
     <span id="user-label" style="display:flex;align-items:center;padding:0 .6rem;font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:#888;white-space:nowrap"></span>
@@ -206,15 +206,15 @@ tbody td:not(:first-child){text-align:right}
 
 <div class="pg on" id="pg-fiche">
 <div class="card">
-  <div class="ch"><div class="ct">Fiche de Gestion</div><div class="cs">Saisie d'une vente Â· Enregistrement automatique</div></div>
+  <div class="ch"><div class="ct">Fiche de Gestion</div><div class="cs">Saisie d'une vente · Enregistrement automatique</div></div>
   <div class="cb">
     <div class="acts">
-      <button class="btn" onclick="resetFiche()">RÃ©initialiser</button>
+      <button class="btn" onclick="resetFiche()">Réinitialiser</button>
       <button class="btn bp" onclick="window.print()">Imprimer / PDF</button>
       <button class="btn bs" id="btn-enreg" onclick="enregistrer()">â Enregistrer au tableau de bord</button>
     </div>
     <div style="margin:.6rem 0;padding:.8rem;background:#fff3e0;border-radius:10px;border:3px solid #ff9800">
-      <div style="font-weight:700;font-size:.9rem;margin-bottom:.5rem;color:#e65100">ð Vente via tÃ©lÃ©prospectriceÂ ? <span style="color:#d32f2f;font-size:.75rem">obligatoire</span></div>
+      <div style="font-weight:700;font-size:.9rem;margin-bottom:.5rem;color:#e65100">ð Vente via téléprospectriceÂ ? <span style="color:#d32f2f;font-size:.75rem">obligatoire</span></div>
       <div style="display:flex;gap:.8rem">
         <label style="cursor:pointer;display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:.9rem"><input type="radio" name="via-prosp" value="oui" onchange="calcFiche()"> â OUI â commission 30%</label>
         <label style="cursor:pointer;display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:.9rem"><input type="radio" name="via-prosp" value="non" onchange="calcFiche()"> â NON â taux normal</label>
@@ -224,55 +224,55 @@ tbody td:not(:first-child){text-align:right}
       <div class="stl">Identification</div>
       <div class="gr">
         <div class="fl"><label>Agence</label>
-          <select id="agence"><option value="">â SÃ©lectionner â</option>
-            <option>Agence Saint-RÃ©my-de-Provence</option>
+          <select id="agence"><option value="">â Sélectionner â</option>
+            <option>Agence Saint-Rémy-de-Provence</option>
             <option>Agence Aix-en-Provence</option></select></div>
         <div class="fl"><label>Agent commercial</label>
-          <select id="agent" onchange="calcFiche()"><option value="">â SÃ©lectionner â</option>
-            <option>Jules</option><option>Adrien</option><option>LÃ©o</option><option>AurÃ©lien</option><option>Tom</option><option>Nael</option><option>Julien</option><option>Jeremy</option></select></div>
+          <select id="agent" onchange="calcFiche()"><option value="">â Sélectionner â</option>
+            <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option><option>Jeremy</option></select></div>
         <div class="fl"><label>Date de la vente</label><input type="date" id="date_vente" oninput="calcFiche()"></div>
-        <div class="fl"><label>Date d'entrÃ©e en stock</label><input type="date" id="date_entree_stock" oninput="calcFiche()" autocomplete="off"></div>
-        <div class="fl"><label>Nom du client</label><input type="text" id="client" placeholder="Nom PrÃ©nom"></div>
-        <div class="fl fc"><label>VÃ©hicule</label><input type="text" id="vehicule" placeholder="Marque ModÃ¨le AnnÃ©e"></div>
+        <div class="fl"><label>Date d'entrée en stock</label><input type="date" id="date_entree_stock" oninput="calcFiche()" autocomplete="off"></div>
+        <div class="fl"><label>Nom du client</label><input type="text" id="client" placeholder="Nom Prénom"></div>
+        <div class="fl fc"><label>Véhicule</label><input type="text" id="vehicule" placeholder="Marque Modèle Année"></div>
         <div class="fl"><label>Type de vente</label>
           <select id="type_vente" onchange="calcFiche()">
             <option value="classique">Vente classique (30% ou 40%)</option>
-            <option value="stock">Stock sociÃ©tÃ© (20%)</option>
-            <option value="croise">Mandat croisÃ© (20%/20%)</option>
+            <option value="stock">Stock société (20%)</option>
+            <option value="croise">Mandat croisé (20%/20%)</option>
             <option value="direct">Vente en direct (0%)</option></select></div>
         <div class="fl" id="bloc-mandant" style="display:none"><label>Agent mandant</label>
-          <select id="agent_mandant"><option value="">â SÃ©lectionner â</option>
-            <option>Jules</option><option>Adrien</option><option>LÃ©o</option><option>AurÃ©lien</option><option>Tom</option><option>Nael</option><option>Julien</option><option>Jeremy</option></select></div>
+          <select id="agent_mandant"><option value="">â Sélectionner â</option>
+            <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option><option>Jeremy</option></select></div>
         <div class="fl"><label>Prix de vente TTC (â¬)</label><input type="number" id="prix_vente" placeholder="0" min="0" step="1" oninput="calcFiche()"></div>
         <div class="fl"><label>Prix d'achat TTC (â¬)</label><input type="number" id="prix_achat" placeholder="0" min="0" step="1" oninput="calcFiche()"></div>
-        <div class="fl fc"><label>Marge brute vÃ©hicule â calculÃ© auto</label><input type="text" id="marge_brute" readonly placeholder="â"></div>
+        <div class="fl fc"><label>Marge brute véhicule â calculé auto</label><input type="text" id="marge_brute" readonly placeholder="â"></div>
       </div>
     </div>
     <div class="sec">
       <div class="stl">Frais</div>
-      <table><thead><tr><th>DÃ©signation</th><th>TVA ?</th><th>Montant TTC (â¬)</th><th>HT (â¬)</th></tr></thead>
+      <table><thead><tr><th>Désignation</th><th>TVA ?</th><th>Montant TTC (â¬)</th><th>HT (â¬)</th></tr></thead>
       <tbody id="frais-body"></tbody></table>
     </div>
     <div class="sec">
-      <div class="stl">RÃ©capitulatif</div>
-      <table><thead><tr><th>ÃlÃ©ment</th><th>TTC (â¬)</th><th>HT (â¬)</th></tr></thead>
+      <div class="stl">Récapitulatif</div>
+      <table><thead><tr><th>Ãlément</th><th>TTC (â¬)</th><th>HT (â¬)</th></tr></thead>
       <tbody>
-        <tr><td class="tdl">Marge vÃ©hicule brute</td><td class="cmp pos" id="r-vttc">â</td><td class="cmp pos" id="r-vht">â</td></tr>
+        <tr><td class="tdl">Marge véhicule brute</td><td class="cmp pos" id="r-vttc">â</td><td class="cmp pos" id="r-vht">â</td></tr>
         <tr><td class="tdl">Total frais</td><td class="cmp neg" id="r-fttc">â</td><td class="cmp neg" id="r-fht">â</td></tr>
-        <tr class="rm"><td>Marge nette validÃ©e</td><td class="cmp" id="r-mttc">â</td><td class="cmp" id="r-mht">â</td></tr>
+        <tr class="rm"><td>Marge nette validée</td><td class="cmp" id="r-mttc">â</td><td class="cmp" id="r-mht">â</td></tr>
       </tbody></table>
     </div>
     <div class="sec">
       <div class="stl">Commission agent (HT)</div>
       <div class="ib" id="comm-info">â</div>
-      <table><thead><tr><th>ÃlÃ©ment</th><th>HT (â¬)</th></tr></thead>
+      <table><thead><tr><th>Ãlément</th><th>HT (â¬)</th></tr></thead>
       <tbody>
         <tr><td class="tdl">Marge nette HT base</td><td class="cmp" id="r-base">â</td></tr>
         <tr><td class="tdl" id="comm-lbl">Commission vendeur</td><td class="cmp" id="r-comm">â</td></tr>
         <tr id="row-croise" style="display:none"><td colspan="2"><div class="cb2" id="croise-det">â</div></td></tr>
         <tr><td class="tdl">Prime exceptionnelle</td><td><input class="ni" type="number" id="prime_excep" placeholder="0" step="1" oninput="calcFiche()"></td></tr>
         <tr><td class="tdl">Prime contrat OPTEVEN 48 mois</td><td><input class="ni" type="number" id="prime_opteven" placeholder="0" step="1" oninput="calcFiche()"></td></tr>
-        <tr id="row-rapidite" style="display:none"><td class="tdl" style="color:var(--v)">â¡ Prime rapiditÃ© (â¤15j stock)</td><td class="cmp pos" id="r-rapidite">+30,00 â¬</td></tr>
+        <tr id="row-rapidite" style="display:none"><td class="tdl" style="color:var(--v)">â¡ Prime rapidité (â¤15j stock)</td><td class="cmp pos" id="r-rapidite">+30,00 â¬</td></tr>
         <tr class="ct2"><td id="total-lbl">Total Ã  verser</td><td class="cmp" id="r-total">â</td></tr>
       </tbody></table>
     </div>
@@ -289,7 +289,7 @@ tbody td:not(:first-child){text-align:right}
 
 <div class="pg" id="pg-livraisons">
 <div class="card">
-  <div class="ch"><div class="ct">Suivi des Livraisons</div><div class="cs">Paye calculÃ©e au mois de livraison</div></div>
+  <div class="ch"><div class="ct">Suivi des Livraisons</div><div class="cs">Paye calculée au mois de livraison</div></div>
   <div class="cb">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
       <span id="livr-cpt" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--gm)"></span>
@@ -304,7 +304,7 @@ tbody td:not(:first-child){text-align:right}
 
 <div class="pg" id="pg-recap">
 <div class="card">
-  <div class="ch"><div class="ct">Mon RÃ©cap</div><div class="cs">Objectifs Â· Progression Â· Paye estimÃ©e</div></div>
+  <div class="ch"><div class="ct">Mon Récap</div><div class="cs">Objectifs · Progression · Paye estimée</div></div>
   <div class="cb">
     <div class="ms">
       <label>Mois</label><select id="recap-mois" onchange="afficherRecap()"></select>
@@ -319,7 +319,7 @@ tbody td:not(:first-child){text-align:right}
 
 <div class="pg" id="pg-dashboard">
 <div class="card">
-  <div class="ch"><div class="ct">Tableau de Bord</div><div class="cs">Vue manager Â· Toutes agences</div></div>
+  <div class="ch"><div class="ct">Tableau de Bord</div><div class="cs">Vue manager · Toutes agences</div></div>
   <div class="cb">
     <div class="ms">
       <label>Mois</label><select id="dash-mois" onchange="afficherDashboard()"></select>
@@ -338,26 +338,26 @@ tbody td:not(:first-child){text-align:right}
 
 <div class="pg" id="pg-mandats">
 <div class="card">
-  <div class="ch"><div class="ct">Mandats</div><div class="cs">Saisie rapide Â· Suivi exclusif vs simple</div></div>
+  <div class="ch"><div class="ct">Mandats</div><div class="cs">Saisie rapide · Suivi exclusif vs simple</div></div>
   <div class="cb">
     <div style="background:var(--bg);border:1px solid var(--b);padding:1rem 1.2rem;margin-bottom:1.2rem">
       <div class="stl" style="margin-bottom:.7rem">Nouveau mandat</div>
       <div class="gr" style="margin-bottom:.7rem">
         <div class="fl"><label>Agent</label>
-          <select id="m-agent" onchange="autoAgenceMandat()"><option value="">â SÃ©lectionner â</option>
-            <option>Jules</option><option>Adrien</option><option>LÃ©o</option><option>AurÃ©lien</option><option>Tom</option><option>Nael</option><option>Julien</option><option>Jeremy</option></select></div>
+          <select id="m-agent" onchange="autoAgenceMandat()"><option value="">â Sélectionner â</option>
+            <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option><option>Jeremy</option></select></div>
         <div class="fl"><label>Date</label><input type="date" id="m-date"></div>
-        <div class="fl fc"><label>VÃ©hicule (Marque ModÃ¨le)</label><input type="text" id="m-vehicule" placeholder="ex: Peugeot 3008 2021"></div>
-        <div class="fl"><label>Nom du propriÃ©taire</label><input type="text" id="m-proprio" placeholder="Nom PrÃ©nom"></div>
+        <div class="fl fc"><label>Véhicule (Marque Modèle)</label><input type="text" id="m-vehicule" placeholder="ex: Peugeot 3008 2021"></div>
+        <div class="fl"><label>Nom du propriétaire</label><input type="text" id="m-proprio" placeholder="Nom Prénom"></div>
         <div class="fl"><label>Type de mandat</label>
           <select id="m-type">
             <option value="exclusif">Exclusif (70%)</option>
             <option value="simple">Simple (30%)</option></select></div>
-        <div class="fl"><label>Agence</label><select id="m-agence"><option value="">â SÃ©lectionner â</option><option value="Agence Saint-RÃ©my-de-Provence">Saint-RÃ©my-de-Provence</option><option value="Agence Aix-en-Provence">Aix-en-Provence</option></select></div>
+        <div class="fl"><label>Agence</label><select id="m-agence"><option value="">â Sélectionner â</option><option value="Agence Saint-Rémy-de-Provence">Saint-Rémy-de-Provence</option><option value="Agence Aix-en-Provence">Aix-en-Provence</option></select></div>
       </div>
       <div class="acts" style="margin-bottom:0">
         <div style="margin:.5rem 0;padding:.7rem .8rem;background:#fff3e0;border-radius:10px;border:3px solid #ff9800">
-          <div style="font-weight:700;font-size:.87rem;margin-bottom:.4rem;color:#e65100">ð Mandat via tÃ©lÃ©prospectriceÂ ? <span style="color:#d32f2f;font-size:.72rem">obligatoire</span></div>
+          <div style="font-weight:700;font-size:.87rem;margin-bottom:.4rem;color:#e65100">ð Mandat via téléprospectriceÂ ? <span style="color:#d32f2f;font-size:.72rem">obligatoire</span></div>
           <div style="display:flex;gap:.8rem">
             <label style="cursor:pointer;display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:.87rem"><input type="radio" name="via-prosp-m" value="oui"> â OUI</label>
             <label style="cursor:pointer;display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:.87rem"><input type="radio" name="via-prosp-m" value="non"> â NON</label>
@@ -379,7 +379,7 @@ tbody td:not(:first-child){text-align:right}
 
 <div class="pg" id="pg-params">
 <div class="card">
-  <div class="ch"><div class="ct">ParamÃ¨tres</div><div class="cs">Objectifs et pay plan</div></div>
+  <div class="ch"><div class="ct">Paramètres</div><div class="cs">Objectifs et pay plan</div></div>
   <div class="cb">
     <div class="acts"><button class="btn bs" onclick="sauvegarderParams()">â Enregistrer</button></div>
 
@@ -397,29 +397,29 @@ tbody td:not(:first-child){text-align:right}
         </div>
       </div>
       <div style="margin-top:.7rem;font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--gm);line-height:1.6">
-        Synchronisation via GitHub Â· Repo : <strong>alpillesautomobile-commits/alpilles-data</strong><br>
-        Le token est prÃ©-configurÃ© â la sync fonctionne directement.
+        Synchronisation via GitHub · Repo : <strong>alpillesautomobile-commits/alpilles-data</strong><br>
+        Le token est pré-configuré â la sync fonctionne directement.
       </div>
       <div id="token-status" style="margin-top:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.65rem;font-weight:600"></div>
     </div>
 
     <div class="pg2" id="param-zone"></div>
 
-    <!-- RESET LOCAL DATA â visible par tous pour purger les anciennes donnÃ©es de test -->
+    <!-- RESET LOCAL DATA â visible par tous pour purger les anciennes données de test -->
     <div style="margin-top:1.4rem;background:#fde8e8;border:1px solid #f5c6c6;padding:1rem 1.2rem">
-      <div class="stl" style="margin-bottom:.5rem;color:var(--r)">â ï¸ RÃ©initialisation des donnÃ©es locales</div>
+      <div class="stl" style="margin-bottom:.5rem;color:var(--r)">â ï¸ Réinitialisation des données locales</div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--gm);margin-bottom:.7rem;line-height:1.6">
-        Supprime toutes les ventes et mandats enregistrÃ©s <strong>sur cet ordinateur</strong> qui n'ont pas Ã©tÃ© synchronisÃ©s.<br>
-        AprÃ¨s la rÃ©initialisation, les donnÃ©es sont rechargÃ©es depuis GitHub.
+        Supprime toutes les ventes et mandats enregistrés <strong>sur cet ordinateur</strong> qui n'ont pas été synchronisés.<br>
+        Après la réinitialisation, les données sont rechargées depuis GitHub.
       </div>
-      <button class="btn bd" onclick="resetDonneesLocales()">ðï¸ Vider mes donnÃ©es locales et recharger depuis GitHub</button>
+      <button class="btn bd" onclick="resetDonneesLocales()">ðï¸ Vider mes données locales et recharger depuis GitHub</button>
     </div>
 
     <!-- NETTOYAGE DOUBLONS â visible manager uniquement -->
     <div id="bloc-clean" style="display:none;margin-top:1rem;background:#fff3cd;border:1px solid #ffc107;padding:1rem 1.2rem">
       <div class="stl" style="margin-bottom:.5rem;color:#856404">ð ï¸ Nettoyage des doublons (Admin)</div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--gm);margin-bottom:.7rem;line-height:1.6">
-        Supprime les entrÃ©es de test et doublons connus directement dans GitHub et en local.
+        Supprime les entrées de test et doublons connus directement dans GitHub et en local.
       </div>
       <button class="btn" onclick="nettoyerDoublonsAdmin()" style="border-color:#856404;color:#856404;background:transparent">ðï¸ Lancer le nettoyage</button>
       <div id="clean-status" style="margin-top:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.65rem;font-weight:600"></div>
@@ -436,18 +436,18 @@ tbody td:not(:first-child){text-align:right}
 <script>
 // âââ CONSTANTES
 const TVA = 1.20;
-const AGENTS = ['Jules', 'Adrien', 'LÃ©o', 'AurÃ©lien', 'Tom', 'Nael', 'Julien', 'Jeremy'];
+const AGENTS = ['Jules', 'Adrien', 'Léo', 'Aurélien', 'Tom', 'Nael', 'Julien', 'Jeremy'];
 const MANAGERS = ['Julien', 'Jules'];
 const AGENCES = {
-  'Saint-RÃ©my': ['LÃ©o', 'AurÃ©lien', 'Nael', 'Julien'],
+  'Saint-Rémy': ['Léo', 'Aurélien', 'Nael', 'Julien'],
   'Aix':        ['Jules', 'Adrien', 'Tom', 'Jeremy'],
 };
 
 // âââ PIN ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const PINS_KEY = 'aa_pins';
-// Codes par dÃ©faut â Ã  changer dans ParamÃ¨tres (section Codes PIN)
-const DEFAULT_PINS = { 'Julien':'1234', 'Jules':'1111', 'Adrien':'6555', 'LÃ©o':'2222', 'AurÃ©lien':'3333', 'Tom':'4444', 'Nael':'5555', 'Jeremy':'5498' };
-const EMBEDDED_PARAMS = {"Jules":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Adrien":{"obj_ventes":8,"obj_mandats":13,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"LÃ©o":{"obj_ventes":10,"obj_mandats":14,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Aurelien":{"obj_ventes":5,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"AurÃ©lien":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Tom":{"obj_ventes":8,"obj_mandats":13,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Nael":{"obj_ventes":5,"obj_mandats":8,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julien":{"obj_ventes":9,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julia":{"obj_ventes":10,"obj_mandats":7,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"_monthly_obj":{"2026-05":{"Jules":{"obj_ventes":9,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Adrien":{"obj_ventes":5,"obj_mandats":8,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"LÃ©o":{"obj_ventes":10,"obj_mandats":14,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"AurÃ©lien":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Tom":{"obj_ventes":5,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Nael":{"obj_ventes":5,"obj_mandats":8,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julien":{"obj_ventes":9,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50}},"2026-06":{"LÃ©o":{"obj_ventes":8,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"NaÃ«l":{"obj_ventes":6,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Nael":{"obj_ventes":6,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"AurÃ©lien":{"obj_ventes":5,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Tom":{"obj_ventes":7,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Jules":{"obj_ventes":7,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Adrien":{"obj_ventes":7,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julien":{"obj_ventes":8,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julia":{"obj_ventes":0,"obj_mandats":7,"prime_obj_ventes":0,"prime_obj_mandats":150,"bonus_dep":50}},"2026-07":{"Jules":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Adrien":{"obj_ventes":8,"obj_mandats":13,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"LÃ©o":{"obj_ventes":10,"obj_mandats":14,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"AurÃ©lien":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Tom":{"obj_ventes":8,"obj_mandats":13,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Nael":{"obj_ventes":5,"obj_mandats":8,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julien":{"obj_ventes":9,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julia":{"obj_ventes":10,"obj_mandats":7,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50}}},"LÃÂ©o":{"obj_ventes":10,"obj_mandats":14,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"AurÃÂ©lien":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"_global":{"palier_opteven":4,"comm_opteven_bas":100,"comm_opteven_haut":150}};
+// Codes par défaut â Ã  changer dans Paramètres (section Codes PIN)
+const DEFAULT_PINS = { 'Julien':'1234', 'Jules':'1111', 'Adrien':'6555', 'Léo':'2222', 'Aurélien':'3333', 'Tom':'4444', 'Nael':'5555', 'Jeremy':'5498' };
+const EMBEDDED_PARAMS = {"Jules":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Adrien":{"obj_ventes":8,"obj_mandats":13,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Léo":{"obj_ventes":10,"obj_mandats":14,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Aurelien":{"obj_ventes":5,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Aurélien":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Tom":{"obj_ventes":8,"obj_mandats":13,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Nael":{"obj_ventes":5,"obj_mandats":8,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julien":{"obj_ventes":9,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julia":{"obj_ventes":10,"obj_mandats":7,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"_monthly_obj":{"2026-05":{"Jules":{"obj_ventes":9,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Adrien":{"obj_ventes":5,"obj_mandats":8,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Léo":{"obj_ventes":10,"obj_mandats":14,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Aurélien":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Tom":{"obj_ventes":5,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Nael":{"obj_ventes":5,"obj_mandats":8,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julien":{"obj_ventes":9,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50}},"2026-06":{"Léo":{"obj_ventes":8,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Naël":{"obj_ventes":6,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Nael":{"obj_ventes":6,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Aurélien":{"obj_ventes":5,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Tom":{"obj_ventes":7,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Jules":{"obj_ventes":7,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Adrien":{"obj_ventes":7,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julien":{"obj_ventes":8,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julia":{"obj_ventes":0,"obj_mandats":7,"prime_obj_ventes":0,"prime_obj_mandats":150,"bonus_dep":50}},"2026-07":{"Jules":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Adrien":{"obj_ventes":8,"obj_mandats":13,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Léo":{"obj_ventes":10,"obj_mandats":14,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Aurélien":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Tom":{"obj_ventes":8,"obj_mandats":13,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Nael":{"obj_ventes":5,"obj_mandats":8,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julien":{"obj_ventes":9,"obj_mandats":12,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"Julia":{"obj_ventes":10,"obj_mandats":7,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50}}},"LÃÂ©o":{"obj_ventes":10,"obj_mandats":14,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"AurÃÂ©lien":{"obj_ventes":6,"obj_mandats":10,"prime_obj_ventes":250,"prime_obj_mandats":150,"bonus_dep":50},"_global":{"palier_opteven":4,"comm_opteven_bas":100,"comm_opteven_haut":150}};
 function getPins() {
   try { const p = JSON.parse(localStorage.getItem(PINS_KEY)); if (p) return Object.assign({}, DEFAULT_PINS, p); } catch {}
   return Object.assign({}, DEFAULT_PINS);
@@ -499,7 +499,7 @@ function verifierPin() {
   if (_pinBuffer === expected) {
     seConnecter(_pendingUser);
   } else {
-    document.getElementById('pin-error').textContent = 'â Code incorrect â rÃ©essaie';
+    document.getElementById('pin-error').textContent = 'â Code incorrect â réessaie';
     _pinBuffer = '';
     updatePinDots();
   }
@@ -553,7 +553,7 @@ function seConnecter(nom) {
     afficherGhStatus();
   }
 
-  // Marquer les IDS_DOUBLONS comme supprimÃ©s (filtrÃ©s Ã  chaque sync)
+  // Marquer les IDS_DOUBLONS comme supprimés (filtrés Ã  chaque sync)
   try {
     const _dv = new Set(JSON.parse(localStorage.getItem(DELETED_V_KEY)) || []);
     IDS_DOUBLONS.forEach(id => _dv.add(String(id)));
@@ -581,7 +581,7 @@ const IDS_DOUBLONS = [1776093539621, 1776152081306, 1776083866843, 1776160609548
 
 async function nettoyerDoublonsAdmin() {
   const st = document.getElementById('clean-status');
-  if (!confirm('Supprimer les ' + IDS_DOUBLONS.length + ' entrÃ©es test/doublons de GitHub ET du stockage local ?')) return;
+  if (!confirm('Supprimer les ' + IDS_DOUBLONS.length + ' entrées test/doublons de GitHub ET du stockage local ?')) return;
   if (st) st.textContent = 'â³ Nettoyage en cours...';
 
   // 1. Supprimer du stockage local
@@ -589,7 +589,7 @@ async function nettoyerDoublonsAdmin() {
   const ventes = loadVentes().filter(v => !IDS_DOUBLONS.includes(Number(v.id)));
   localStorage.setItem(SK, JSON.stringify(ventes));
 
-  // Marquer comme supprimÃ©s dans DELETED_V_KEY
+  // Marquer comme supprimés dans DELETED_V_KEY
   const dv = new Set(JSON.parse(localStorage.getItem(DELETED_V_KEY)) || []);
   IDS_DOUBLONS.forEach(id => dv.add(String(id)));
   localStorage.setItem(DELETED_V_KEY, JSON.stringify([...dv]));
@@ -597,8 +597,8 @@ async function nettoyerDoublonsAdmin() {
   // 2. Pousser vers GitHub via ghPush (qui applique les suppressions)
   try {
     await ghPush();
-    if (st) st.textContent = 'â Doublons supprimÃ©s de GitHub et en local';
-    toast('ð§¹ Nettoyage terminÃ© â ' + ventesAvant.length + ' entrÃ©e(s) supprimÃ©e(s)');
+    if (st) st.textContent = 'â Doublons supprimés de GitHub et en local';
+    toast('ð§¹ Nettoyage terminé â ' + ventesAvant.length + ' entrée(s) supprimée(s)');
   } catch(e) {
     if (st) st.textContent = 'â ï¸ Erreur GitHub : ' + e.message;
     toast('â ï¸ Nettoyage local OK mais erreur GitHub', true);
@@ -622,7 +622,7 @@ function getGhToken() {
 // Lit le fichier data.json depuis GitHub â retourne { data, sha }
 async function ghRead() {
   const token = getGhToken();
-  if (!token) throw new Error('Token GitHub non configurÃ©');
+  if (!token) throw new Error('Token GitHub non configuré');
   const r = await fetch(
     'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_FILE,
     { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }, cache: 'no-store' }
@@ -637,7 +637,7 @@ async function ghRead() {
 async function ghWrite(data, sha, retries) {
   if (retries === undefined) retries = 3;
   const token = getGhToken();
-  if (!token) throw new Error('Token GitHub non configurÃ©');
+  if (!token) throw new Error('Token GitHub non configuré');
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
   const r = await fetch(
     'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_FILE,
@@ -656,13 +656,13 @@ async function ghWrite(data, sha, retries) {
   return j.content.sha;
 }
 
-// Sync complÃ¨te : pull GitHub â merge local â push si nÃ©cessaire
+// Sync complète : pull GitHub â merge local â push si nécessaire
 async function syncLoad() {
   if (isSyncing) return;
   const token = getGhToken();
   if (!token) {
     showSyncStatus('âï¸ Token manquant');
-    if (MANAGERS.includes(CURRENT_USER)) toast('âï¸ Configure le token GitHub dans ParamÃ¨tres', true);
+    if (MANAGERS.includes(CURRENT_USER)) toast('âï¸ Configure le token GitHub dans Paramètres', true);
     return;
   }
   isSyncing = true;
@@ -687,17 +687,17 @@ async function syncLoad() {
     const ghDeletedV = new Set([...(ghData.deleted_ventes  || []), ...deletedV]);
     const ghDeletedM = new Set([...(ghData.deleted_mandats || []), ...deletedM]);
 
-    // DonnÃ©es GitHub filtrÃ©es (suppressions + doublons)
+    // Données GitHub filtrées (suppressions + doublons)
     const serverVentes  = (ghData.ventes  || []).filter(v => !ghDeletedV.has(String(v.id)) && !IDS_DOUBLONS.includes(Number(v.id)));
     const serverMandats = (ghData.mandats || []).filter(m => !ghDeletedM.has(String(m.id)));
 
-    // ÃlÃ©ments locaux non encore dans GitHub â Ã  pousser
+    // Ãléments locaux non encore dans GitHub â Ã  pousser
     const serverVIds = new Set(serverVentes.map(v => String(v.id)));
     const serverMIds = new Set(serverMandats.map(m => String(m.id)));
     const unsavedV = localVentes.filter(v => !serverVIds.has(String(v.id)));
     const unsavedM = localMandats.filter(m => !serverMIds.has(String(m.id)));
 
-    // Merge : GitHub + local non sauvegardÃ©s (dedup par id)
+    // Merge : GitHub + local non sauvegardés (dedup par id)
     const byIdV = {};
     [...serverVentes, ...unsavedV].forEach(v => { byIdV[v.id] = v; });
     const byIdM = {};
@@ -706,7 +706,7 @@ async function syncLoad() {
     const mergedVentes  = Object.values(byIdV);
     const mergedMandats = Object.values(byIdM);
 
-    // Pousser vers GitHub si on a des nouveautÃ©s locales ou des suppressions nouvelles
+    // Pousser vers GitHub si on a des nouveautés locales ou des suppressions nouvelles
     const needsPush = unsavedV.length > 0 || unsavedM.length > 0
       || deletedV.size > (ghData.deleted_ventes || []).length
       || deletedM.size > (ghData.deleted_mandats || []).length;
@@ -725,8 +725,8 @@ async function syncLoad() {
     const pushed = unsavedV.length + unsavedM.length;
     showSyncStatus('â ' + new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}));
     toast(pushed > 0
-      ? 'ð Sync : ' + pushed + ' Ã©lÃ©ment(s) envoyÃ©(s) vers GitHub'
-      : 'ð SynchronisÃ© avec GitHub');
+      ? 'ð Sync : ' + pushed + ' élément(s) envoyé(s) vers GitHub'
+      : 'ð Synchronisé avec GitHub');
 
     updateBadge();
     updateMandatBadge();
@@ -744,8 +744,8 @@ async function syncLoad() {
   }
 }
 
-// Push immÃ©diat vers GitHub aprÃ¨s une modification locale
-// Lit GitHub â fusionne le local par-dessus â rÃ©Ã©crit
+// Push immédiat vers GitHub après une modification locale
+// Lit GitHub â fusionne le local par-dessus â réécrit
 async function ghPush() {
   const token = getGhToken();
   if (!token) return;
@@ -759,7 +759,7 @@ async function ghPush() {
     const ghDeletedV = new Set([...(ghData.deleted_ventes  || []), ...deletedV]);
     const ghDeletedM = new Set([...(ghData.deleted_mandats || []), ...deletedM]);
 
-    // Local gagne sur GitHub pour les mÃªmes IDs (le local vient d'Ãªtre mis Ã  jour)
+    // Local gagne sur GitHub pour les mêmes IDs (le local vient d'être mis Ã  jour)
     const byIdV = {};
     (ghData.ventes  || []).forEach(v => { byIdV[v.id] = v; });
     localVentes.forEach(v => { byIdV[v.id] = v; });
@@ -788,7 +788,7 @@ async function ghPush() {
   }
 }
 
-// Aliases pour compatibilitÃ© avec les appels existants
+// Aliases pour compatibilité avec les appels existants
 async function gasSaveVente(v)    { ghPush(); }
 async function gasSaveMandat(m)   { ghPush(); }
 async function gasUpdateVente(v)  { ghPush(); }
@@ -805,11 +805,11 @@ function showSyncStatus(msg) {
 // âââ FRAIS
 const FRAIS = [
   {id:'garantie',  label:'Garantie',                    tva:false, fixe:true},
-  {id:'entretien', label:'Frais entretien / rÃ©paration', tva:true},
-  {id:'ct',        label:'ContrÃ´le technique',           tva:true},
-  {id:'revision',  label:'RÃ©vision',                     tva:true},
+  {id:'entretien', label:'Frais entretien / réparation', tva:true},
+  {id:'ct',        label:'Contrôle technique',           tva:true},
+  {id:'revision',  label:'Révision',                     tva:true},
   {id:'cg_forfait',label:'Frais carte grise (forfait)',   tva:false, fixe:true, defaut:40},
-  {id:'cg_taxe',   label:'Carte grise (taxe rÃ©gionale)', tva:false, fixe:true},
+  {id:'cg_taxe',   label:'Carte grise (taxe régionale)', tva:false, fixe:true},
   {id:'transport', label:'Frais de transport',            tva:true},
   {id:'nettoyage', label:'Frais de nettoyage',            tva:true},
   {id:'coffret',   label:'Coffret cadeau',                tva:true},
@@ -829,10 +829,10 @@ function setTxt(id, v) {
 function getMois(dateStr) { if (!dateStr) return null; const parts = dateStr.split('-'); return parts[0] + '-' + parts[1]; }
 function lblMois(k) {
   if (!k) return 'â'; const [y,m] = k.split('-');
-  return ['Janvier','FÃ©vrier','Mars','Avril','Mai','Juin','Juillet','AoÃ»t','Septembre','Octobre','Novembre','DÃ©cembre'][parseInt(m)-1] + ' ' + y;
+  return ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'][parseInt(m)-1] + ' ' + y;
 }
 function fmtDate(s) { if (!s) return 'â'; const [y,m,d] = s.split('-'); return d+'/'+m+'/'+y; }
-// Palier mensuel supprimÃ© â remplacÃ© par primes trimestrielles
+// Palier mensuel supprimé â remplacé par primes trimestrielles
 function palier(m) {
   if (m >= 25000) return 650;
   if (m >= 20000) return 400;
@@ -856,7 +856,7 @@ function calcTauxComm(mnHt, agent, moisRef) {
   return (pctV >= 0.80 && pctM >= 0.80) ? 0.40 : 0.30;
 }
 
-// Prime rapiditÃ© : 30â¬ si vente signÃ©e dans les 15 jours aprÃ¨s entrÃ©e en stock
+// Prime rapidité : 30â¬ si vente signée dans les 15 jours après entrée en stock
 function calcPrimeRapidite(dateVente, dateEntreeStock) {
   if (!dateVente || !dateEntreeStock) return 0;
   const diff = (new Date(dateVente) - new Date(dateEntreeStock)) / 86400000;
@@ -967,8 +967,8 @@ function loadParams()  {
     'Jules':    {obj_ventes:9,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
     'Adrien':   {obj_ventes:5,  obj_mandats:8,  prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
     'Jeremy':    {obj_ventes:0,  obj_mandats:7,  prime_obj_ventes:0,   prime_obj_mandats:150, bonus_dep:50},
-    'LÃ©o':      {obj_ventes:10, obj_mandats:14, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
-    'AurÃ©lien': {obj_ventes:6,  obj_mandats:10, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+    'Léo':      {obj_ventes:10, obj_mandats:14, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+    'Aurélien': {obj_ventes:6,  obj_mandats:10, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
     'Tom':      {obj_ventes:5,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
     'Nael':     {obj_ventes:5,  obj_mandats:8,  prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
     'Julien':   {obj_ventes:9,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
@@ -1005,7 +1005,7 @@ function autoAgenceMandat() {
   if (!agenceEl || !agent) return;
   for (const [ag, agents] of Object.entries(AGENCES)) {
     if (agents.includes(agent)) {
-      agenceEl.value = ag.includes('Saint') ? 'Agence Saint-RÃ©my-de-Provence' : 'Agence Aix-en-Provence';
+      agenceEl.value = ag.includes('Saint') ? 'Agence Saint-Rémy-de-Provence' : 'Agence Aix-en-Provence';
       return;
     }
   }
@@ -1041,11 +1041,11 @@ function enregistrerMandat() {
   const proprio  = document.getElementById('m-proprio')?.value?.trim();
   const type     = document.getElementById('m-type')?.value || 'exclusif';
   const agence   = document.getElementById('m-agence')?.value;
-  if (!document.querySelector('input[name="via-prosp-m"]:checked')) return toast('ð Indique si mandat via tÃ©lÃ©prospectrice (OUI / NON)', true);
-  if (!agent)    return toast('SÃ©lectionne un agent', true);
+  if (!document.querySelector('input[name="via-prosp-m"]:checked')) return toast('ð Indique si mandat via téléprospectrice (OUI / NON)', true);
+  if (!agent)    return toast('Sélectionne un agent', true);
   if (!dateStr)  return toast('Indique la date du mandat', true);
-  if (!vehicule) return toast('Indique le vÃ©hicule', true);
-  if (!proprio)  return toast('Indique le propriÃ©taire', true);
+  if (!vehicule) return toast('Indique le véhicule', true);
+  if (!proprio)  return toast('Indique le propriétaire', true);
   if (!agence)   return toast('Sï¿½lectionne l\'agence (Aix ou Saint-Rï¿½my)', true);
   if (_editingMandatId) {
     const mandats2 = loadMandats();
@@ -1067,7 +1067,7 @@ function enregistrerMandat() {
   saveMandats(mandats, mandat);
   updateMandatBadge();
   afficherMandats();
-  toast('Mandat enregistrÃ© â ' + vehicule);
+  toast('Mandat enregistré â ' + vehicule);
   document.getElementById('m-agent').value = '';
   document.getElementById('m-date').value = new Date().toISOString().slice(0,10);
   document.getElementById('m-vehicule').value = '';
@@ -1085,7 +1085,7 @@ function validerMandatVendu(id) {
   updateMandatBadge();
   afficherMandats();
   if (document.getElementById('pg-recap')?.classList.contains('on')) afficherRecap();
-  toast('Mandat marquÃ© vendu');
+  toast('Mandat marqué vendu');
 }
 
 function supprimerMandat(id) {
@@ -1097,7 +1097,7 @@ function supprimerMandat(id) {
   updateMandatBadge();
   afficherMandats();
   if (document.getElementById('pg-recap')?.classList.contains('on')) afficherRecap();
-  toast('Mandat supprimÃ©');
+  toast('Mandat supprimé');
 }
 
 function reclamerMandat(id) {
@@ -1156,7 +1156,7 @@ function afficherMandats() {
   const iconExcl = pctE >= 50 ? 'â' : 'â ï¸';
 
   const cpt = document.getElementById('mand-cpt');
-  if (cpt) cpt.textContent = total + ' mandat(s) Â· ' + excl.length + ' exclusif(s) Â· ' + simple.length + ' simple(s)';
+  if (cpt) cpt.textContent = total + ' mandat(s) · ' + excl.length + ' exclusif(s) · ' + simple.length + ' simple(s)';
 
   if (!total) {
     zone.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucun mandat ce mois.</div>';
@@ -1166,17 +1166,17 @@ function afficherMandats() {
   const barHtml = '<div style="background:var(--w);border:1px solid var(--b);padding:.85rem 1rem;margin-bottom:1rem">'
     + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.45rem">'
     + '<div style="font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Exclusif vs Simple â ' + iconExcl + ' ' + pctE + '% exclusifs</div>'
-    + '<div style="font-family:IBM Plex Mono,monospace;font-size:.72rem;color:var(--gm)">' + excl.length + ' excl. Â· ' + simple.length + ' simple</div></div>'
+    + '<div style="font-family:IBM Plex Mono,monospace;font-size:.72rem;color:var(--gm)">' + excl.length + ' excl. · ' + simple.length + ' simple</div></div>'
     + '<div style="height:10px;background:var(--gc);border-radius:5px;overflow:hidden;display:flex">'
     + '<div style="width:' + pctE + '%;background:linear-gradient(90deg,var(--ad),var(--a));transition:width .6s"></div>'
     + '<div style="width:' + pctS + '%;background:#c0cfe0"></div></div>'
     + '<div style="display:flex;gap:1.2rem;margin-top:.4rem">'
     + '<span style="font-family:IBM Plex Mono,monospace;font-size:.6rem;color:var(--ad)">â  Exclusif ' + pctE + '%</span>'
     + '<span style="font-family:IBM Plex Mono,monospace;font-size:.6rem;color:#5a7a9a">â  Simple ' + pctS + '%</span></div>'
-    + (pctE < 50 ? '<div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#b45309;margin-top:.4rem">â ï¸ Moins de 50% d\'exclusifs ce mois â Ã  amÃ©liorer</div>' : '')
+    + (pctE < 50 ? '<div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#b45309;margin-top:.4rem">â ï¸ Moins de 50% d\'exclusifs ce mois â Ã  améliorer</div>' : '')
     + '</div>';
 
-  const tableHtml = '<table class="vt"><thead><tr><th>Date</th><th>VÃ©hicule</th><th>PropriÃ©taire</th><th>Agent</th><th>Type</th><th>Statut</th><th></th></tr></thead><tbody>'
+  const tableHtml = '<table class="vt"><thead><tr><th>Date</th><th>Véhicule</th><th>Propriétaire</th><th>Agent</th><th>Type</th><th>Statut</th><th></th></tr></thead><tbody>'
     + dm.map(m => {
         const typeTag   = m.type === 'exclusif' ? '<span class="tag" style="background:#fff3e0;color:#b45309">EXCLUSIF</span>' : '<span class="tag" style="background:#e8f0fe;color:#1a56d6">SIMPLE</span>';
         const statutTag = m.statut === 'vendu' ? '<span class="tag tgl">Vendu</span>' : '<span class="tag tgcr">En cours</span>';
@@ -1203,7 +1203,7 @@ function afficherMandats() {
     return '<div style="background:var(--bg);border:1px solid var(--b);padding:.65rem .85rem;flex:1;min-width:180px">'
       + '<div style="font-family:\'Libre Baskerville\',serif;font-size:.75rem;font-weight:700;margin-bottom:.4rem">ð¤ ' + a + '</div>'
       + '<div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600">' + am.length + ' mandat(s)</div>'
-      + '<div style="font-size:.62rem;color:var(--gm);margin:.2rem 0">' + ae + ' excl. Â· ' + as2 + ' simple Â· ' + pE + '% excl.</div>'
+      + '<div style="font-size:.62rem;color:var(--gm);margin:.2rem 0">' + ae + ' excl. · ' + as2 + ' simple · ' + pE + '% excl.</div>'
       + '<div style="height:6px;background:var(--gc);border-radius:3px;overflow:hidden;margin-top:.3rem"><div style="width:' + pE + '%;height:100%;background:linear-gradient(90deg,var(--ad),var(--a))"></div></div>'
       + (pE < 50 && am.length ? '<div style="font-size:.58rem;color:#b45309;margin-top:.22rem">â ï¸ Objectif exclusifs non atteint</div>' : (am.length ? '<div style="font-size:.58rem;color:var(--v);margin-top:.22rem">â Bon ratio exclusifs</div>' : ''))
       + '</div>';
@@ -1292,7 +1292,7 @@ function calcFiche() {
     document.getElementById('row-croise').style.display = 'none';
     document.getElementById('comm-lbl').textContent = 'Commission vendeur (0%)';
   } else if (type === 'classique') {
-    // Taux estimÃ© selon progression actuelle (confirmÃ© Ã  la livraison)
+    // Taux estimé selon progression actuelle (confirmé Ã  la livraison)
     const moisVente = dateVente ? getMois(dateVente) : getMois(new Date().toISOString().slice(0,10));
     const taux = calcTauxComm(mnHt, agent, moisVente);
     cv = mnHt * taux;
@@ -1303,18 +1303,18 @@ function calcFiche() {
       : taux === 0.40
         ? '(obj. 80% atteints â taux 40%)'
         : '(obj. 80% non atteints â taux 30%, peut passer Ã  40% en fin de mois)';
-    document.getElementById('comm-info').textContent = 'Vente classique â ' + agent + ' : taux estimÃ© ' + pctLbl + ' ' + condLbl + ' Â· Taux dÃ©finitif confirmÃ© Ã  la livraison';
+    document.getElementById('comm-info').textContent = 'Vente classique â ' + agent + ' : taux estimé ' + pctLbl + ' ' + condLbl + ' · Taux définitif confirmé Ã  la livraison';
     document.getElementById('row-croise').style.display = 'none';
-    document.getElementById('comm-lbl').textContent = 'Commission ' + agent + ' (estimÃ© ' + pctLbl + ')';
+    document.getElementById('comm-lbl').textContent = 'Commission ' + agent + ' (estimé ' + pctLbl + ')';
   } else if (type === 'stock') {
     cv = mnHt * 0.20;
-    document.getElementById('comm-info').textContent = 'Stock sociÃ©tÃ© â ' + agent + ' perÃ§oit 20%';
+    document.getElementById('comm-info').textContent = 'Stock société â ' + agent + ' perçoit 20%';
     document.getElementById('row-croise').style.display = 'none';
     document.getElementById('comm-lbl').textContent = 'Commission ' + agent + ' (20%)';
   } else {
     cv = mnHt * 0.20;
     const cm = mnHt * 0.20;
-    document.getElementById('comm-info').textContent = 'Mandat croisÃ© â ' + agent + ' vend Â· ' + mandant + ' a rentrÃ© le mandat';
+    document.getElementById('comm-info').textContent = 'Mandat croisé â ' + agent + ' vend · ' + mandant + ' a rentré le mandat';
     document.getElementById('row-croise').style.display = '';
     document.getElementById('comm-lbl').textContent = 'Commission ' + agent + ' (vendeur 20%)';
     document.getElementById('croise-det').innerHTML = agent + ' (vendeur) â <strong>' + fmt(cv) + '</strong><br>' + mandant + ' (mandant) â <strong>' + fmt(cm) + '</strong>';
@@ -1334,11 +1334,11 @@ function enregistrer() {
   const dateStr = document.getElementById('date_vente')?.value;
   const vehicule= document.getElementById('vehicule')?.value;
 
-  if (!document.querySelector('input[name="via-prosp"]:checked')) return toast('ð Indique si vente via tÃ©lÃ©prospectrice (OUI / NON)', true);
-  if (!agent)   return toast('SÃ©lectionne un agent', true);
-  if (!agence)  return toast('SÃ©lectionne une agence', true);
+  if (!document.querySelector('input[name="via-prosp"]:checked')) return toast('ð Indique si vente via téléprospectrice (OUI / NON)', true);
+  if (!agent)   return toast('Sélectionne un agent', true);
+  if (!agence)  return toast('Sélectionne une agence', true);
   if (!dateStr) return toast('Indique la date de la vente', true);
-  if (!vehicule)return toast('Indique le vÃ©hicule', true);
+  if (!vehicule)return toast('Indique le véhicule', true);
 
   const pv = getNum('prix_vente');
   const pa = getNum('prix_achat');
@@ -1392,7 +1392,7 @@ function enregistrer() {
   };
 
   if (EDITING_ID !== null) {
-    // Mode Ã©dition : mettre Ã  jour l'entrÃ©e existante
+    // Mode édition : mettre Ã  jour l'entrée existante
     const ventes = loadVentes();
     const idx = ventes.findIndex(v => v.id === EDITING_ID);
     if (idx < 0) { EDITING_ID = null; return toast('Vente introuvable', true); }
@@ -1414,7 +1414,7 @@ function enregistrer() {
   ventes.push(vente);
   saveVentes(ventes, vente);
   updateBadge();
-  toast('â Vente enregistrÃ©e â ' + vehicule);
+  toast('â Vente enregistrée â ' + vehicule);
   resetFiche(true);
 }
 
@@ -1434,7 +1434,7 @@ function editerVente(id) {
   const bloc = document.getElementById('bloc-mandant');
   if (bloc) bloc.style.display = v.type === 'croise' ? '' : 'none';
   if (v.type === 'croise') set('agent_mandant', v.mandant || '');
-  // Restaurer les frais depuis frais_detail (sauvegardÃ© depuis la v2)
+  // Restaurer les frais depuis frais_detail (sauvegardé depuis la v2)
   // Fallback pour anciennes ventes : mettre le total dans "autres frais"
   FRAIS.forEach(f => {
     const e = document.getElementById('f_'+f.id);
@@ -1444,11 +1444,11 @@ function editerVente(id) {
       const tvaEl = document.getElementById('tva_'+f.id);
       if (tvaEl && v.frais_detail['tva_'+f.id]) tvaEl.value = v.frais_detail['tva_'+f.id];
     } else {
-      // Ancienne vente sans dÃ©tail : remettre les dÃ©fauts (ex : 40â¬ cg_forfait)
+      // Ancienne vente sans détail : remettre les défauts (ex : 40â¬ cg_forfait)
       e.value = f.defaut || '';
     }
   });
-  // Ancienne vente sans frais_detail : mettre le rÃ©sidu dans "autres" pour ne pas perdre le total
+  // Ancienne vente sans frais_detail : mettre le résidu dans "autres" pour ne pas perdre le total
   if (!v.frais_detail && v.total_frais_ht) {
     const defaultSum = FRAIS.reduce((s,f) => s + (f.defaut||0), 0);
     const residHt = v.total_frais_ht - defaultSum / TVA;
@@ -1462,11 +1462,11 @@ function editerVente(id) {
   nav('fiche');
   const btn = document.getElementById('btn-enreg');
   if (btn) { btn.textContent = 'â Mettre Ã  jour'; btn.style.background = '#b45309'; btn.style.borderColor = '#b45309'; }
-  toast('âï¸ Mode Ã©dition â modifie et enregistre');
+  toast('âï¸ Mode édition â modifie et enregistre');
 }
 
 function resetFiche(silent) {
-  if (!silent && !confirm('RÃ©initialiser la fiche ?')) return;
+  if (!silent && !confirm('Réinitialiser la fiche ?')) return;
   ['agence','agent','agent_mandant'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
   document.getElementById('type_vente').value = 'classique';
   document.getElementById('bloc-mandant').style.display = 'none';
@@ -1482,7 +1482,7 @@ function resetFiche(silent) {
   FRAIS.forEach(f => { const e = document.getElementById('fh_'+f.id); if (e) { e.textContent = 'â'; e.className = 'cmp neg'; } });
   const ci = document.getElementById('comm-info'); if (ci) ci.textContent = 'â';
   const rc = document.getElementById('row-croise'); if (rc) rc.style.display = 'none';
-  // Annuler mode Ã©dition
+  // Annuler mode édition
   EDITING_ID = null;
   const btn = document.getElementById('btn-enreg');
   if (btn) { btn.textContent = 'â Enregistrer au tableau de bord'; btn.style.background = ''; btn.style.borderColor = ''; }
@@ -1535,14 +1535,14 @@ function afficherLivraisons() {
   const enAttente = ventes.filter(v => v.livraison_statut === 'En attente')
     .sort((a,b) => (a.date||'').localeCompare(b.date||''));
   const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-60);
-  const livrees = ventes.filter(v => ['LivrÃ©','LivrÃ©e'].includes(v.livraison_statut) && v.date_livraison && new Date(v.date_livraison) >= cutoff)
+  const livrees = ventes.filter(v => ['Livré','Livrée'].includes(v.livraison_statut) && v.date_livraison && new Date(v.date_livraison) >= cutoff)
     .sort((a,b) => (b.date_livraison||'').localeCompare(a.date_livraison||''));
 
   const cpt = document.getElementById('livr-cpt');
-  if (cpt) cpt.textContent = enAttente.length + ' en attente Â· ' + livrees.length + ' livrÃ©e(s) (60 derniers jours)';
+  if (cpt) cpt.textContent = enAttente.length + ' en attente · ' + livrees.length + ' livrée(s) (60 derniers jours)';
 
   function renderCard(v) {
-    const done = ['LivrÃ©','LivrÃ©e'].includes(v.livraison_statut);
+    const done = ['Livré','Livrée'].includes(v.livraison_statut);
     const avisAcq  = v.avis_acquereur || v.avis_google || 'attente'; // compat ancien champ
     const avisMand = v.avis_mandant   || 'attente';
     const avisGainTotal = (avisAcq==='oui'?15:0) + (avisMand==='oui'?15:0);
@@ -1555,14 +1555,14 @@ function afficherLivraisons() {
 
     const checkHtml = !done
       ? '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.28rem;margin-top:.45rem">'
-        + [['cg','ðªª Carte grise'],['histovec','ð Histovec'],['revision','ð§ RÃ©vision'],['garantie','ð¡ï¸ Garantie']].map(item =>
+        + [['cg','ðªª Carte grise'],['histovec','ð Histovec'],['revision','ð§ Révision'],['garantie','ð¡ï¸ Garantie']].map(item =>
             '<label style="display:flex;align-items:center;gap:.32rem;font-size:.7rem;cursor:pointer;background:var(--bg);padding:.28rem .45rem;border:1px solid var(--b)">'
             + '<input type="checkbox" id="ck_'+v.id+'_'+item[0]+'" style="accent-color:var(--v);width:12px;height:12px;border-bottom:none"> '+item[1]+'</label>'
           ).join('')
         + '</div>'
         + '<div style="margin-top:.5rem;padding-top:.45rem;border-top:1px solid var(--b)">'
-        + '<div style="font-size:.57rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);margin-bottom:.35rem">Avis Google reÃ§u ? (15 â¬ chacun)</div>'
-        + '<div style="margin-bottom:.3rem"><span style="font-size:.65rem;font-weight:600;color:var(--gm)">AcquÃ©reur :</span> '
+        + '<div style="font-size:.57rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);margin-bottom:.35rem">Avis Google reçu ? (15 â¬ chacun)</div>'
+        + '<div style="margin-bottom:.3rem"><span style="font-size:.65rem;font-weight:600;color:var(--gm)">Acquéreur :</span> '
         + '<label style="display:inline-flex;align-items:center;gap:.28rem;font-size:.75rem;cursor:pointer;margin-right:.7rem"><input type="radio" name="av_acq_'+v.id+'" value="oui" style="border-bottom:none;accent-color:var(--v)"> Oui (+15 â¬)</label>'
         + '<label style="display:inline-flex;align-items:center;gap:.28rem;font-size:.75rem;cursor:pointer;margin-right:.7rem"><input type="radio" name="av_acq_'+v.id+'" value="non" style="border-bottom:none;accent-color:var(--r)"> Non</label>'
         + '<label style="display:inline-flex;align-items:center;gap:.28rem;font-size:.75rem;cursor:pointer"><input type="radio" name="av_acq_'+v.id+'" value="attente" checked style="border-bottom:none;accent-color:#b45309"> Attente</label>'
@@ -1573,23 +1573,23 @@ function afficherLivraisons() {
         + '<label style="display:inline-flex;align-items:center;gap:.28rem;font-size:.75rem;cursor:pointer"><input type="radio" name="av_mand_'+v.id+'" value="attente" checked style="border-bottom:none;accent-color:#b45309"> Attente</label>'
         + '</div></div>'
       : '<div style="margin-top:.35rem;font-family:IBM Plex Mono,monospace;font-size:.7rem">'
-        + '<span style="color:'+colAcq+'">AcquÃ©reur : '+(avisAcq==='oui'?'â +15â¬':avisAcq==='non'?'â':'â³')+'</span>'
+        + '<span style="color:'+colAcq+'">Acquéreur : '+(avisAcq==='oui'?'â +15â¬':avisAcq==='non'?'â':'â³')+'</span>'
         + (avisAcq==='attente' ? ' <button class="btn bs" style="padding:.1rem .3rem;font-size:.5rem;margin-left:.2rem" onclick="toggleAvisAcq('+v.id+',\'oui\')">â</button>'
           + '<button class="btn bd" style="padding:.1rem .3rem;font-size:.5rem;margin-left:.15rem" onclick="toggleAvisAcq('+v.id+',\'non\')">â</button>' : '')
         + ' &nbsp; <span style="color:'+colMand+'">Mandant : '+(avisMand==='oui'?'â +15â¬':avisMand==='non'?'â':'â³')+'</span>'
         + (avisMand==='attente' ? ' <button class="btn bs" style="padding:.1rem .3rem;font-size:.5rem;margin-left:.2rem" onclick="toggleAvisMand('+v.id+',\'oui\')">â</button>'
           + '<button class="btn bd" style="padding:.1rem .3rem;font-size:.5rem;margin-left:.15rem" onclick="toggleAvisMand('+v.id+',\'non\')">â</button>' : '')
-        + (avisGainTotal>0 ? ' <strong style="color:var(--v)"> Â· +'+avisGainTotal+' â¬</strong>' : '')
+        + (avisGainTotal>0 ? ' <strong style="color:var(--v)"> · +'+avisGainTotal+' â¬</strong>' : '')
         + '</div>';
 
     return '<div class="lc'+(done?' ld':'')+'">'
       + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.9rem;flex-wrap:wrap">'
       + '<div style="flex:1">'
-      + '<div style="font-weight:600;font-size:.88rem;margin-bottom:.22rem">'+agentBadge+v.vehicule+' <span class="tag '+(done?'tgl':'tga')+'">'+(done?'LivrÃ©e':'En attente')+'</span></div>'
-      + '<div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:var(--gm)">Client : '+(v.client||'â')+' Â· SignÃ© le '+fmtDate(v.date)+(isManager?' <span style="font-weight:700;color:#6366f1;font-size:.75rem">'+v.agent+'</span>':'')+'</div>'
+      + '<div style="font-weight:600;font-size:.88rem;margin-bottom:.22rem">'+agentBadge+v.vehicule+' <span class="tag '+(done?'tgl':'tga')+'">'+(done?'Livrée':'En attente')+'</span></div>'
+      + '<div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:var(--gm)">Client : '+(v.client||'â')+' · Signé le '+fmtDate(v.date)+(isManager?' <span style="font-weight:700;color:#6366f1;font-size:.75rem">'+v.agent+'</span>':'')+'</div>'
       + '<div style="display:flex;gap:1.2rem;margin:.3rem 0;flex-wrap:wrap;align-items:baseline">'
       + '<span style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--v)">Marge : '+fmt(v.marge_nette_ht)+'</span>'
-      + '<span style="font-family:IBM Plex Mono,monospace;font-size:.72rem;color:var(--gm)">RÃ©sultat sociÃ©tÃ© : <strong style="color:var(--n)">'+(CURRENT_USER==='Jules'?'':fmt(rshT))+'</strong></span>'
+      + '<span style="font-family:IBM Plex Mono,monospace;font-size:.72rem;color:var(--gm)">Résultat société : <strong style="color:var(--n)">'+(CURRENT_USER==='Jules'?'':fmt(rshT))+'</strong></span>'
       + '</div>'
       + '<div style="background:var(--bg);border:1px solid var(--b);padding:.5rem .7rem">'
       + '<div style="font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);margin-bottom:.22rem">Checklist & Avis Google</div>'
@@ -1600,39 +1600,39 @@ function afficherLivraisons() {
           + '<button class="btn bs" style="width:100%" onclick="validerLivraison('+v.id+')">â Valider la livraison</button>'
           + '<button class="btn" style="width:100%;font-size:.52rem" onclick="editerVente('+v.id+')">âï¸ Modifier la fiche</button>'
           + '<button class="btn bd" style="width:100%;font-size:.52rem" onclick="supprimerVente('+v.id+')">â Supprimer</button>'
-        : '<span style="font-family:IBM Plex Mono,monospace;font-size:.68rem;color:var(--v);text-align:right">â LivrÃ©e le<br>'+fmtDate(v.date_livraison)+'</span>'
+        : '<span style="font-family:IBM Plex Mono,monospace;font-size:.68rem;color:var(--v);text-align:right">â Livrée le<br>'+fmtDate(v.date_livraison)+'</span>'
           + '<button class="btn" style="width:100%;font-size:.52rem;margin-top:.3rem" onclick="editerVente('+v.id+')">âï¸ Modifier</button>'
           + '<button class="btn bd" style="width:100%;font-size:.52rem" onclick="annulerLivraison('+v.id+')">Annuler livraison</button>')
       + '</div></div></div>';
   }
 
-  function aOf(v){if(v.agence)return v.agence;for(const[ag,al]of Object.entries(AGENCES)){if(al.includes(v.agent))return ag.includes('Saint')?'Agence Saint-RÃ©my-de-Provence':'Agence Aix-en-Provence';}return '';}
+  function aOf(v){if(v.agence)return v.agence;for(const[ag,al]of Object.entries(AGENCES)){if(al.includes(v.agent))return ag.includes('Saint')?'Agence Saint-Rémy-de-Provence':'Agence Aix-en-Provence';}return '';}
   function rSec(lbl,col,ag){
     const at=enAttente.filter(v=>aOf(v)===ag),lv=livrees.filter(v=>aOf(v)===ag);
     if(!at.length&&!lv.length)return '';
     const uid=ag.replace(/[^a-z]/gi,'_');
-    let s='<div style="margin-bottom:1.2rem"><div style="background:'+col+';color:#fff;font-weight:700;font-size:.78rem;padding:.5rem .9rem;margin-bottom:.8rem">'+lbl+' Â· '+at.length+' en attente Â· '+lv.length+' livrÃ©e(s)'+(CURRENT_USER==='Jules'?'':'<span style="font-size:.72rem;color:#555;margin-left:.3rem">('+fmt(at.reduce((s,v)=>s+(v.resultat_societe_ht||0),0))+')</span>')+'</div>';
+    let s='<div style="margin-bottom:1.2rem"><div style="background:'+col+';color:#fff;font-weight:700;font-size:.78rem;padding:.5rem .9rem;margin-bottom:.8rem">'+lbl+' · '+at.length+' en attente · '+lv.length+' livrée(s)'+(CURRENT_USER==='Jules'?'':'<span style="font-size:.72rem;color:#555;margin-left:.3rem">('+fmt(at.reduce((s,v)=>s+(v.resultat_societe_ht||0),0))+')</span>')+'</div>';
     s+=at.length?'<div class="stl" style="margin-bottom:.6rem;color:var(--r)">ð Ã livrer ('+at.length+')</div>'+at.map(renderCard).join(''):'<div style="background:var(--vl);border:1px solid var(--v);padding:.6rem .9rem;font-size:.72rem;color:var(--v);margin-bottom:.8rem;font-family:IBM Plex Mono,monospace">â Aucune en attente</div>';
-    if(lv.length)s+='<div style="margin-top:.8rem"><button onclick="(function(){var z=document.getElementById(\'lsec_'+uid+'\');var o=z.style.display!==\'none\';z.style.display=o?\'none\':\'\';this.textContent=o?\'â¶ LivrÃ©es ('+lv.length+')\':\'â¼ LivrÃ©es ('+lv.length+')\'}).call(this)" style="background:none;border:none;cursor:pointer;font-size:.75rem;font-weight:600;color:var(--gm);padding:.3rem 0">â¶ LivrÃ©es rÃ©cemment ('+lv.length+')</button><div id="lsec_'+uid+'" style="display:none">'+lv.map(renderCard).join('')+'</div></div>';
+    if(lv.length)s+='<div style="margin-top:.8rem"><button onclick="(function(){var z=document.getElementById(\'lsec_'+uid+'\');var o=z.style.display!==\'none\';z.style.display=o?\'none\':\'\';this.textContent=o?\'â¶ Livrées ('+lv.length+')\':\'â¼ Livrées ('+lv.length+')\'}).call(this)" style="background:none;border:none;cursor:pointer;font-size:.75rem;font-weight:600;color:var(--gm);padding:.3rem 0">â¶ Livrées récemment ('+lv.length+')</button><div id="lsec_'+uid+'" style="display:none">'+lv.map(renderCard).join('')+'</div></div>';
     return s+'</div>';
   }
   let html='';
-  if(isManager){html+=rSec('ð¢ Saint-RÃ©my','#2d6a4f','Agence Saint-RÃ©my-de-Provence');html+=rSec('ð¢ Aix-en-Provence','#1a56d6','Agence Aix-en-Provence');}
+  if(isManager){html+=rSec('ð¢ Saint-Rémy','#2d6a4f','Agence Saint-Rémy-de-Provence');html+=rSec('ð¢ Aix-en-Provence','#1a56d6','Agence Aix-en-Provence');}
   else{
     if(enAttente.length)html+='<div class="stl" style="margin-bottom:.7rem;color:var(--r)">ð Ã livrer ('+enAttente.length+')</div>'+enAttente.map(renderCard).join('');else html+='<div style="background:var(--vl);border:1px solid var(--v);padding:.7rem 1rem;font-size:.72rem;color:var(--v);margin-bottom:1rem;font-family:IBM Plex Mono,monospace">â Aucune livraison en attente</div>';
-    if(livrees.length)html+='<div style="margin-top:1rem"><button onclick="(function(){var z=document.getElementById(\'lsec_v\');var o=z.style.display!==\'none\';z.style.display=o?\'none\':\'\';this.textContent=o?\'â¶ LivrÃ©es ('+livrees.length+')\':\'â¼ LivrÃ©es ('+livrees.length+')\'}).call(this)" style="background:none;border:none;cursor:pointer;font-size:.75rem;font-weight:600;color:var(--gm);padding:.3rem 0">â¶ LivrÃ©es rÃ©cemment ('+livrees.length+')</button><div id="lsec_v" style="display:none">'+livrees.map(renderCard).join('')+'</div></div>';
+    if(livrees.length)html+='<div style="margin-top:1rem"><button onclick="(function(){var z=document.getElementById(\'lsec_v\');var o=z.style.display!==\'none\';z.style.display=o?\'none\':\'\';this.textContent=o?\'â¶ Livrées ('+livrees.length+')\':\'â¼ Livrées ('+livrees.length+')\'}).call(this)" style="background:none;border:none;cursor:pointer;font-size:.75rem;font-weight:600;color:var(--gm);padding:.3rem 0">â¶ Livrées récemment ('+livrees.length+')</button><div id="lsec_v" style="display:none">'+livrees.map(renderCard).join('')+'</div></div>';
   }
   zone.innerHTML = html || '<div style="text-align:center;padding:2rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucune livraison Ã  afficher.</div>';
 }
 function validerLivraison(id) {
   const dl = document.getElementById('ld_'+id)?.value;
-  if (!dl) return toast('SÃ©lectionne une date de livraison', true);
-  const noms = {cg:'Carte grise',histovec:'Histovec',revision:'RÃ©vision',garantie:'Garantie'};
+  if (!dl) return toast('Sélectionne une date de livraison', true);
+  const noms = {cg:'Carte grise',histovec:'Histovec',revision:'Révision',garantie:'Garantie'};
   const manq = ['cg','histovec','revision','garantie'].filter(k => !document.getElementById('ck_'+id+'_'+k)?.checked);
-  if (manq.length) return toast('Checklist incomplÃ¨te : ' + manq.map(k => noms[k]).join(', '), true);
+  if (manq.length) return toast('Checklist incomplète : ' + manq.map(k => noms[k]).join(', '), true);
   const avisAcq = document.querySelector('input[name="av_acq_'+id+'"]:checked');
   const avisMand= document.querySelector('input[name="av_mand_'+id+'"]:checked');
-  if (!avisAcq) return toast('Indique le statut avis Google acquÃ©reur', true);
+  if (!avisAcq) return toast('Indique le statut avis Google acquéreur', true);
   if (!avisMand) return toast('Indique le statut avis Google mandant', true);
   const ventes = loadVentes();
   const idx = ventes.findIndex(v => v.id === id);
@@ -1640,10 +1640,10 @@ function validerLivraison(id) {
   const v = ventes[idx];
   const moisLiv = getMois(dl);
 
-  // Recalcul dÃ©finitif de la commission au moment de la livraison
-  // Le taux (30% ou 40%) est fixÃ© par le mois de VENTE, pas de livraison :
+  // Recalcul définitif de la commission au moment de la livraison
+  // Le taux (30% ou 40%) est fixé par le mois de VENTE, pas de livraison :
   // si l'agent a atteint 80% de ses objectifs en avril, les voitures vendues
-  // en avril sont payÃ©es Ã  40% mÃªme si elles sont livrÃ©es en mai.
+  // en avril sont payées Ã  40% même si elles sont livrées en mai.
   let cvFinal = v.comm_vendeur;
   if (v.type === 'classique') {
     const taux = (getUnlock40(v.agent,v.mois)||getUnlock40(v.agent,moisLiv))?0.40:calcTauxComm(v.marge_nette_ht, v.agent, v.mois);
@@ -1651,19 +1651,19 @@ function validerLivraison(id) {
   }
   const mshFinal = Math.round((v.marge_nette_ht - cvFinal - (v.comm_mandant||0) - (v.prime_excep||0) - (v.prime_opteven||0) - (v.prime_rapidite||0) + ((v.prime_opteven||0)>0?380:0)) * 100) / 100;
 
-  ventes[idx].livraison_statut    = 'LivrÃ©e';
+  ventes[idx].livraison_statut    = 'Livrée';
   ventes[idx].date_livraison      = dl;
   ventes[idx].mois_livraison      = moisLiv;
   ventes[idx].comm_vendeur        = cvFinal;
   ventes[idx].resultat_societe_ht = mshFinal;
   ventes[idx].avis_acquereur      = avisAcq.value;
   ventes[idx].avis_mandant        = avisMand.value;
-  // CompatibilitÃ© avec l'ancien champ avis_google
+  // Compatibilité avec l'ancien champ avis_google
   ventes[idx].avis_google = (avisAcq.value === 'oui' || avisMand.value === 'oui') ? 'oui' : avisAcq.value;
   saveVentes(ventes, ventes[idx]);
   updateBadge();
   afficherLivraisons();
-  toast('ð Livraison validÃ©e !');
+  toast('ð Livraison validée !');
 }
 
 function annulerLivraison(id) {
@@ -1677,7 +1677,7 @@ function annulerLivraison(id) {
   saveVentes(ventes, ventes[idx]);
   updateBadge();
   afficherLivraisons();
-  toast('Livraison annulÃ©e');
+  toast('Livraison annulée');
 }
 
 function toggleAvis(id, val) {
@@ -1687,7 +1687,7 @@ function toggleAvis(id, val) {
   ventes[idx].avis_google = val;
   saveVentes(ventes, ventes[idx]);
   afficherLivraisons();
-  toast(val === 'oui' ? 'â Prime avis Google ajoutÃ©e' : 'Avis mis Ã  jour');
+  toast(val === 'oui' ? 'â Prime avis Google ajoutée' : 'Avis mis Ã  jour');
 }
 
 function toggleAvisAcq(id, val) {
@@ -1697,7 +1697,7 @@ function toggleAvisAcq(id, val) {
   ventes[idx].avis_acquereur = val;
   saveVentes(ventes, ventes[idx]);
   afficherLivraisons();
-  toast(val === 'oui' ? 'â Avis acquÃ©reur +15 â¬ ajoutÃ©' : 'Avis acquÃ©reur mis Ã  jour');
+  toast(val === 'oui' ? 'â Avis acquéreur +15 â¬ ajouté' : 'Avis acquéreur mis Ã  jour');
 }
 
 function toggleAvisMand(id, val) {
@@ -1707,7 +1707,7 @@ function toggleAvisMand(id, val) {
   ventes[idx].avis_mandant = val;
   saveVentes(ventes, ventes[idx]);
   afficherLivraisons();
-  toast(val === 'oui' ? 'â Avis mandant +15 â¬ ajoutÃ©' : 'Avis mandant mis Ã  jour');
+  toast(val === 'oui' ? 'â Avis mandant +15 â¬ ajouté' : 'Avis mandant mis Ã  jour');
 }
 
 // âââ UNLOCK40 HELPERS (top-level for afficherAgent)
@@ -1755,7 +1755,7 @@ function afficherRecap() {
   window.getUnlock40=function(ag,mo){var p=JSON.parse(localStorage.getItem('aa_unlock40')||'{}');return !!(p[mo]&&p[mo][ag]);};
   window.setUnlock40=function(ag,mo,val){var p=JSON.parse(localStorage.getItem('aa_unlock40')||'{}');if(!p[mo])p[mo]={};p[mo][ag]=!!val;localStorage.setItem('aa_unlock40',JSON.stringify(p));try{afficherDashboard();}catch(e){}return false;};
   window.getPrime=function(ag,mo){var p=JSON.parse(localStorage.getItem('aa_prime_ex')||'{}');return(p[mo]&&p[mo][ag])||0;};
-  window.savePayeReel=function(ag,mo,val){var pr=JSON.parse(localStorage.getItem('aa_paye_reel')||'{}');if(!pr[mo])pr[mo]={};pr[mo][ag]=parseFloat(val)||0;localStorage.setItem('aa_paye_reel',JSON.stringify(pr));var tv=AGENTS.reduce(function(s,a){var ov=(pr[mo]&&pr[mo][a]!==undefined)?parseFloat(pr[mo][a]):null;return s+(ov!==null?ov:calcPayeTotal(a,mo));},0);var mg=window._recapTotalMarge||0;var el=document.getElementById('recap-total-verse');if(el)el.textContent=fmt(tv);var re=document.getElementById('recap-resultat-net');if(re){re.textContent=fmt(mg-tv);re.style.color=(mg-tv)>=0?'var(--gm)':'#e55';}toast('â Paye de '+ag+' enregistrÃ©e');};
+  window.savePayeReel=function(ag,mo,val){var pr=JSON.parse(localStorage.getItem('aa_paye_reel')||'{}');if(!pr[mo])pr[mo]={};pr[mo][ag]=parseFloat(val)||0;localStorage.setItem('aa_paye_reel',JSON.stringify(pr));var tv=AGENTS.reduce(function(s,a){var ov=(pr[mo]&&pr[mo][a]!==undefined)?parseFloat(pr[mo][a]):null;return s+(ov!==null?ov:calcPayeTotal(a,mo));},0);var mg=window._recapTotalMarge||0;var el=document.getElementById('recap-total-verse');if(el)el.textContent=fmt(tv);var re=document.getElementById('recap-resultat-net');if(re){re.textContent=fmt(mg-tv);re.style.color=(mg-tv)>=0?'var(--gm)':'#e55';}toast('â Paye de '+ag+' enregistrée');};
   window.setPrime=function(ag,mo,val){var p=JSON.parse(localStorage.getItem('aa_prime_ex')||'{}');if(!p[mo])p[mo]={};p[mo][ag]=parseFloat(val)||0;localStorage.setItem('aa_prime_ex',JSON.stringify(p));try{afficherDashboard();}catch(e){}};
   const mois   = remplirMoisMandats('recap-mois');
   const ventes = loadVentes();
@@ -1785,13 +1785,13 @@ function afficherRecap() {
 
     // KPIs
     const kpiHtml = '<div class="kg" style="grid-template-columns:repeat(4,1fr);margin-bottom:1.2rem">'
-      + '<div class="kpi hl"><div class="kl">Ventes signÃ©es</div><div class="kv">'+totalVentes+'</div><div class="ks">'+lblMois(mois)+'</div></div>'
+      + '<div class="kpi hl"><div class="kl">Ventes signées</div><div class="kv">'+totalVentes+'</div><div class="ks">'+lblMois(mois)+'</div></div>'
       + '<div class="kpi wn"><div class="kl">En attente livraison</div><div class="kv">'+attente.length+'</div><div class="ks">Tous mois confondus</div></div>'
-      + '<div class="kpi ok"><div class="kl">Marge HT livrÃ©e</div><div class="kv">'+fmt(totalMarge)+'</div><div class="ks">'+allLiv.length+' livraison(s)</div></div>'
-      + '<div class="kpi" style="border:2px solid #2a9"><div class="kl">RÃ©sultat net rÃ©el</div><div class="kv" id="recap-resultat-net" style="color:#2a9">'+fmt(totalMarge-totalVerse)+'</div><div class="ks">Marge â paye complÃ¨te</div></div>'
-      + '<div class="kpi"><div class="kl">Total versÃ© agents</div><div class="kv" id="recap-total-verse" style="color:var(--gm)">'+fmt(totalVerse)+'</div><div class="ks">CalculÃ© auto Â· modifiable</div></div>'
-      + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800;margin-top:.4rem"><div class="kl">ð Via tÃ©lÃ©prospectrice</div><div class="kv">'+(allLiv.filter(v=>v.via_prospectrice).length)+' vente(s)</div><div class="ks">livrÃ©es ce mois</div></div>'
-      + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800"><div class="kl">ð Mandats prospectrice</div><div class="kv">'+(mandats.filter(m=>m.mois===mois&&m.via_prospectrice).length)+'</div><div class="ks">rentrÃ©s ce mois</div></div>'
+      + '<div class="kpi ok"><div class="kl">Marge HT livrée</div><div class="kv">'+fmt(totalMarge)+'</div><div class="ks">'+allLiv.length+' livraison(s)</div></div>'
+      + '<div class="kpi" style="border:2px solid #2a9"><div class="kl">Résultat net réel</div><div class="kv" id="recap-resultat-net" style="color:#2a9">'+fmt(totalMarge-totalVerse)+'</div><div class="ks">Marge â paye complète</div></div>'
+      + '<div class="kpi"><div class="kl">Total versé agents</div><div class="kv" id="recap-total-verse" style="color:var(--gm)">'+fmt(totalVerse)+'</div><div class="ks">Calculé auto · modifiable</div></div>'
+      + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800;margin-top:.4rem"><div class="kl">ð Via téléprospectrice</div><div class="kv">'+(allLiv.filter(v=>v.via_prospectrice).length)+' vente(s)</div><div class="ks">livrées ce mois</div></div>'
+      + '<div class="kpi hl" style="grid-column:1/-1;background:#fff3e0;border:1px solid #ff9800"><div class="kl">ð Mandats prospectrice</div><div class="kv">'+(mandats.filter(m=>m.mois===mois&&m.via_prospectrice).length)+'</div><div class="ks">rentrés ce mois</div></div>'
       + (CURRENT_USER==='Jules'?'<div class="kpi" style="grid-column:1/-1;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3)"><div class="kl">Paye mensuelle</div><div class="kv" style="color:#6366f1">'+fmt(getJulesPaye(mois))+'</div><div class="ks">ce mois</div></div>':'')
       + '</div>';
 
@@ -1819,20 +1819,20 @@ function afficherRecap() {
       return '<div style="background:var(--w);border-top:3px solid '+(ok?'var(--v)':'var(--b)')+';padding:.9rem 1rem;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:.6rem">'
         +'<div style="font-family:Libre Baskerville,serif;font-size:.85rem;font-weight:700;margin-bottom:.65rem;padding-bottom:.4rem;border-bottom:1px solid var(--b)">ð¤ '+a+(ok?' <span style=\"font-size:.55rem;color:var(--v)\">â</span>':'')+'</div>'+(rangA?'<div style="text-align:right;font-size:.72rem;font-weight:600;color:var(--v);margin:-.2rem 0 .4rem">ð '+rangAOrd+' / 8 vendeurs</div>':'')
         +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;margin-bottom:.6rem">'
-        +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Ventes signÃ©es</div><div style="font-family:IBM Plex Mono,monospace;font-size:1.15rem;font-weight:700;color:'+(ok?'var(--v)':'var(--n)')+'">'+nb+'<span style="font-size:.65rem;color:var(--gm)"> / '+ag.obj_ventes+'</span></div><div style="height:4px;background:var(--gc);border-radius:2px;margin-top:.2rem"><div style="width:'+pctV+'%;height:100%;background:'+(ok?'var(--v)':'var(--a)')+'"></div></div></div>'
+        +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Ventes signées</div><div style="font-family:IBM Plex Mono,monospace;font-size:1.15rem;font-weight:700;color:'+(ok?'var(--v)':'var(--n)')+'">'+nb+'<span style="font-size:.65rem;color:var(--gm)"> / '+ag.obj_ventes+'</span></div><div style="height:4px;background:var(--gc);border-radius:2px;margin-top:.2rem"><div style="width:'+pctV+'%;height:100%;background:'+(ok?'var(--v)':'var(--a)')+'"></div></div></div>'
         +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Mandats</div><div style="font-family:IBM Plex Mono,monospace;font-size:1.15rem;font-weight:700;color:'+(pctM>=100?'var(--v)':'var(--n)')+'">'+nbM+'<span style="font-size:.65rem;color:var(--gm)"> / '+ag.obj_mandats+'</span></div><div style="height:4px;background:var(--gc);border-radius:2px;margin-top:.2rem"><div style="width:'+pctM+'%;height:100%;background:'+(pctM>=100?'var(--v)':'var(--ad)')+'"></div></div></div>'
         +'</div><div style="border-top:1px solid var(--gc);padding-top:.5rem;display:grid;grid-template-columns:1fr 1fr;gap:.3rem">'
-        +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Marge HT livrÃ©e</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--v)">'+fmt(mg)+'</div></div>'
-        +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">RÃ©sultat sociÃ©tÃ©</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--n)">'+(CURRENT_USER==='Jules'?'':fmt(rs))+'</div></div>'
+        +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Marge HT livrée</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--v)">'+fmt(mg)+'</div></div>'
+        +'<div><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Résultat société</div><div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600;color:var(--n)">'+(CURRENT_USER==='Jules'?'':fmt(rs))+'</div></div>'
         +'<div style="grid-column:1/-1"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gm)">Commission Ã  verser</div><div style="font-family:IBM Plex Mono,monospace;font-size:.78rem;color:var(--gm)">'+fmt(cv)+'</div></div>'
         +(CURRENT_USER==='Julien'?'<div style="grid-column:1/-1;margin-top:.4rem;padding:.3rem .5rem;border-radius:6px;background:'+(at40Manual?'rgba(34,197,94,.1)':'rgba(200,200,200,.1)')+';border:1px solid '+(at40Manual?'rgba(34,197,94,.3)':'rgba(200,200,200,.4)')+'"><button onclick="setUnlock40(\''+a+'\',' +'\''+mois+'\','+!at40Manual+')" style="font-size:.72rem;padding:.15rem .45rem;border-radius:4px;border:none;background:'+(at40Manual?'rgba(34,197,94,.2)':'#e5e7eb')+';cursor:pointer;color:'+(at40Manual?'#166534':'#374151')+'">'+( at40Manual?'&#10003; 40% d&#233;bloqu&#233; &#8212; Verrouiller':'&#128274; D&#233;bloquer les 40%')+'</button></div><div style="grid-column:1/-1;margin-top:.3rem;padding:.4rem .6rem;border-radius:6px;background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.3)"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#a16207;margin-bottom:.3rem">Prime exceptionnelle</div><div style="display:flex;align-items:center;gap:.5rem"><input type="number" id="prime_'+a+'_'+mois+'" value="'+getPrime(a,mois)+'" style="width:90px;padding:.2rem .4rem;border:1px solid #ca8a04;border-radius:4px;font-family:IBM Plex Mono,monospace;font-size:.78rem" onchange="setPrime(\''+a+'\',\''+mois+'\',this.value)"><span style="font-size:.75rem;color:#555">&#8364;</span></div></div>'+(a==='Jules'?'<div style="grid-column:1/-1;margin-top:.3rem;padding:.4rem .6rem;border-radius:6px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3)"><div style="font-size:.5rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6366f1;margin-bottom:.3rem">Paye mensuelle Jules</div><div style="display:flex;align-items:center;gap:.5rem"><input type="number" id="julesPaye_'+mois+'" value="'+getJulesPaye(mois)+'" style="width:90px;padding:.2rem .4rem;border:1px solid #6366f1;border-radius:4px;font-family:IBM Plex Mono,monospace;font-size:.78rem" onchange="saveJulesPaye(this.value,\''+mois+'\')"><span style="font-size:.75rem;color:#555">&#8364;</span></div></div>':''):'')
         +(at40||manqueV>0||manqueM>0||gainPotA>0
           ? '<div style="grid-column:1/-1;margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.8rem;background:'+(at40?'rgba(34,197,94,.12)':'rgba(255,140,0,.12)')+';border:1px solid '+(at40?'rgba(34,197,94,.3)':'rgba(255,140,0,.3)')+'">'
           +(at40
-            ? '<span style="color:#16a34a">&#9989; <strong>Taux 40% dÃ©bloquÃ©!</strong></span>'
-            : '<span style="color:#c87000">&#127919; Il manque <strong>'+manqueV+'</strong> vente(s) et <strong>'+manqueM+'</strong> mandat(s) pour dÃ©bloquer le 40%</span>'
+            ? '<span style="color:#16a34a">&#9989; <strong>Taux 40% débloqué!</strong></span>'
+            : '<span style="color:#c87000">&#127919; Il manque <strong>'+manqueV+'</strong> vente(s) et <strong>'+manqueM+'</strong> mandat(s) pour débloquer le 40%</span>'
           )
-          +(gainPotA>0?' &nbsp;<span style="opacity:.8">â gain potentiel si livrÃ©s : <strong>+'+fmt(gainPotA)+'</strong></span>':'')
+          +(gainPotA>0?' &nbsp;<span style="opacity:.8">â gain potentiel si livrés : <strong>+'+fmt(gainPotA)+'</strong></span>':'')
           +'</div>'
           : '')
         +(manqueV100>0||manqueM100>0||elig100
@@ -1842,10 +1842,10 @@ function afficherRecap() {
                       : 'ð Il manque '+manqueV100+' vente(s) et '+manqueM100+' mandat(s) pour prime 150â¬'
                     )+'</div>'
                     : '')
-                  +'<div style="border-top:1px solid rgba(255,255,255,.12);padding:.3rem .7rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem">'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em">VersÃ© agent</span>'+'<div style="display:flex;align-items:center;gap:.25rem">'+'<input type="number" id="paye-reel-'+a+'" value="'+((_prRecap[mois]&&_prRecap[mois][a]!==undefined)?parseFloat(_prRecap[mois][a]):Math.round(calcPayeTotal(a,mois)*100)/100)+'" step="1" style="width:88px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:.76rem;padding:.18rem .4rem;border-radius:3px;text-align:right;font-family:IBM Plex Mono,monospace" >'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5)">â¬</span><button onclick="savePayeReel(\''+ a +'\',\''+mois+'\',parseFloat(document.getElementById(\'paye-reel-\'+a).value)||0)" style="margin-left:.3rem;padding:.15rem .55rem;background:#16a34a;border:none;border-radius:4px;color:#fff;font-weight:700;cursor:pointer;font-size:.85rem">â</button>'+'</div></div>'+'</div></div>';
+                  +'<div style="border-top:1px solid rgba(255,255,255,.12);padding:.3rem .7rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem">'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em">Versé agent</span>'+'<div style="display:flex;align-items:center;gap:.25rem">'+'<input type="number" id="paye-reel-'+a+'" value="'+((_prRecap[mois]&&_prRecap[mois][a]!==undefined)?parseFloat(_prRecap[mois][a]):Math.round(calcPayeTotal(a,mois)*100)/100)+'" step="1" style="width:88px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:.76rem;padding:.18rem .4rem;border-radius:3px;text-align:right;font-family:IBM Plex Mono,monospace" >'+'<span style="font-size:.6rem;color:rgba(255,255,255,.5)">â¬</span><button onclick="savePayeReel(\''+ a +'\',\''+mois+'\',parseFloat(document.getElementById(\'paye-reel-\'+a).value)||0)" style="margin-left:.3rem;padding:.15rem .55rem;background:#16a34a;border:none;border-radius:4px;color:#fff;font-weight:700;cursor:pointer;font-size:.85rem">â</button>'+'</div></div>'+'</div></div>';
     }
     function buildAgenceSection(agenceName, agents) {
-      const agLabel = agenceName === 'Saint-RÃ©my' ? 'Agence Saint-RÃ©my-de-Provence' : 'Agence Aix-en-Provence';
+      const agLabel = agenceName === 'Saint-Rémy' ? 'Agence Saint-Rémy-de-Provence' : 'Agence Aix-en-Provence';
       const agV=allV.filter(v=>v.agence===agLabel);
       const agL=allLiv.filter(v=>v.agence===agLabel);
       const agM=allM.filter(m=>m.agence?m.agence===agLabel:agents.includes(m.agent));
@@ -1858,8 +1858,8 @@ function afficherRecap() {
         +'<div style="background:var(--bg);padding:.5rem .8rem;margin-bottom:.8rem;border-left:3px solid var(--a);display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem">'
         +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Ventes</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+agV.length+'</div></div>'
         +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Mandats</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+agM.length+'</div></div>'
-        +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Marge HT livrÃ©e</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--v)">'+fmt(agMg)+'</div></div>'
-        +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">RÃ©sultat sociÃ©tÃ©</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+fmt(agRs)+'</div></div>'
+        +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Marge HT livrée</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--v)">'+fmt(agMg)+'</div></div>'
+        +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Résultat société</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+fmt(agRs)+'</div></div>'
         +'<div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">OPTEVEN 48</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--ad)">'+agOpt+'</div></div>'
         +'</div>'
         +agents.map(a=>buildAgentCard(a)).join('')
@@ -1870,10 +1870,10 @@ function afficherRecap() {
       +'</div>';
 
     const livrRows = allLiv.map(v => {const b=v.comm_vendeur||0;const cDisp=(getUnlock40(v.agent,mois)&&!v.via_prospectrice&&v.type==='classique'?Math.max(b,(v.marge_nette_ht||0)*.40):b)+(v.prime_rapidite||0);return '<tr><td>'+(v.date_livraison||v.date_vente||'')+'</td><td>'+(v.vehicule||'')+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+fmt(v.marge_nette_ht||0)+'</td><td>'+fmt(cDisp)+'</td></tr>';}).join('');
-    const livrManagerHtml = allLiv.length ? '<table class="vt"><thead><tr><th>Livraison</th><th>VÃ©hicule</th><th>Client</th><th>Agent</th><th>Marge HT</th><th>Commission</th></tr></thead><tbody>'+livrRows+'</tbody></table>' : '<div style="color:var(--gm);font-size:.75rem;font-family:IBM Plex Mono,monospace;padding:.5rem 0">Aucune livraison ce mois.</div>';
+    const livrManagerHtml = allLiv.length ? '<table class="vt"><thead><tr><th>Livraison</th><th>Véhicule</th><th>Client</th><th>Agent</th><th>Marge HT</th><th>Commission</th></tr></thead><tbody>'+livrRows+'</tbody></table>' : '<div style="color:var(--gm);font-size:.75rem;font-family:IBM Plex Mono,monospace;padding:.5rem 0">Aucune livraison ce mois.</div>';
 
-    const venteRows = allV.map(v => '<tr><td>'+(v.date_vente||'')+'</td><td>'+(v.vehicule||'')+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+(v.type||'')+'</td><td><span class="tag" style="background:'+(v.livraison_statut==='LivrÃ©e'?'#d1fae5':'#fff3e0')+';color:'+(v.livraison_statut==='LivrÃ©e'?'#065f46':'#b45309')+'">'+( v.livraison_statut||'')+'</span></td></tr>').join('');
-    const tableHtml = allV.length ? '<table class="vt"><thead><tr><th>Date</th><th>VÃ©hicule</th><th>Client</th><th>Agent</th><th>Type</th><th>Statut</th></tr></thead><tbody>'+venteRows+'</tbody></table>' : '<div style="color:var(--gm);font-size:.75rem;font-family:IBM Plex Mono,monospace;padding:.5rem 0">Aucune vente ce mois.</div>';
+    const venteRows = allV.map(v => '<tr><td>'+(v.date_vente||'')+'</td><td>'+(v.vehicule||'')+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+(v.type||'')+'</td><td><span class="tag" style="background:'+(v.livraison_statut==='Livrée'?'#d1fae5':'#fff3e0')+';color:'+(v.livraison_statut==='Livrée'?'#065f46':'#b45309')+'">'+( v.livraison_statut||'')+'</span></td></tr>').join('');
+    const tableHtml = allV.length ? '<table class="vt"><thead><tr><th>Date</th><th>Véhicule</th><th>Client</th><th>Agent</th><th>Type</th><th>Statut</th></tr></thead><tbody>'+venteRows+'</tbody></table>' : '<div style="color:var(--gm);font-size:.75rem;font-family:IBM Plex Mono,monospace;padding:.5rem 0">Aucune vente ce mois.</div>';
 
     // Stats personnelles si manager est aussi agent
     let mesSectionHtml = '';
@@ -1884,14 +1884,14 @@ function afficherRecap() {
       const meTrim = calcPrimeTrim(CURRENT_USER, mois);
       const meBest = calcPrimeBestAgent(CURRENT_USER, mois);
       const meTot  = meCv + meTrim.prime + (meBest ? 150 : 0);
-      mesSectionHtml = '<div style="background:var(--bg);border-left:4px solid var(--a);padding:.85rem 1rem;margin-bottom:1.2rem"><div style="font-family:Libre Baskerville,serif;font-size:.82rem;font-weight:700;color:var(--n);margin-bottom:.65rem">\u{1f464} Mes stats â '+CURRENT_USER+'</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem"><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Marge livrÃ©e</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--v)">'+fmt(meMg)+'</div></div><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Commission vente</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--v)">'+fmt(meCv)+'</div></div><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:'+(meTrim.prime>0?'var(--v)':'var(--gm)')+'">Prime trimestrielle</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:'+(meTrim.prime>0?'var(--v)':'var(--gm)')+'">'+fmt(meTrim.prime)+'</div>'+(meTrim.prime===0?'<div style="font-size:.55rem;color:var(--gm)">encore '+fmt(meTrim.manquant)+'</div>':'')+'</div><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Total Ã  verser</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+fmt(meTot)+(meBest?' <span style="font-size:.55rem;color:var(--v)">+150â¬ ð</span>':'')+'</div></div></div></div>';
+      mesSectionHtml = '<div style="background:var(--bg);border-left:4px solid var(--a);padding:.85rem 1rem;margin-bottom:1.2rem"><div style="font-family:Libre Baskerville,serif;font-size:.82rem;font-weight:700;color:var(--n);margin-bottom:.65rem">\u{1f464} Mes stats â '+CURRENT_USER+'</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem"><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Marge livrée</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--v)">'+fmt(meMg)+'</div></div><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Commission vente</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--v)">'+fmt(meCv)+'</div></div><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:'+(meTrim.prime>0?'var(--v)':'var(--gm)')+'">Prime trimestrielle</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:'+(meTrim.prime>0?'var(--v)':'var(--gm)')+'">'+fmt(meTrim.prime)+'</div>'+(meTrim.prime===0?'<div style="font-size:.55rem;color:var(--gm)">encore '+fmt(meTrim.manquant)+'</div>':'')+'</div><div><div style="font-size:.48rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Total Ã  verser</div><div style="font-family:IBM Plex Mono,monospace;font-size:.88rem;font-weight:700;color:var(--n)">'+fmt(meTot)+(meBest?' <span style="font-size:.55rem;color:var(--v)">+150â¬ ð</span>':'')+'</div></div></div></div>';
     } } catch(e) { console.error('recap err',e); }
     zone.innerHTML = kpiHtml
       + mesSectionHtml
       + agencesCols
       + '<div class="stl" style="margin-bottom:.65rem">ð Livraisons de '+lblMois(mois)+' ('+allLiv.length+') â base de calcul des commissions</div>'
       + livrManagerHtml
-      + '<div class="stl" style="margin-top:1.1rem;margin-bottom:.65rem">Ventes signÃ©es en '+lblMois(mois)+' ('+allV.length+')</div>'
+      + '<div class="stl" style="margin-top:1.1rem;margin-bottom:.65rem">Ventes signées en '+lblMois(mois)+' ('+allV.length+')</div>'
       + tableHtml;
     return;
   }
@@ -1931,9 +1931,9 @@ function afficherRecap() {
   const trimData = calcPrimeTrim(CURRENT_USER, mois);
 
   const objCards = [
-    {icon:'ð',label:'Ventes signÃ©es',  cur:nb,         tot:obj_v,      pct:pctV,     detail:nb>=obj_v?'â Objectif atteint !':(obj_v-nb)+' manquante(s)'},
-    {icon:'ð',label:'Mandats rentrÃ©s', cur:nbM,        tot:obj_m,      pct:pctM,     detail:nbM>=obj_m?'â Objectif atteint !':(obj_m-nbM)+' manquant(s)'},
-    {icon:'ð¶',label:'Marge HT livrÃ©e', cur:fmt(marge), tot:'objectif', pct:pctMarge, detail:'Prime palier : '+fmt(palier(marge))+(trimData.manquant>0?' Â· Trim. : encore '+fmt(trimData.manquant):'')},
+    {icon:'ð',label:'Ventes signées',  cur:nb,         tot:obj_v,      pct:pctV,     detail:nb>=obj_v?'â Objectif atteint !':(obj_v-nb)+' manquante(s)'},
+    {icon:'ð',label:'Mandats rentrés', cur:nbM,        tot:obj_m,      pct:pctM,     detail:nbM>=obj_m?'â Objectif atteint !':(obj_m-nbM)+' manquant(s)'},
+    {icon:'ð¶',label:'Marge HT livrée', cur:fmt(marge), tot:'objectif', pct:pctMarge, detail:'Prime palier : '+fmt(palier(marge))+(trimData.manquant>0?' · Trim. : encore '+fmt(trimData.manquant):'')},
   ];
 
   const objHtml = '<div class="og">'
@@ -1951,11 +1951,11 @@ function afficherRecap() {
 
   const ventesHtml = vm.length === 0
     ? '<div style="text-align:center;padding:1.5rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucune vente ce mois.</div>'
-    : '<table class="vt"><thead><tr><th>VÃ©hicule</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Livraison</th><th></th></tr></thead><tbody>'
+    : '<table class="vt"><thead><tr><th>Véhicule</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Livraison</th><th></th></tr></thead><tbody>'
       + vm.map(v => '<tr>'
           + '<td><div style="font-weight:500">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
-          + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='LivrÃ©e'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
+          + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='Livrée'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
           + '<td style="white-space:nowrap">'
           + '<button class="delbtn" onclick="editerVente('+v.id+')" title="Modifier" style="color:var(--a)">âï¸</button> '
           + '<button class="delbtn" onclick="supprimerVenteRecap('+v.id+')" title="Supprimer">â</button>'
@@ -1964,9 +1964,9 @@ function afficherRecap() {
 
   const livrRecapHtml = vl.length === 0
     ? '<div style="text-align:center;padding:1rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucune livraison ce mois.</div>'
-    : '<table class="vt"><thead><tr><th>VÃ©hicule</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">LivrÃ©e le</th></tr></thead><tbody>'
+    : '<table class="vt"><thead><tr><th>Véhicule</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">Livrée le</th></tr></thead><tbody>'
       + vl.map(v => '<tr>'
-          + '<td><div style="font-weight:500">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+' Â· vendu le '+fmtDate(v.date)+'</div></td>'
+          + '<td><div style="font-weight:500">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+' · vendu le '+fmtDate(v.date)+'</div></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--v)">â '+fmtDate(v.date_livraison)+'</td>'
@@ -1983,9 +1983,9 @@ function afficherRecap() {
     motivHtml = '<div style="background:linear-gradient(135deg,#fff8e8,#fff3d0);border:2px solid var(--a);padding:.85rem 1rem;margin-bottom:1rem;border-radius:3px">'
       + '<div style="font-family:IBM Plex Mono,monospace;font-size:.68rem;font-weight:700;color:#7a5a00;margin-bottom:.35rem">ð TON POTENTIEL DE GAIN</div>'
       + (manqueStr ? '<div style="font-size:.78rem;color:var(--n);margin-bottom:.3rem">Il te manque encore <strong>' + manqueStr + '</strong> pour passer Ã  <strong style="color:var(--v)">40 %</strong> de commission.</div>' : '')
-      + '<div style="font-size:.78rem;color:var(--n);margin-bottom:.3rem">Sur tes <strong>' + attenteAgent.filter(v=>(v.marge_nette_ht||0)>=1000).length + ' vente(s) en attente</strong> (â¥1000â¬, mois en cours), tu pourrais dÃ©bloquer <strong style="color:var(--v);font-family:IBM Plex Mono,monospace">+' + fmt(gainPotentiel) + '</strong> supplÃ©mentaires'+(((obj_v?nb>=obj_v:true)&&(obj_m?nbM>=obj_m:true))?' â¢ +150â¬ si meilleur agent !':'')+' .</div>' + (rangLabel ? '<div style="text-align:right;font-size:.73rem;color:var(--gm);margin-top:.2rem">ð '+rangLabel+'</div>' : '')
+      + '<div style="font-size:.78rem;color:var(--n);margin-bottom:.3rem">Sur tes <strong>' + attenteAgent.filter(v=>(v.marge_nette_ht||0)>=1000).length + ' vente(s) en attente</strong> (â¥1000â¬, mois en cours), tu pourrais débloquer <strong style="color:var(--v);font-family:IBM Plex Mono,monospace">+' + fmt(gainPotentiel) + '</strong> supplémentaires'+(((obj_v?nb>=obj_v:true)&&(obj_m?nbM>=obj_m:true))?' â¢ +150â¬ si meilleur agent !':'')+' .</div>' + (rangLabel ? '<div style="text-align:right;font-size:.73rem;color:var(--gm);margin-top:.2rem">ð '+rangLabel+'</div>' : '')
       + (attenteAgent.filter(v=>(v.marge_nette_ht||0)>=1000).length===0?'<div style="font-size:.73rem;color:var(--gm)">Tu n\'as pas encore de ventes en attente avec marge â¥ 1 000 â¬.</div>':'')
-      + '<div style="font-size:.68rem;color:var(--gm);margin-top:.25rem;font-family:IBM Plex Mono,monospace">â¡ Le taux 40 % se dÃ©bloque quand tu atteins 80 % de tes objectifs ventes ET mandats.</div>'
+      + '<div style="font-size:.68rem;color:var(--gm);margin-top:.25rem;font-family:IBM Plex Mono,monospace">â¡ Le taux 40 % se débloque quand tu atteins 80 % de tes objectifs ventes ET mandats.</div>'
       + '</div>';
   } else if (alreadyAt40) {
     motivHtml = '<div style="background:var(--vl);border:2px solid var(--v);padding:.75rem 1rem;margin-bottom:1rem;border-radius:3px">'
@@ -1994,12 +1994,12 @@ function afficherRecap() {
       + '</div>';
   }
 
-  // Section commissions croisÃ©es mandant (si prÃ©sentes)
+  // Section commissions croisées mandant (si présentes)
   const croiseMandantHtml = vlCroise.length === 0 ? '' :
     '<div style="margin-top:.9rem">'
-    + '<div class="stl" style="margin-bottom:.65rem">ð¤ Mes commissions mandant croisÃ© â '+lblMois(mois)+' ('+vlCroise.length+')</div>'
+    + '<div class="stl" style="margin-bottom:.65rem">ð¤ Mes commissions mandant croisé â '+lblMois(mois)+' ('+vlCroise.length+')</div>'
     + '<div style="background:var(--w);border:1px solid var(--b);padding:.7rem .9rem;margin-bottom:.5rem">'
-    + '<table class="vt"><thead><tr><th>VÃ©hicule</th><th>Vendu par</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Ta commission (20%)</th><th style="text-align:right">LivrÃ©e le</th></tr></thead><tbody>'
+    + '<table class="vt"><thead><tr><th>Véhicule</th><th>Vendu par</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Ta commission (20%)</th><th style="text-align:right">Livrée le</th></tr></thead><tbody>'
     + vlCroise.map(v => '<tr>'
         + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
         + '<td style="font-family:IBM Plex Mono,monospace;font-size:.7rem;color:var(--gm)">'+v.agent+'</td>'
@@ -2008,7 +2008,7 @@ function afficherRecap() {
         + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--v)">â '+fmtDate(v.date_livraison)+'</td>'
         + '</tr>').join('')
     + '</tbody></table>'
-    + '<div style="text-align:right;font-family:IBM Plex Mono,monospace;font-size:.78rem;font-weight:700;color:var(--ad);padding:.5rem 0 .1rem">Total mandant croisÃ© : '+fmt(commMRecap)+'</div>'
+    + '<div style="text-align:right;font-family:IBM Plex Mono,monospace;font-size:.78rem;font-weight:700;color:var(--ad);padding:.5rem 0 .1rem">Total mandant croisé : '+fmt(commMRecap)+'</div>'
     + '</div></div>';
 
     // Meilleur agent motivational block
@@ -2025,12 +2025,12 @@ function afficherRecap() {
       if(manqueM100>0) parts100.push(manqueM100+' mandat'+(manqueM100>1?'s':''));
       motivBestHtml = '<div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #f59e0b;padding:.85rem 1rem;margin-bottom:1rem;border-radius:8px">'
         + '<div style="font-size:.58rem;font-weight:700;color:#92400e;margin-bottom:.35rem">ð PRIME MEILLEUR AGENT â 150 â¬</div>'
-        + '<div style="font-size:.78rem;color:var(--n)">Il te reste <strong>'+parts100.join(' + ')+'</strong> pour Ãªtre Ã©ligible (Ã©ligibilitÃ© = 100% objectifs).</div>'
+        + '<div style="font-size:.78rem;color:var(--n)">Il te reste <strong>'+parts100.join(' + ')+'</strong> pour être éligible (éligibilité = 100% objectifs).</div>'
         + '</div>';
     } else if (isBestAgent) {
       motivBestHtml = '<div style="background:linear-gradient(135deg,#fef9c3,#fefce8);border:2px solid #eab308;padding:.85rem 1rem;margin-bottom:1rem;border-radius:8px">'
         + '<div style="font-size:.58rem;font-weight:700;color:#713f12;margin-bottom:.35rem">ð MEILLEUR AGENT DU MOIS !</div>'
-        + '<div style="font-size:.78rem;color:var(--n)">Tu dÃ©croches la prime de <strong>+150 â¬</strong> â fÃ©licitations !</div>'
+        + '<div style="font-size:.78rem;color:var(--n)">Tu décroches la prime de <strong>+150 â¬</strong> â félicitations !</div>'
         + '</div>';
     } else {
       motivBestHtml = '<div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #22c55e;padding:.85rem 1rem;margin-bottom:1rem;border-radius:8px">'
@@ -2045,7 +2045,7 @@ zone.innerHTML = objHtml
     + (trimData.prime>0||trimData.manquant>0 ? '<div style="background:#fff8e8;border:1px solid var(--a);padding:.65rem .85rem;margin-bottom:1rem;font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#7a5a1a">'
       + 'ð <strong>Prime trimestrielle</strong> : marge sur 3 mois = '+fmt(trimData.marge)
       + (trimData.prime>0 ? ' â <strong style="color:var(--v)">Prime : '+fmt(trimData.prime)+(calcPrimeBestAgent(CURRENT_USER,mois)?' + 150 â¬ (meilleur agent)':'')+'</strong>' : ' â encore '+fmt(trimData.manquant)+' pour atteindre le palier '+fmt(trimData.prochainPalier)+'â¬')
-      + '<div style="font-size:.75rem;opacity:.6;margin-top:.3rem">Mois comptÃ©s : '+trimData.moisList.slice().sort().map(m=>lblMois(m)).join(' â¢ ')+'</div>'
+      + '<div style="font-size:.75rem;opacity:.6;margin-top:.3rem">Mois comptés : '+trimData.moisList.slice().sort().map(m=>lblMois(m)).join(' â¢ ')+'</div>'
       + '</div>' : '')
     + '<div style="margin-top:.9rem"><div class="stl" style="margin-bottom:.65rem">ð Mes livraisons de '+lblMois(mois)+' ('+vl.length+')</div>'
     + livrRecapHtml + '</div>'
@@ -2067,7 +2067,7 @@ zone.innerHTML = objHtml
             + '</tr>').join('')
         + '</tbody></table>')
     + '</div>'
-    + '<div style="margin-top:.9rem"><div class="stl" style="margin-bottom:.65rem">Mes ventes signÃ©es ce mois ('+vm.length+')</div>'
+    + '<div style="margin-top:.9rem"><div class="stl" style="margin-bottom:.65rem">Mes ventes signées ce mois ('+vm.length+')</div>'
     + ventesHtml
     + (() => {
         const seuil80V = ag.obj_ventes  ? Math.ceil(ag.obj_ventes  * 0.8) : 0;
@@ -2077,7 +2077,7 @@ zone.innerHTML = objHtml
         const at40     = (ag.obj_ventes?nb/ag.obj_ventes:1) >= 0.8 && (ag.obj_mandats?nbM/ag.obj_mandats:1) >= 0.8;
         const pending  = attenteAgent.filter(v => (v.marge_nette_ht||0) >= 1000);
         const gainPot  = pending.reduce((s,v) => s + Math.round((v.marge_nette_ht||0)*0.10), 0);
-        if (at40) return '<div style="margin:.5rem 1rem .7rem;padding:.5rem .8rem;background:#e8f5e9;border-radius:8px;border:1px solid #a5d6a7;font-size:.75rem;color:#2e7d32;font-weight:600">â 40% dÃ©bloquÃ© ce mois</div>';
+        if (at40) return '<div style="margin:.5rem 1rem .7rem;padding:.5rem .8rem;background:#e8f5e9;border-radius:8px;border:1px solid #a5d6a7;font-size:.75rem;color:#2e7d32;font-weight:600">â 40% débloqué ce mois</div>';
         const parts = [];
         if (manqueV > 0) parts.push(manqueV+' vente'+(manqueV>1?'s':''));
         if (manqueM > 0) parts.push(manqueM+' mandat'+(manqueM>1?'s':''));
@@ -2085,7 +2085,7 @@ zone.innerHTML = objHtml
         return '<div style="margin:.5rem 1rem .7rem;padding:.5rem .8rem;background:#fff3e0;border-radius:8px;border:1px solid #ffb74d;font-size:.75rem">'
           + '<span style="color:#e65100;font-weight:700">ð¯ '+(manqueStr?'Il manque '+manqueStr+' pour 40%':'Objectifs atteints !')+'</span>'
           + (gainPot>0 ? '<span style="float:right;color:#2e7d32;font-weight:700">+'+gainPot.toLocaleString('fr-FR')+'â¬ potentiel</span>' : '')
-          + (pending.length>0 ? '<div style="color:#555;margin-top:.2rem;font-size:.7rem">'+pending.length+' vente'+(pending.length>1?'s':'')+' en attente Ã©ligible'+(pending.length>1?'s':'')+' (marge â¥1000â¬)</div>' : '')
+          + (pending.length>0 ? '<div style="color:#555;margin-top:.2rem;font-size:.7rem">'+pending.length+' vente'+(pending.length>1?'s':'')+' en attente éligible'+(pending.length>1?'s':'')+' (marge â¥1000â¬)</div>' : '')
           + '</div>';
       })()
     + '</div>';
@@ -2098,8 +2098,8 @@ function afficherDashboard() {
   const ventes = loadVentes();
   const params = loadParams();
 
-  const vm    = ventes.filter(v => v.mois === mois);           // ventes signÃ©es ce mois
-  const vliv  = ventes.filter(v => v.mois_livraison === mois); // vÃ©hicules livrÃ©s ce mois (tous mois de vente confondus)
+  const vm    = ventes.filter(v => v.mois === mois);           // ventes signées ce mois
+  const vliv  = ventes.filter(v => v.mois_livraison === mois); // véhicules livrés ce mois (tous mois de vente confondus)
 
   const totalMarge   = vliv.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
   const totalComm    = AGENTS.reduce((s,a)=>s+calcPayeTotal(a,mois),0);
@@ -2120,16 +2120,16 @@ function afficherDashboard() {
 
   const kz = document.getElementById('kpi-zone');
   if (kz) kz.innerHTML = ''
-    + '<div class="kpi hl"><div class="kl">Marge nette HT</div><div class="kv">'+fmt(totalMarge)+'</div><div class="ks">Avant commissions Â· '+nbL+' livraison(s)</div></div>'
+    + '<div class="kpi hl"><div class="kl">Marge nette HT</div><div class="kv">'+fmt(totalMarge)+'</div><div class="ks">Avant commissions · '+nbL+' livraison(s)</div></div>'
     + '<div class="kpi ok"><div class="kl">Commissions vendeurs</div><div class="kv" style="color:var(--r)">â '+fmt(totalComm)+'</div><div class="ks">Total Ã  verser agents</div></div>'
-    + '<div class="kpi" style="border-top-color:#1a56d6"><div class="kl">RÃ©sultat sociÃ©tÃ© HT</div><div class="kv" style="color:#1a56d6">'+fmt(totalMarge-totalComm)+'</div><div class="ks">Marge â commissions</div></div>'
+    + '<div class="kpi" style="border-top-color:#1a56d6"><div class="kl">Résultat société HT</div><div class="kv" style="color:#1a56d6">'+fmt(totalMarge-totalComm)+'</div><div class="ks">Marge â commissions</div></div>'
     + '<div class="kpi nf"><div class="kl">Livraisons</div><div class="kv">'+nbL+' / '+nbV+'</div><div class="ks">'+nbAtt+' en attente</div></div>'
     + '<div class="kpi wn"><div class="kl">Avis Google en attente</div><div class="kv">'+avisAtt+'</div><div class="ks">Ã confirmer</div></div>';
 
-  const agences = ['Agence Saint-RÃ©my-de-Provence','Agence Aix-en-Provence'];
+  const agences = ['Agence Saint-Rémy-de-Provence','Agence Aix-en-Provence'];
   const az = document.getElementById('ag-zone');
   if (az) az.innerHTML = agences.map(ag => {
-    const va = vm.filter(v => v.agence===ag);                            // ventes signÃ©es ce mois pour cette agence
+    const va = vm.filter(v => v.agence===ag);                            // ventes signées ce mois pour cette agence
     const vla= vliv.filter(v => v.agence===ag);                          // livraisons de ce mois pour cette agence
     const m  = vla.reduce((s,v) => s+(v.marge_nette_ht||0), 0);         // marge sur livraisons
     const c  = vla.reduce((s,v) => s+(v.comm_vendeur||0)+(v.comm_mandant||0)+(v.prime_excep||0)+(v.prime_opteven||0)+(v.prime_rapidite||0), 0); // commissions sur livraisons
@@ -2143,8 +2143,8 @@ function afficherDashboard() {
       + '<div class="ar"><span>Ventes</span><span style="font-family:IBM Plex Mono,monospace">'+va.length+'</span></div>'
       + '<div class="ar"><span>Livraisons</span><span style="font-family:IBM Plex Mono,monospace">'+vla.length+'</span></div>'
       + '<div class="ar"><span>Marge nette HT</span><span style="font-family:IBM Plex Mono,monospace;color:var(--gm)">'+fmt(m)+'</span></div>'
-      + '<div class="ar"><span>Commissions versÃ©es</span><span style="font-family:IBM Plex Mono,monospace;color:var(--r)">â '+fmt(c)+'</span></div>'
-      + '<div class="ar" style="border-top:1px solid var(--b);padding-top:.3rem;margin-top:.15rem"><span style="font-weight:600">RÃ©sultat sociÃ©tÃ© HT</span><span style="font-family:IBM Plex Mono,monospace;font-weight:700;color:#1a56d6">'+(CURRENT_USER==='Jules'?'':fmt(rs))+'</span></div>'
+      + '<div class="ar"><span>Commissions versées</span><span style="font-family:IBM Plex Mono,monospace;color:var(--r)">â '+fmt(c)+'</span></div>'
+      + '<div class="ar" style="border-top:1px solid var(--b);padding-top:.3rem;margin-top:.15rem"><span style="font-weight:600">Résultat société HT</span><span style="font-family:IBM Plex Mono,monospace;font-weight:700;color:#1a56d6">'+(CURRENT_USER==='Jules'?'':fmt(rs))+'</span></div>'
       + '</div>';
   }).join('');
 
@@ -2182,7 +2182,7 @@ function afficherAgent(vm, agent, params) {
   const ventesLivr= allV.filter(v => v.agent === agent && v.mois_livraison === moisSel);
   const mandatsCroises = allV.filter(v => v.mois_livraison === moisSel && v.type==='croise' && v.mandant===agent);
 
-  const nb    = ventes.length;                                            // ventes signÃ©es ce mois
+  const nb    = ventes.length;                                            // ventes signées ce mois
   const nl    = ventesLivr.length;                                        // livraisons ce mois
   const nbM   = tousMandats.length;
   const marge    = ventesLivr.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
@@ -2227,21 +2227,21 @@ function afficherAgent(vm, agent, params) {
 
   const ventesHtml = ventes.length === 0
     ? '<div style="text-align:center;padding:1.5rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucune vente ce mois.</div>'
-    : '<table class="vt"><thead><tr><th>Date</th><th>VÃ©hicule</th><th>Type</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">Statut</th><th></th></tr></thead><tbody>'
+    : '<table class="vt"><thead><tr><th>Date</th><th>Véhicule</th><th>Type</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">Statut</th><th></th></tr></thead><tbody>'
       + ventes.map(v => '<tr>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;white-space:nowrap">'+fmtDate(v.date)+'</td>'
           + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
           + '<td><span class="tag '+(v.type==='classique'?'tgc':v.type==='stock'?'tgs':'tgcr')+'">'+v.type+'</span></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:'+(v.marge_nette_ht>=0?'var(--v)':'var(--r)')+'">'+fmt(v.marge_nette_ht)+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+'</td>'
-          + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='LivrÃ©e'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
+          + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='Livrée'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
           + '<td><button class="delbtn" onclick="supprimerVente('+v.id+')" title="Supprimer">â</button></td>'
           + '</tr>').join('')
       + '</tbody></table>';
 
   const livrHtml = ventesLivr.length === 0
     ? '<div style="text-align:center;padding:1rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucune livraison ce mois pour cet agent.</div>'
-    : '<table class="vt"><thead><tr><th>Date vente</th><th>VÃ©hicule</th><th>Type</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">LivrÃ©e le</th></tr></thead><tbody>'
+    : '<table class="vt"><thead><tr><th>Date vente</th><th>Véhicule</th><th>Type</th><th style="text-align:right">Marge HT</th><th style="text-align:right">Commission</th><th style="text-align:right">Livrée le</th></tr></thead><tbody>'
       + ventesLivr.map(v => '<tr>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;white-space:nowrap">'+fmtDate(v.date)+'</td>'
           + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
@@ -2258,28 +2258,28 @@ function afficherAgent(vm, agent, params) {
     + '<div>'
     + '<div class="stl" style="margin-bottom:.65rem">Progression</div>'
     + '<div style="background:var(--w);border:1px solid var(--b);padding:.85rem .95rem;margin-bottom:.7rem">'
-    + '<div style="font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);margin-bottom:.28rem">Ventes signÃ©es</div>'
+    + '<div style="font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);margin-bottom:.28rem">Ventes signées</div>'
     + '<div style="font-family:IBM Plex Mono,monospace;font-size:1.4rem;font-weight:700;color:'+(nb>=obj_v?'var(--v)':'var(--n)')+'">'+nb+'</div>'
     + '<div class="pw"><div class="pb" style="width:'+pctV+'%;background:'+barV+'"></div></div>'
     + '<div style="font-family:IBM Plex Mono,monospace;font-size:.6rem;color:var(--gm)">'+pctV+'% â '+(nb>=obj_v?'â Objectif atteint':'â³ '+(obj_v-nb)+' manquante(s) / obj. '+obj_v)+'</div>'
     + '<div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:var(--v);margin-top:.35rem;border-top:1px solid var(--gc);padding-top:.35rem">ð '+nl+' livraison(s) ce mois</div>'
     + '</div>'
     + '<div style="background:var(--w);border:1px solid var(--b);padding:.85rem .95rem;margin-top:.6rem">'
-    + '<div style="font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);margin-bottom:.28rem">Mandats rentrÃ©s</div>'
+    + '<div style="font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);margin-bottom:.28rem">Mandats rentrés</div>'
     + '<div style="font-family:IBM Plex Mono,monospace;font-size:1.05rem;font-weight:700;color:'+(nbM>=obj_m?'var(--v)':'var(--n)')+'">'+nbM+' <span style="font-size:.75rem;color:var(--gm)">/ '+obj_m+' obj.</span></div>'
     + '<div class="pw"><div class="pb" style="width:'+pctMand+'%;background:linear-gradient(90deg,var(--ad),var(--a))"></div></div>'
     + '<div style="font-family:IBM Plex Mono,monospace;font-size:.6rem;color:var(--gm)">'+pctMand+'% â '+(nbM>=obj_m?'â Objectif atteint':'â³ '+(obj_m-nbM)+' manquant(s)')+'</div></div>'
     + '<div style="background:var(--w);border:1px solid var(--b);padding:.85rem .95rem;margin-top:.6rem">'
-    + '<div style="font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);margin-bottom:.28rem">Marge HT livrÃ©e</div>'
+    + '<div style="font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);margin-bottom:.28rem">Marge HT livrée</div>'
     + '<div style="font-family:IBM Plex Mono,monospace;font-size:1.05rem;font-weight:700;color:var(--ad)">'+fmt(marge)+'</div>'
     + '<div class="pw"><div class="pb" style="width:'+pctMarg+'%;background:linear-gradient(90deg,var(--ad),var(--a))"></div></div>'
-    + '<div style="font-family:IBM Plex Mono,monospace;font-size:.6rem;color:var(--gm)">'+pctMarg+'% vers 25 000 â¬'+(avisAtt?' Â· '+avisAtt+' avis en attente':'')+'</div>'
+    + '<div style="font-family:IBM Plex Mono,monospace;font-size:.6rem;color:var(--gm)">'+pctMarg+'% vers 25 000 â¬'+(avisAtt?' · '+avisAtt+' avis en attente':'')+'</div>'
     + '</div></div>'
     + '<div>'
     + '<div class="stl" style="margin-bottom:.65rem">Paye ce mois</div>'
     + '<div style="background:var(--bg);padding:.85rem .95rem;border:1px solid var(--b)">'
     + '<div class="pr"><span style="color:var(--gm)">Commission vendeur</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(comm)+'</span></div>'
-    + (primeRapid>0?'<div class="pr"><span style="color:var(--gm)">Prime rapiditÃ©</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(primeRapid)+'</span></div>':'')
+    + (primeRapid>0?'<div class="pr"><span style="color:var(--gm)">Prime rapidité</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(primeRapid)+'</span></div>':'')
     + (commM>0?'<div class="pr"><span style="color:var(--gm)">Commission mandant</span><span style="font-family:IBM Plex Mono,monospace;color:var(--ad)">'+fmt(commM)+'</span></div>':'')
     + '<div class="pr"><span style="color:var(--gm)">Primes avis Google'+(avisAtt?' ('+avisAtt+' att.)':'')+'</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(avisGain)+'</span></div>'
     + '<div class="pr"><span style="color:var(--gm)">Prime palier marge HT '+(primePal>0?'â':'â³')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(primePal>0?'var(--v)':'var(--gm)')+'">'+fmt(primePal)+'</span></div>'
@@ -2288,7 +2288,7 @@ function afficherAgent(vm, agent, params) {
     + (opteven>0?'<div class="pr"><span style="color:var(--gm)">Contrats OPTEVEN livr\u00e9s</span><span style="font-family:IBM Plex Mono,monospace">'+fmt(opteven)+'<span style="font-size:.78em;color:var(--gm)"> ('+nbOpt+' contrat'+(nbOpt>1?'s':'')+')</span></span></div>':'')
     + '<div class="pr"><span style="color:var(--gm)">Prime obj. ventes '+(nb>=obj_v?'â':'â³')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(primeOv>0?'var(--v)':'var(--gm)')+'">'+fmt(primeOv)+'</span></div>'
     + '<div class="pr"><span style="color:var(--gm)">Prime obj. mandats '+(nbM>=obj_m?'â':'â³')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(primeOm>0?'var(--v)':'var(--gm)')+'">'+fmt(primeOm)+'</span></div>'
-    + '<div class="pr"><span style="color:var(--gm)">Bonus dÃ©passement</span><span style="font-family:IBM Plex Mono,monospace;color:'+(bonus>0?'var(--v)':'var(--gm)')+'">'+fmt(bonus)+'</span></div>'
+    + '<div class="pr"><span style="color:var(--gm)">Bonus dépassement</span><span style="font-family:IBM Plex Mono,monospace;color:'+(bonus>0?'var(--v)':'var(--gm)')+'">'+fmt(bonus)+'</span></div>'
     + '<div class="pr"><span style="color:var(--gm)">Prime trimestrielle '+(trimData.prime>0?'â':'â³')+'</span><span style="font-family:IBM Plex Mono,monospace;color:'+(trimData.prime>0?'var(--v)':'var(--gm)')+'">'+fmt(trimData.prime)+'</span></div>'
     + (isBest?'<div class="pr"><span style="color:var(--gm)">ð Meilleur agent</span><span style="font-family:IBM Plex Mono,monospace;color:var(--v)">'+fmt(150)+'</span></div>':'')
     + '</div>'
@@ -2302,30 +2302,30 @@ function afficherAgent(vm, agent, params) {
     '</div></div>'
     + '<div class="stl" style="margin-top:1.1rem;margin-bottom:.65rem">ð Livraisons de '+agent+' en '+lblMois(moisSel)+' ('+ventesLivr.length+')</div>'
     + livrHtml
-    + '<div class="stl" style="margin-top:1.1rem;margin-bottom:.65rem">Ventes signÃ©es par '+agent+' ce mois ('+ventes.length+')</div>'
+    + '<div class="stl" style="margin-top:1.1rem;margin-bottom:.65rem">Ventes signées par '+agent+' ce mois ('+ventes.length+')</div>'
     + ventesHtml;
 }
 
 function supprimerVente(id) {
-  if (!confirm('Supprimer cette vente dÃ©finitivement ?')) return;
+  if (!confirm('Supprimer cette vente définitivement ?')) return;
   addDeleted(SK, id);
   const ventes = loadVentes().filter(v => v.id !== id);
   saveVentes(ventes);
   gasDeleteVente(id);
   updateBadge();
   afficherDashboard();
-  toast('Vente supprimÃ©e');
+  toast('Vente supprimée');
 }
 
 function supprimerVenteRecap(id) {
-  if (!confirm('Supprimer cette vente dÃ©finitivement ?')) return;
+  if (!confirm('Supprimer cette vente définitivement ?')) return;
   addDeleted(SK, id);
   const ventes = loadVentes().filter(v => v.id !== id);
   saveVentes(ventes);
   gasDeleteVente(id);
   updateBadge();
   afficherRecap();
-  toast('Vente supprimÃ©e');
+  toast('Vente supprimée');
 }
 
 function afficherGhStatus() {
@@ -2333,10 +2333,10 @@ function afficherGhStatus() {
   if (!el) return;
   const t = getGhToken();
   if (!t) {
-    el.textContent = 'â ï¸ Aucun token configurÃ© â la sync ne fonctionnera pas';
+    el.textContent = 'â ï¸ Aucun token configuré â la sync ne fonctionnera pas';
     el.style.color = 'var(--r)';
   } else {
-    el.textContent = 'â Token GitHub configurÃ©';
+    el.textContent = 'â Token GitHub configuré';
     el.style.color = 'var(--v)';
   }
 }
@@ -2371,7 +2371,7 @@ function sauvegarderToken() {
     return toast('Token invalide â doit commencer par ghp_', true);
   localStorage.setItem(GH_TOKEN_KEY, val);
   afficherGhStatus();
-  toast('â Token GitHub enregistrÃ©');
+  toast('â Token GitHub enregistré');
 }
 
 function sauvegarderScriptUrl() { sauvegarderToken(); }
@@ -2387,14 +2387,14 @@ async function testerSync() {
       { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }, cache: 'no-store' }
     );
     if (r.ok) {
-      if (el) { el.textContent = 'â GitHub OK â connexion rÃ©ussie !'; el.style.color = 'var(--v)'; }
-      toast('â GitHub connectÃ© !');
+      if (el) { el.textContent = 'â GitHub OK â connexion réussie !'; el.style.color = 'var(--v)'; }
+      toast('â GitHub connecté !');
     } else {
       if (el) { el.textContent = 'â Erreur GitHub ' + r.status; el.style.color = 'var(--r)'; }
       toast('â Erreur GitHub ' + r.status, true);
     }
   } catch(e) {
-    if (el) { el.textContent = 'â Impossible de joindre GitHub (rÃ©seau ?)'; el.style.color = 'var(--r)'; }
+    if (el) { el.textContent = 'â Impossible de joindre GitHub (réseau ?)'; el.style.color = 'var(--r)'; }
     toast('â GitHub inaccessible', true);
   }
 }
@@ -2424,27 +2424,27 @@ function afficherParams() {
           + '<div class="pf"><label>Objectif mandats / mois</label><input type="number" id="pom_'+a+'" value="'+(ag.obj_mandats||8)+'" min="0" step="1"></div>'
           + '<div class="pf"><label>Prime objectif ventes (â¬)</label><input type="number" id="ppv_'+a+'" value="'+(ag.prime_obj_ventes||250)+'" min="0" step="10"></div>'
           + '<div class="pf"><label>Prime objectif mandats (â¬)</label><input type="number" id="ppm_'+a+'" value="'+(ag.prime_obj_mandats||150)+'" min="0" step="10"></div>'
-          + '<div class="pf"><label>Bonus par vente dÃ©passÃ©e (â¬)</label><input type="number" id="ppb_'+a+'" value="'+(ag.bonus_dep||100)+'" min="0" step="10"></div>'
+          + '<div class="pf"><label>Bonus par vente dépassée (â¬)</label><input type="number" id="ppb_'+a+'" value="'+(ag.bonus_dep||100)+'" min="0" step="10"></div>'
           + '<div class="pf" style="border-top:1px solid var(--b);padding-top:.5rem;margin-top:.3rem"><label>ð Code PIN (4 chiffres)</label>'
           + '<input type="password" id="pin_'+a+'" placeholder="â¢â¢â¢â¢" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" value="'+(currentPins[a]||'')+'" style="letter-spacing:.2em"></div>'
           + '</div>';
       }).join('')
   + '<div style="margin-top:1.5rem;border-top:2px solid var(--b);padding-top:1rem">'
-  + '<p style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gm);margin-bottom:.6rem">&#9881;&#65039; BarÃ¨me OPTEVEN (global â actif Ã  partir de juillet 2026)</p>'
+  + '<p style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gm);margin-bottom:.6rem">&#9881;&#65039; Barème OPTEVEN (global â actif Ã  partir de juillet 2026)</p>'
   + '<div class="pf"><label>Palier (nb contrats pour passer au tarif haut)</label><input type="number" id="palier-opteven" value="'+(p._global&&p._global.palier_opteven!=null?p._global.palier_opteven:4)+'" min="1" step="1"></div>'
   + '<div class="pf"><label>Tarif bas â en dessous du palier (â¬/contrat)</label><input type="number" id="comm-opteven-bas" value="'+(p._global&&p._global.comm_opteven_bas!=null?p._global.comm_opteven_bas:100)+'"></div>'
-  + '<div class="pf"><label>Tarif haut â au palier et au-dessus, rÃ©troactif (â¬/contrat)</label><input type="number" id="comm-opteven-haut" value="'+(p._global&&p._global.comm_opteven_haut!=null?p._global.comm_opteven_haut:150)+'"></div>'
+  + '<div class="pf"><label>Tarif haut â au palier et au-dessus, rétroactif (â¬/contrat)</label><input type="number" id="comm-opteven-haut" value="'+(p._global&&p._global.comm_opteven_haut!=null?p._global.comm_opteven_haut:150)+'"></div>'
   + '</div>';
 }
 
 function resetDonneesLocales() {
-  if (!confirm('â ï¸ Supprimer toutes les donnÃ©es locales sur cet ordinateur et recharger depuis GitHub ?\n\nLes donnÃ©es non synchronisÃ©es seront dÃ©finitivement perdues.')) return;
+  if (!confirm('â ï¸ Supprimer toutes les données locales sur cet ordinateur et recharger depuis GitHub ?\n\nLes données non synchronisées seront définitivement perdues.')) return;
   // Effacer ventes, mandats et liste des suppressions locales
   localStorage.removeItem(SK);
   localStorage.removeItem(MK);
   localStorage.removeItem(DELETED_V_KEY);
   localStorage.removeItem(DELETED_M_KEY);
-  toast('ðï¸ DonnÃ©es locales effacÃ©es â rechargement depuis GitHub...');
+  toast('ðï¸ Données locales effacées â rechargement depuis GitHub...');
   setTimeout(() => syncLoad(), 800);
 }
 
@@ -2467,14 +2467,14 @@ function sauvegarderParams() {
     };
     // Sauvegarder dans le slot mensuel
     p._monthly_obj[selMois][a] = objData;
-    // Garder aussi les dÃ©fauts globaux Ã  jour (utilisÃ©s comme fallback pour les nouveaux mois)
+    // Garder aussi les défauts globaux Ã  jour (utilisés comme fallback pour les nouveaux mois)
     p[a] = objData;
     const pinEl = document.getElementById('pin_'+a);
     if (pinEl) {
       const val = pinEl.value.trim();
       if (val.length === 4 && /^\d{4}$/.test(val)) { pins[a] = val; pinChanged = true; }
       else if (val.length > 0 && val.length !== 4) {
-        toast('â PIN de '+a+' invalide â doit Ãªtre 4 chiffres', true); return;
+        toast('â PIN de '+a+' invalide â doit être 4 chiffres', true); return;
       }
     }
   });
@@ -2487,7 +2487,7 @@ function sauvegarderParams() {
   if (pinChanged) savePins(pins);
   ghPush();
   pushEmbeddedParams(p);
-  toast('â Objectifs de '+selMois+' enregistrÃ©s');
+  toast('â Objectifs de '+selMois+' enregistrés');
 }
 
 
@@ -2496,21 +2496,21 @@ function imprimerFiche(agent) {
   var d = window._payData && window._payData[agent];
   if (!d) { alert('Ouvrez d\'abord l\'onglet de cet agent'); return; }
   var _prImp=JSON.parse(localStorage.getItem('aa_paye_reel')||'{}');var _prMois=d.moisSel;if(_prImp[_prMois]&&_prImp[_prMois][agent]!==undefined)d=Object.assign({},d,{total:_prImp[_prMois][agent]});
-  var mn = ['Janvier','FÃ©vrier','Mars','Avril','Mai','Juin','Juillet','AoÃ»t','Septembre','Octobre','Novembre','DÃ©cembre'];
+  var mn = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
   var mp = d.moisSel.split('-');
   var ml = mn[parseInt(mp[1])-1]+' '+mp[0];
   var fm = function(v){ return (Math.round((v||0)*100)/100).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+'Â â¬'; };
   var fd = function(s){ if(!s)return 'â'; var p=s.split('-'); return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:'â'; };
   var lines=[
     {l:'Commission vendeur ('+d.nb+' livraison'+(d.nb>1?'s':'')+')', v:(d.comm||0)+(d.commM||0)},
-    {l:'Contrats OPTEVEN ('+d.nbOpt+' livrÃ©'+(d.nbOpt>1?'s':'')+')', v:d.opteven, hide:!d.opteven&&!d.nbOptVendu},
+    {l:'Contrats OPTEVEN ('+d.nbOpt+' livré'+(d.nbOpt>1?'s':'')+')', v:d.opteven, hide:!d.opteven&&!d.nbOptVendu},
     {l:'Primes avis Google'+(d.avisAtt>0?' ('+d.avisAtt+' att.)':''), v:d.avisGain},
-    {l:'Prime rapiditÃ©', v:d.primeRapid, hide:!d.primeRapid},
+    {l:'Prime rapidité', v:d.primeRapid, hide:!d.primeRapid},
     {l:'Prime palier marge HT', v:d.primePal},
     {l:'Primes exceptionnelles', v:d.excep},
     {l:'Prime obj. ventes', v:d.primeOv},
     {l:'Prime obj. mandats', v:d.primeOm},
-    {l:'Bonus dÃ©passement', v:d.bonus},
+    {l:'Bonus dépassement', v:d.bonus},
     {l:'Prime trimestrielle', v:d.trimData.prime},
     {l:'Prime meilleur vendeur', v:d.primeBest, hide:!d.primeBest}
   ];
@@ -2563,15 +2563,15 @@ function imprimerFiche(agent) {
       +'</tr></thead><tbody>'+vHtml+'</tbody></table>'
       :'')
     +'<div style="margin-top:1.4rem;font-size:.7rem;color:#3a3a4a;border-top:1px solid #252530;padding-top:.65rem;text-align:right">'
-    +'GÃ©nÃ©rÃ© le '+new Date().toLocaleDateString('fr-FR')+' â Alpilles Automobile</div>'
+    +'Généré le '+new Date().toLocaleDateString('fr-FR')+' â Alpilles Automobile</div>'
     +'</div><scr'+'ipt>window.onload=function(){window.print();}<\/scr'+'ipt></html>';
   var w = window.open('','_blank','width=780,height=950');
   if (w) { w.document.write(pg); w.document.close(); }
 }
 
 // âââ INIT
-// PrÃ©-configurer le token GitHub (dÃ©jÃ  intÃ©grÃ© â pas besoin de le saisir)
-// Token prÃ©-configurÃ© (retirÃ© de la source publique â stockÃ© uniquement en localStorage)
+// Pré-configurer le token GitHub (déjÃ  intégré â pas besoin de le saisir)
+// Token pré-configuré (retiré de la source publique â stocké uniquement en localStorage)
 const PRECONFIGURED_GH_TOKEN = '';
 if (PRECONFIGURED_GH_TOKEN && !localStorage.getItem(GH_TOKEN_KEY)) {
   localStorage.setItem(GH_TOKEN_KEY, PRECONFIGURED_GH_TOKEN);
@@ -2581,7 +2581,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (inp && !inp.value) inp.value = getGhToken();
 });
 
-// âââ MIGRATION : correction noms corrompus dans les donnÃ©es stockÃ©es
+// âââ MIGRATION : correction noms corrompus dans les données stockées
 (function migrateData() {
   try {
     var p = JSON.parse(localStorage.getItem(PK)) || {};
@@ -2589,8 +2589,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var objs = {
       'Jules':    {obj_ventes:9,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
       'Adrien':   {obj_ventes:5,  obj_mandats:8,  prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
-      'LÃ©o':      {obj_ventes:10, obj_mandats:14, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
-      'AurÃ©lien': {obj_ventes:6,  obj_mandats:10, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+      'Léo':      {obj_ventes:10, obj_mandats:14, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
+      'Aurélien': {obj_ventes:6,  obj_mandats:10, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
       'Tom':      {obj_ventes:5,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
       'Nael':     {obj_ventes:5,  obj_mandats:8,  prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
       'Julien':   {obj_ventes:9,  obj_mandats:12, prime_obj_ventes:250, prime_obj_mandats:150, bonus_dep:50},
@@ -2629,7 +2629,7 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 
 initFraisTable();
-// Forcer la date d'entrÃ©e stock Ã  vide (certains navigateurs remplissent auto les champs date)
+// Forcer la date d'entrée stock Ã  vide (certains navigateurs remplissent auto les champs date)
 document.getElementById('date_entree_stock').value = '';
 calcFiche();
 updateBadge();
@@ -2638,7 +2638,7 @@ document.getElementById('m-date').value = new Date().toISOString().slice(0,10);
 const savedUser = localStorage.getItem('aa_user');
 if (savedUser) seConnecter(savedUser);
 
-// âââ AUTO-SYNC toutes les 30 secondes (uniquement si connectÃ© et token prÃ©sent)
+// âââ AUTO-SYNC toutes les 30 secondes (uniquement si connecté et token présent)
 setInterval(function() {
   if (CURRENT_USER && getGhToken() && !isSyncing) {
     syncLoad();
