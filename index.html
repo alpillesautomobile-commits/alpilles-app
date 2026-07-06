@@ -2126,18 +2126,29 @@ function afficherBilan() {
   function nA(a){return (a&&a.indexOf('Aix')>-1)?'Aix-en-Provence':'Saint-Rémy';}
   function fmt(n){return (Math.round(n)||0).toLocaleString('fr-FR')+' €';}
   function stA(ag,agNorm,yr){
-    var av=ventes.filter(function(v){return v.agent===ag&&nA(v.agence)===agNorm&&v.mois_livraison&&v.mois_livraison.startsWith(yr);});
+    var av=ventes.filter(function(v){return nAgt(v.agent)===ag&&nA(v.agence)===agNorm&&v.mois_livraison&&v.mois_livraison.startsWith(yr);});
     if(!av.length) return null;
     return {v:av.length,mg:Math.round(av.reduce(function(s,v){return s+(v.marge_nette_ht||0);},0)/av.length),opt:av.filter(function(v){return v.prime_opteven>0;}).length,avis:av.filter(function(v){return v.avis_google;}).length,rap:av.filter(function(v){return v.prime_rapidite>0;}).length};
   }
   function stComm(ag,yr){
-    var mois=[...new Set(ventes.filter(function(v){return v.agent===ag&&v.mois_livraison&&v.mois_livraison.startsWith(yr);}).map(function(v){return v.mois_livraison;}))];
+    var mois=[...new Set(ventes.filter(function(v){return nAgt(v.agent)===ag&&v.mois_livraison&&v.mois_livraison.startsWith(yr);}).map(function(v){return v.mois_livraison;}))];
     var dues=mois.reduce(function(s,m){return s+calcPayeTotal(ag,m);},0);
     var paye=mois.reduce(function(s,m){return s+(pr[m]&&pr[m][ag]!==undefined?parseFloat(pr[m][ag]):0);},0);
     return {dues:dues,paye:paye,restant:dues-paye};
   }
   var agAg={};
-  ventes.forEach(function(v){if(!v.agent)return;var ag=nA(v.agence);if(!agAg[ag])agAg[ag]={};agAg[ag][v.agent]=true;});
+  function nAgt(n){
+    if(!n) return n;
+    var out=[],i=0;
+    while(i<n.length){
+      var c0=n.charCodeAt(i);
+      if(i+3<n.length&&c0===0xC3&&n.charCodeAt(i+1)>=0x80&&n.charCodeAt(i+1)<=0x9F&&n.charCodeAt(i+2)===0xC2&&n.charCodeAt(i+3)>=0x80&&n.charCodeAt(i+3)<=0xBF){
+        out.push(n.charCodeAt(i+1)+0x40);out.push(n.charCodeAt(i+3));i+=4;
+      }else{out.push(c0);i++;}
+    }
+    try{return new TextDecoder('utf-8').decode(new Uint8Array(out));}catch(e){return n;}
+  }
+  ventes.forEach(function(v){if(!v.agent)return;var ag=nA(v.agence);var agt=nAgt(v.agent);if(!agAg[ag])agAg[ag]={};agAg[ag][agt]=true;});
   var AGENCES=['Saint-Rémy','Aix-en-Provence'];
   function bloc(agNorm){
     var ags=Object.keys(agAg[agNorm]||{}).sort();if(!ags.length)return '';
