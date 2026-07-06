@@ -554,7 +554,7 @@ function seConnecter(nom) {
   const rowOpt = document.getElementById('row-opteven'); if (rowOpt) rowOpt.style.display = isManager ? '' : 'none';
   document.getElementById('t-dashboard').style.display = isManager ? '' : 'none';
   document.getElementById('t-params').style.display = isManager ? '' : 'none';
-  document.getElementById('t-bilan').style.display = isManager ? '' : 'none';
+  document.getElementById('t-bilan').style.display = nom === 'Julien' ? '' : 'none';
   const bt = document.getElementById('bloc-token');
   if (bt) bt.style.display = isManager ? '' : 'none';
   const bc = document.getElementById('bloc-clean');
