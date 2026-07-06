@@ -192,6 +192,7 @@ tbody td:not(:first-child){text-align:right}
     <button class="ntab" onclick="nav('livraisons')" id="t-livraisons">🚗 Livraisons <span class="nbg" id="livr-badge" style="display:none"></span></button>
     <button class="ntab" onclick="nav('recap')" id="t-recap">📈 Mon récap</button>
     <button class="ntab" onclick="nav('dashboard')" id="t-dashboard">📊 Tableau de bord</button>
+    <button class="ntab" onclick="nav('bilan')" id="t-bilan">📅 Bilan</button>
     <button class="ntab" onclick="nav('mandats')" id="t-mandats">📋 Mandats <span class="nbg" id="mand-badge" style="display:none"></span></button>
     <button class="ntab" onclick="nav('params')" id="t-params">⚙️ Paramètres</button>
     <button class="ntab" onclick="syncLoad()" style="margin-left:auto;color:var(--a)">🔄 Sync</button>
@@ -336,6 +337,21 @@ tbody td:not(:first-child){text-align:right}
 
 <!-- MANDATS -->
 
+<div class="page" id="pg-bilan" style="display:none">
+  <div style="padding:16px 16px 32px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <h2 style="margin:0;font-size:18px">📅 Bilan Annuel</h2>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <select id="bilan-annee" class="sel" onchange="afficherBilan()"></select>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--text2)">
+          <input type="checkbox" id="bilan-compare" onchange="afficherBilan()">
+          Comparer année précédente
+        </label>
+      </div>
+    </div>
+    <div id="bilan-content"></div>
+  </div>
+</div>
 <div class="pg" id="pg-mandats">
 <div class="card">
   <div class="ch"><div class="ct">Mandats</div><div class="cs">Saisie rapide · Suivi exclusif vs simple</div></div>
@@ -1224,6 +1240,7 @@ function nav(id) {
   if (id === 'livraisons') afficherLivraisons();
   if (id === 'recap')      afficherRecap();
   if (id === 'dashboard')  afficherDashboard();
+  if(p==='bilan') afficherBilan();
   if (id === 'mandats')    afficherMandats();
   if (id === 'params')     afficherParams();
 }
@@ -2092,6 +2109,75 @@ zone.innerHTML = objHtml
 }
 // ═══ DASHBOARD
 let curAgentTab = AGENTS[0];
+
+function afficherBilan() {
+  var elAn = document.getElementById('bilan-annee');
+  var ventes = JSON.parse(localStorage.getItem('aa_ventes_v3')||'[]');
+  if(elAn && elAn.options.length===0) {
+    var ans=[...new Set(ventes.filter(function(v){return v.mois_livraison;}).map(function(v){return v.mois_livraison.substr(0,4);}))].sort().reverse();
+    if(!ans.length) ans=[String(new Date().getFullYear())];
+    ans.forEach(function(a){var o=document.createElement('option');o.value=a;o.textContent=a;if(a===String(new Date().getFullYear()))o.selected=true;elAn.appendChild(o);});
+  }
+  var annee = elAn?elAn.value:String(new Date().getFullYear());
+  var cmp = !!(document.getElementById('bilan-compare')&&document.getElementById('bilan-compare').checked);
+  var anneeN1 = String(parseInt(annee)-1);
+  var pr = JSON.parse(localStorage.getItem('aa_paye_reel')||'[]');
+  if(!pr||Array.isArray(pr)) pr={};
+  function nA(a){return (a&&a.indexOf('Aix')>-1)?'Aix-en-Provence':'Saint-Rémy';}
+  function fmt(n){return (Math.round(n)||0).toLocaleString('fr-FR')+' €';}
+  function stA(ag,agNorm,yr){
+    var av=ventes.filter(function(v){return v.agent===ag&&nA(v.agence)===agNorm&&v.mois_livraison&&v.mois_livraison.startsWith(yr);});
+    if(!av.length) return null;
+    return {v:av.length,mg:Math.round(av.reduce(function(s,v){return s+(v.marge_nette_ht||0);},0)/av.length),opt:av.filter(function(v){return v.prime_opteven>0;}).length,avis:av.filter(function(v){return v.avis_google;}).length,rap:av.filter(function(v){return v.prime_rapidite>0;}).length};
+  }
+  function stComm(ag,yr){
+    var mois=[...new Set(ventes.filter(function(v){return v.agent===ag&&v.mois_livraison&&v.mois_livraison.startsWith(yr);}).map(function(v){return v.mois_livraison;}))];
+    var dues=mois.reduce(function(s,m){return s+calcPayeTotal(ag,m);},0);
+    var paye=mois.reduce(function(s,m){return s+(pr[m]&&pr[m][ag]!==undefined?parseFloat(pr[m][ag]):0);},0);
+    return {dues:dues,paye:paye,restant:dues-paye};
+  }
+  var agAg={};
+  ventes.forEach(function(v){if(!v.agent)return;var ag=nA(v.agence);if(!agAg[ag])agAg[ag]={};agAg[ag][v.agent]=true;});
+  var AGENCES=['Saint-Rémy','Aix-en-Provence'];
+  function bloc(agNorm){
+    var ags=Object.keys(agAg[agNorm]||{}).sort();if(!ags.length)return '';
+    var totV=0,totMS=0,totO=0,totAv=0,totR=0;
+    var rows='';
+    ags.forEach(function(ag){
+      var s=stA(ag,agNorm,annee);var sP=cmp?stA(ag,agNorm,anneeN1):null;
+      if(!s){rows+='<tr style="color:var(--text2)"><td style="padding:5px 4px">'+ag+'</td><td colspan="5" style="text-align:center;font-size:11px">— pas de vente en '+annee+'</td></tr>';return;}
+      totV+=s.v;totMS+=s.mg*s.v;totO+=s.opt;totAv+=s.avis;totR+=s.rap;
+      function diff(a,b,u){if(!sP)return '';var up=a>b;return '<div style="font-size:10px;color:'+( up?'#2ecc71':'#e74c3c')+'">'+(up?'&#9650;':'&#9660;')+b+(u||'')+'</div>';}
+      rows+='<tr style="border-bottom:1px solid var(--bg3)">';
+      rows+='<td style="padding:7px 4px;font-weight:600">'+ag+'</td>';
+      rows+='<td style="text-align:center;padding:4px">'+s.v+diff(s.v,sP?sP.v:0)+'</td>';
+      rows+='<td style="text-align:right;padding:4px">'+s.mg+'€'+diff(s.mg,sP?sP.mg:0,'€')+'</td>';
+      rows+='<td style="text-align:center;padding:4px;'+( s.opt>0?'color:#2ecc71;font-weight:700':'' )+'">'+s.opt+'</td>';
+      rows+='<td style="text-align:center;padding:4px;'+( s.avis>0?'color:#2ecc71;font-weight:700':'' )+'">'+s.avis+'</td>';
+      rows+='<td style="text-align:center;padding:4px;'+( s.rap>0?'color:#2ecc71;font-weight:700':'' )+'">'+s.rap+'</td>';
+      rows+='</tr>';
+    });
+    var totMoy=totV>0?Math.round(totMS/totV):0;
+    return '<div class="card"><h3 style="margin:0 0 10px;font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:1px">🏢 '+agNorm+'</h3><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:var(--bg3);text-align:center;font-size:11px"><th style="text-align:left;padding:6px 4px">Vendeur</th><th title="Ventes livrées" style="padding:4px">🚗 Ventes</th><th title="Marge nette HT moyenne par voiture" style="padding:4px">Marge /voiture</th><th title="Contrats Opteven" style="padding:4px">Opteven</th><th title="Avis Google" style="padding:4px">⭐ Avis</th><th title="Primes rapidité" style="padding:4px">⚡ Rapid.</th></tr></thead><tbody>'+rows+'<tr style="background:var(--bg3);font-weight:700;border-top:2px solid var(--accent)"><td style="padding:6px 4px">TOTAL</td><td style="text-align:center">'+totV+'</td><td style="text-align:right">'+totMoy+'€</td><td style="text-align:center">'+totO+'</td><td style="text-align:center">'+totAv+'</td><td style="text-align:center">'+totR+'</td></tr></tbody></table></div></div>';
+  }
+  // Commissions section
+  function commBloc(){
+    var allAgs=[...new Set(ventes.filter(function(v){return v.agent&&v.mois_livraison&&v.mois_livraison.startsWith(annee);}).map(function(v){return v.agent;}))].sort();
+    if(!allAgs.length) return '';
+    var rows='';var totD=0,totP=0,totR=0;
+    allAgs.forEach(function(ag){
+      var c=stComm(ag,annee);totD+=c.dues;totP+=c.paye;totR+=c.restant;
+      var rTxt=c.restant>1?'<span style="color:#e67e22;font-weight:600">'+fmt(c.restant)+'</span>':'<span style="color:#2ecc71">✓ versé</span>';
+      rows+='<tr style="border-bottom:1px solid var(--bg3)"><td style="padding:7px 4px;font-weight:600">'+ag+'</td><td style="text-align:right;padding:4px">'+fmt(c.dues)+'</td><td style="text-align:right;padding:4px">'+fmt(c.paye)+'</td><td style="text-align:right;padding:4px">'+rTxt+'</td></tr>';
+    });
+    var rStyle=totR>1?'color:#e67e22;font-weight:700':'color:#2ecc71;font-weight:700';
+    return '<div class="card" style="margin-top:16px"><h3 style="margin:0 0 10px;font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:1px">💰 Commissions '+annee+'</h3><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:var(--bg3);text-align:center;font-size:11px"><th style="text-align:left;padding:6px 4px">Vendeur</th><th title="Total commissions calculées">Comm. dues</th><th title="Déjà versé">Payé</th><th title="Restant à verser">Restant dû</th></tr></thead><tbody>'+rows+'<tr style="background:var(--bg3);font-weight:700;border-top:2px solid var(--accent)"><td style="padding:6px 4px">TOTAL</td><td style="text-align:right">'+fmt(totD)+'</td><td style="text-align:right">'+fmt(totP)+'</td><td style="text-align:right;'+rStyle+'">'+fmt(totR)+'</td></tr></tbody></table></div></div>';
+  }
+  var grid='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px">';
+  AGENCES.forEach(function(ag){grid+=bloc(ag);});
+  grid+='</div>';
+  document.getElementById('bilan-content').innerHTML = grid + commBloc();
+}
 
 function afficherDashboard() {
   const mois   = remplirMois('dash-mois');
