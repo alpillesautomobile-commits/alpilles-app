@@ -2303,7 +2303,10 @@ function afficherAgent(vm, agent, params) {
   const nbOptVendu = ventes.filter(v=>(v.prime_opteven||0)>0).length;
   const _gOpt      = (params||{})._global||{};
   const opteven    = moisSel>='2026-07'
-    ? (nbOpt>=(_gOpt.palier_opteven||4) ? nbOpt*(_gOpt.comm_opteven_haut||150) : nbOpt*(_gOpt.comm_opteven_bas||100))
+    ? ventesLivr.filter(v=>(v.prime_opteven||0)>0).reduce((sum,v)=>{
+          const nbVenduMoisVente=allV.filter(av=>av.agent===agent&&av.mois===v.mois&&(av.prime_opteven||0)>0).length;
+          return sum+(nbVenduMoisVente>(_gOpt.palier_opteven||4)-1?(_gOpt.comm_opteven_haut||150):(_gOpt.comm_opteven_bas||100));
+        },0)
     : ventesLivr.reduce((s,v)=>s+(v.prime_opteven||0),0);
   const avisAtt  = ventesLivr.filter(v => {
     const acq  = v.avis_acquereur || v.avis_google || 'attente';
