@@ -3,33 +3,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<script>
-(function(){
-  var VERSION = document.documentElement.innerHTML.match(/<!-- v(\d+) -->/);
-  VERSION = VERSION ? VERSION[1] : '0';
-  function checkUpdate(){
-    fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'})
-    .then(function(r){return r.text();})
-    .then(function(html){
-      var m = html.match(/<!-- v(\d+) -->/);
-      if(m && m[1] !== VERSION){
-        var banner = document.createElement('div');
-        banner.id='update-banner';
-        banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:#2563eb;color:white;text-align:center;padding:12px;font-size:14px;font-weight:bold;cursor:pointer;';
-        banner.innerHTML='\uD83D\uDD04 Mise à jour disponible — <u>Cliquer ici pour recharger<\/u>';
-        banner.onclick=function(){location.reload(true);};
-        document.body.appendChild(banner);
-        setTimeout(function(){location.reload(true);},10000);
-      }
-    }).catch(function(){});
-  }
-  setTimeout(checkUpdate, 30000);
-  setInterval(checkUpdate, 300000);
-})();
-</script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alpilles Automobile – Gestion</title>
 <style>
@@ -2769,7 +2743,7 @@ setInterval(function() {
   if (CURRENT_USER && getGhToken() && !isSyncing) {
     syncLoad();
   }
-}, 30000);
+}, 120000);
 </script>
 
 <script id="paye-btn-injector">
