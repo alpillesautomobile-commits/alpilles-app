@@ -1796,10 +1796,7 @@ function afficherRecap() {
     window._recapTotalMarge = totalMarge;
     const _prRecap = JSON.parse(localStorage.getItem('aa_paye_reel')||'{}');
     const totalVerse = AGENTS.reduce((s,a) => {const ov=(_prRecap[mois]&&_prRecap[mois][a]!==undefined)?parseFloat(_prRecap[mois][a]):null;return s+(ov!==null?ov:calcPayeTotal(a,mois));}, 0);
-    const totalSociete  = allLiv.reduce((s,v) => {
-      const r = v.resultat_societe_ht != null ? v.resultat_societe_ht : (v.marge_nette_ht-(v.comm_vendeur||0)-(v.comm_mandant||0)-(v.prime_excep||0)-(v.prime_opteven||0)+((v.prime_opteven||0)>0?380:0));
-      return s + r;
-    }, 0);
+    const totalSociete  = totalMarge - totalVerse;
     const totalComm     = allLiv.reduce((s,v) => s+(v.comm_vendeur||0)+(v.comm_mandant||0), 0);
 
     // KPIs
