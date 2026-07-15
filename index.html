@@ -2199,7 +2199,8 @@ function afficherDashboard() {
   const vliv  = ventes.filter(v => v.mois_livraison === mois); // véhicules livrés ce mois (tous mois de vente confondus)
 
   const totalMarge   = vliv.reduce((s,v) => s+(v.marge_nette_ht||0), 0);
-  const totalComm    = AGENTS.reduce((s,a)=>s+calcPayeTotal(a,mois),0);
+  const _prDash  = JSON.parse(localStorage.getItem('aa_paye_reel')||'{}');
+  const totalComm    = AGENTS.reduce((s,a)=>{const ov=(_prDash[mois]&&_prDash[mois][a]!==undefined)?parseFloat(_prDash[mois][a]):null;return s+(ov!==null?ov:calcPayeTotal(a,mois));},0);
   const totalSociete = vliv.reduce((s,v) => {
     const r = v.resultat_societe_ht != null
       ? v.resultat_societe_ht
