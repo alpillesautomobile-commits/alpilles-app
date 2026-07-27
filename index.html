@@ -874,9 +874,10 @@ function calcTauxComm(mnHt, agent, moisRef) {
   return (pctV >= 0.80 && pctM >= 0.80) ? 0.40 : 0.30;
 }
 
-// Prime rapidité : 30€ si vente signée dans les 15 jours après entrée en stock
-function calcPrimeRapidite(dateVente, dateEntreeStock) {
+// Prime rapidité : 30€ si vente signée dans les 15 jours après entrée en stock ET marge >= 1000€ HT
+function calcPrimeRapidite(dateVente, dateEntreeStock, marge) {
   if (!dateVente || !dateEntreeStock) return 0;
+  if ((marge || 0) < 1000) return 0;
   const diff = (new Date(dateVente) - new Date(dateEntreeStock)) / 86400000;
   return (diff >= 0 && diff <= 15) ? 30 : 0;
 }
@@ -1301,7 +1302,7 @@ function calcFiche() {
 
   const dateVente = document.getElementById('date_vente')?.value || '';
   const dateStock = document.getElementById('date_entree_stock')?.value || '';
-  const prRapid   = calcPrimeRapidite(dateVente, dateStock);
+  const prRapid   = calcPrimeRapidite(dateVente, dateStock, mnHt);
   const rowRap    = document.getElementById('row-rapidite');
   if (rowRap) rowRap.style.display = prRapid > 0 ? '' : 'none';
 
