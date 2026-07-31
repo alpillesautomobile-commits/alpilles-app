@@ -1246,15 +1246,19 @@ function afficherMandats() {
       + '<div style="font-family:\'Libre Baskerville\',serif;font-size:.82rem;font-weight:700;margin-bottom:.6rem">📋 Suivi des relances</div>';
     if (enRetard.length) {
       relHtml += '<div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#c0392b;margin-bottom:.3rem">🔴 En retard (' + enRetard.length + ')</div>';
-      relHtml += enRetard.map(m => relCard(m,'#fdf2f2','#c0392b','#c0392b','🔴')).join('');
+      const cap = 15;
+      relHtml += enRetard.slice(0,cap).map(m => relCard(m,'#fdf2f2','#c0392b','#c0392b','🔴')).join('');
+      if (enRetard.length > cap) relHtml += '<div style="font-size:.65rem;color:#c0392b;padding:.25rem .4rem">... et ' + (enRetard.length - cap) + ' autres en retard</div>';
     }
     if (urgents.length) {
       relHtml += '<div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#e67e22;margin-bottom:.3rem' + (enRetard.length?';margin-top:.6rem':'') + '">🟠 À relancer bientôt (' + urgents.length + ')</div>';
-      relHtml += urgents.map(m => relCard(m,'#fef9f0','#e67e22','#e67e22','🟠')).join('');
+      relHtml += urgents.slice(0,cap).map(m => relCard(m,'#fef9f0','#e67e22','#e67e22','🟠')).join('');
+      if (urgents.length > cap) relHtml += '<div style="font-size:.65rem;color:#e67e22;padding:.25rem .4rem">... et ' + (urgents.length - cap) + ' autres</div>';
     }
     if (recents.length) {
       relHtml += '<div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#27ae60;margin-bottom:.3rem' + ((enRetard.length||urgents.length)?';margin-top:.6rem':'') + '">🟢 À jour (' + recents.length + ')</div>';
-      relHtml += recents.map(m => relCard(m,'#f0faf4','#27ae60','#27ae60','🟢')).join('');
+      relHtml += recents.slice(0,cap).map(m => relCard(m,'#f0faf4','#27ae60','#27ae60','🟢')).join('');
+      if (recents.length > cap) relHtml += '<div style="font-size:.65rem;color:#27ae60;padding:.25rem .4rem">... et ' + (recents.length - cap) + ' autres à jour</div>';
     }
     relHtml += '</div>';
   }
