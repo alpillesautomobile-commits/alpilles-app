@@ -372,6 +372,11 @@ tbody td:not(:first-child){text-align:right}
             <option value="simple">Simple (30%)</option></select></div>
         <div class="fl"><label>Agence</label><select id="m-agence"><option value="">— Sélectionner —</option><option value="Agence Saint-Rémy-de-Provence">Saint-Rémy-de-Provence</option><option value="Agence Aix-en-Provence">Aix-en-Provence</option></select></div>
       </div>
+      <div class="fl" style="gap:.5rem">
+        <div style="flex:1"><label>Prix demandé (€)</label><input id="m-prix-demande" type="number" min="0" step="100" placeholder="ex: 9500" oninput="calcEcartMandat()"></div>
+        <div style="flex:1"><label>Prix conseillé (€)</label><input id="m-prix-conseille" type="number" min="0" step="100" placeholder="ex: 8800" oninput="calcEcartMandat()"></div>
+      </div>
+      <div id="m-ecart-zone" style="display:none;margin:.3rem 0;font-family:'IBM Plex Mono',monospace;font-size:.72rem"></div>
       <div class="acts" style="margin-bottom:0">
         <div style="margin:.5rem 0;padding:.7rem .8rem;background:#fff3e0;border-radius:10px;border:3px solid #ff9800">
           <div style="font-weight:700;font-size:.87rem;margin-bottom:.4rem;color:#e65100">📞 Mandat via téléprospectrice ? <span style="color:#d32f2f;font-size:.72rem">obligatoire</span></div>
@@ -1051,6 +1056,19 @@ function editerMandat(id) {
   toast('\u270f\ufe0f Mandat charg\u00e9 \u2014 modifie puis valide');
 }
 
+function calcEcartMandat() {
+  const pd = parseFloat(document.getElementById('m-prix-demande')?.value) || 0;
+  const pc = parseFloat(document.getElementById('m-prix-conseille')?.value) || 0;
+  const zone = document.getElementById('m-ecart-zone');
+  if (!zone) return;
+  if (!pd || !pc) { zone.style.display = 'none'; return; }
+  const ecart = pd - pc;
+  const pct = pc ? Math.round(ecart / pc * 100) : 0;
+  zone.style.display = 'block';
+  zone.style.color = ecart > 0 ? '#b45309' : '#2e7d32';
+  zone.textContent = 'Écart : ' + (ecart > 0 ? '+' : '') + ecart.toLocaleString('fr-FR') + ' € (' + (pct > 0 ? '+' : '') + pct + '%)' + (ecart > 0 ? ' — prix demandé > conseillé' : ' ✓ OK');
+}
+
 function enregistrerMandat() {
   autoAgenceMandat();
   let agent    = document.getElementById('m-agent')?.value;
@@ -1060,6 +1078,8 @@ function enregistrerMandat() {
   const proprio  = document.getElementById('m-proprio')?.value?.trim();
   const type     = document.getElementById('m-type')?.value || 'exclusif';
   const agence   = document.getElementById('m-agence')?.value;
+  const prixDemande   = parseFloat(document.getElementById('m-prix-demande')?.value) || null;
+  const prixConseille = parseFloat(document.getElementById('m-prix-conseille')?.value) || null;
   if (!document.querySelector('input[name="via-prosp-m"]:checked')) return toast('📞 Indique si mandat via téléprospectrice (OUI / NON)', true);
   if (!agent)    return toast('Sélectionne un agent', true);
   if (!dateStr)  return toast('Indique la date du mandat', true);
@@ -1070,7 +1090,7 @@ function enregistrerMandat() {
     const mandats2 = loadMandats();
     const idx2 = mandats2.findIndex(m => m.id === _editingMandatId);
     if (idx2 >= 0) {
-      mandats2[idx2] = { ...mandats2[idx2], date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence };
+      mandats2[idx2] = { ...mandats2[idx2], date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, prix_demande: prixDemande, prix_conseille: prixConseille };
       saveMandats(mandats2, mandats2[idx2]);
       toast('\u2705 Mandat modifi\u00e9 \u2014 ' + vehicule);
     }
@@ -1080,7 +1100,7 @@ function enregistrerMandat() {
     updateMandatBadge(); afficherMandats();
     return;
   }
-  const mandat = { id: Date.now(), date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, statut: 'en_cours', via_prospectrice: document.querySelector('input[name="via-prosp-m"]:checked')?.value === 'oui' };
+  const mandat = { id: Date.now(), date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, statut: 'en_cours', via_prospectrice: document.querySelector('input[name="via-prosp-m"]:checked')?.value === 'oui', prix_demande: prixDemande, prix_conseille: prixConseille, derniere_relance: dateStr, note_relance: '' };
   const mandats = loadMandats();
   mandats.push(mandat);
   saveMandats(mandats, mandat);
@@ -1093,6 +1113,25 @@ function enregistrerMandat() {
   document.getElementById('m-proprio').value = '';
   document.getElementById('m-type').value = 'exclusif';
   document.getElementById('m-agence').value = '';
+  document.getElementById('m-prix-demande').value = '';
+  document.getElementById('m-prix-conseille').value = '';
+  const ecartZ = document.getElementById('m-ecart-zone');
+  if (ecartZ) ecartZ.style.display = 'none';
+  if (!MANAGERS.includes(CURRENT_USER)) autoAgenceMandat();
+}
+
+function contacterMandat(id) {
+  const note = prompt('Note du contact (facultatif)\nEx: accepte 8 500€, veut attendre, baisse à 9 000€…') ?? null;
+  if (note === null) return;
+  const mandats = loadMandats();
+  const idx = mandats.findIndex(m => m.id === id);
+  if (idx < 0) return;
+  const today = new Date().toISOString().slice(0,10);
+  mandats[idx].derniere_relance = today;
+  if (note.trim()) mandats[idx].note_relance = note.trim();
+  saveMandats(mandats, mandats[idx]);
+  toast('✅ Contact enregistré — prochain rappel dans 15 jours');
+  afficherMandats();
 }
 
 function validerMandatVendu(id) {
@@ -1166,26 +1205,78 @@ function afficherMandats() {
   const zone    = document.getElementById('mand-zone');
   if (!zone) return;
 
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  function joursDepuisRelance(m) {
+    const ref = m.derniere_relance || m.date;
+    if (!ref) return 999;
+    const d = new Date(ref);
+    d.setHours(0,0,0,0);
+    return Math.floor((today - d) / 86400000);
+  }
+
+  // ── RELANCES SECTION ──
+  const actifs = mandats.filter(m => m.statut === 'en_cours');
+  const myActifs = MANAGERS.includes(CURRENT_USER) ? actifs : actifs.filter(m => m.agent === CURRENT_USER);
+
+  const enRetard = myActifs.filter(m => joursDepuisRelance(m) > 15);
+  const urgents  = myActifs.filter(m => { const j = joursDepuisRelance(m); return j >= 12 && j <= 15; });
+  const recents  = myActifs.filter(m => joursDepuisRelance(m) < 12);
+
+  function relCard(m, bg, brd, btn, ico) {
+    const j = joursDepuisRelance(m);
+    const lbl = j > 15 ? ('En retard de ' + (j-15) + 'j') : j >= 12 ? ('À relancer dans ' + (15-j) + 'j') : ('Contacté il y a ' + j + 'j');
+    const pInfo = (m.prix_demande || m.prix_conseille)
+      ? ' <span style="font-size:.6rem;color:var(--gm)">· ' + (m.prix_demande ? m.prix_demande.toLocaleString('fr-FR') + '€ dem.' : '') + (m.prix_demande && m.prix_conseille ? ' / ' : '') + (m.prix_conseille ? m.prix_conseille.toLocaleString('fr-FR') + '€ cons.' : '') + '</span>' : '';
+    const nInfo = m.note_relance ? '<div style="font-size:.64rem;color:#5a6370;font-style:italic;margin-top:.1rem">💬 ' + m.note_relance + '</div>' : '';
+    return '<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem .65rem;border-radius:8px;background:' + bg + ';border-left:3px solid ' + brd + ';margin-bottom:.3rem">'
+      + '<span>' + ico + '</span>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="font-weight:600;font-size:.75rem">' + m.vehicule + ' — ' + m.proprio + pInfo + '</div>'
+      + '<div style="font-size:.67rem;color:var(--gm)">' + m.agent + ' · ' + lbl + '</div>'
+      + nInfo + '</div>'
+      + '<button class="btn bs" style="padding:.18rem .45rem;font-size:.64rem;white-space:nowrap;background:' + btn + ';color:#fff;border:none;border-radius:6px" onclick="contacterMandat(' + m.id + ')">✉ Contacté</button>'
+      + '</div>';
+  }
+
+  let relHtml = '';
+  if (myActifs.length) {
+    relHtml = '<div style="background:var(--bg);border:1px solid var(--b);border-radius:12px;padding:.9rem 1rem;margin-bottom:1.1rem">'
+      + '<div style="font-family:\'Libre Baskerville\',serif;font-size:.82rem;font-weight:700;margin-bottom:.6rem">📋 Suivi des relances</div>';
+    if (enRetard.length) {
+      relHtml += '<div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#c0392b;margin-bottom:.3rem">🔴 En retard (' + enRetard.length + ')</div>';
+      relHtml += enRetard.map(m => relCard(m,'#fdf2f2','#c0392b','#c0392b','🔴')).join('');
+    }
+    if (urgents.length) {
+      relHtml += '<div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#e67e22;margin-bottom:.3rem' + (enRetard.length?';margin-top:.6rem':'') + '">🟠 À relancer bientôt (' + urgents.length + ')</div>';
+      relHtml += urgents.map(m => relCard(m,'#fef9f0','#e67e22','#e67e22','🟠')).join('');
+    }
+    if (recents.length) {
+      relHtml += '<div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#27ae60;margin-bottom:.3rem' + ((enRetard.length||urgents.length)?';margin-top:.6rem':'') + '">🟢 À jour (' + recents.length + ')</div>';
+      relHtml += recents.map(m => relCard(m,'#f0faf4','#27ae60','#27ae60','🟢')).join('');
+    }
+    relHtml += '</div>';
+  }
+
+  // ── MONTHLY STATS ──
   const dm     = mandats.filter(m => m.mois === mois);
   const excl   = dm.filter(m => m.type === 'exclusif');
   const simple = dm.filter(m => m.type === 'simple');
   const total  = dm.length;
   const pctE   = total ? Math.round(excl.length / total * 100) : 0;
   const pctS   = total ? Math.round(simple.length / total * 100) : 0;
-  const iconExcl = pctE >= 50 ? '✅' : '⚠️';
 
   const cpt = document.getElementById('mand-cpt');
   if (cpt) cpt.textContent = total + ' mandat(s) · ' + excl.length + ' exclusif(s) · ' + simple.length + ' simple(s)';
 
   if (!total) {
-    zone.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucun mandat ce mois.</div>';
+    zone.innerHTML = relHtml + '<div style="text-align:center;padding:2rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucun mandat ce mois.</div>';
     return;
   }
 
-  const barHtml = '<div style="background:var(--w);border:1px solid var(--b);padding:.85rem 1rem;margin-bottom:1rem">'
-    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.45rem">'
-    + '<div style="font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gm)">Exclusif vs Simple — ' + iconExcl + ' ' + pctE + '% exclusifs</div>'
-    + '<div style="font-family:IBM Plex Mono,monospace;font-size:.72rem;color:var(--gm)">' + excl.length + ' excl. · ' + simple.length + ' simple</div></div>'
+  const barHtml = '<div style="background:var(--bg);border:1px solid var(--b);border-radius:12px;padding:.9rem 1rem;margin-bottom:1rem">'
+    + '<div style="font-family:\'Libre Baskerville\',serif;font-size:.82rem;font-weight:700;margin-bottom:.5rem">' + (pctE >= 50 ? '✅' : '⚠️') + ' Mandats ' + mois + ' — ' + total + ' au total</div>'
     + '<div style="height:10px;background:var(--gc);border-radius:5px;overflow:hidden;display:flex">'
     + '<div style="width:' + pctE + '%;background:linear-gradient(90deg,var(--ad),var(--a));transition:width .6s"></div>'
     + '<div style="width:' + pctS + '%;background:#c0cfe0"></div></div>'
@@ -1195,24 +1286,41 @@ function afficherMandats() {
     + (pctE < 50 ? '<div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#b45309;margin-top:.4rem">⚠️ Moins de 50% d\'exclusifs ce mois — à améliorer</div>' : '')
     + '</div>';
 
-  const tableHtml = '<table class="vt"><thead><tr><th>Date</th><th>Véhicule</th><th>Propriétaire</th><th>Agent</th><th>Type</th><th>Statut</th><th></th></tr></thead><tbody>'
+  // ── MANDAT CARDS ──
+  const cardsHtml = '<div style="display:flex;flex-direction:column;gap:.45rem;margin-bottom:1rem">'
     + dm.map(m => {
-        const typeTag   = m.type === 'exclusif' ? '<span class="tag" style="background:#fff3e0;color:#b45309">EXCLUSIF</span>' : '<span class="tag" style="background:#e8f0fe;color:#1a56d6">SIMPLE</span>';
-        const statutTag = m.statut === 'vendu' ? '<span class="tag tgl">Vendu</span>' : '<span class="tag tgcr">En cours</span>';
-        return '<tr>'
-          + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;white-space:nowrap">' + fmtDate(m.date) + '</td>'
-          + '<td style="font-weight:500;font-size:.76rem">' + m.vehicule + '</td>'
-          + '<td style="font-size:.73rem;color:var(--gm)">' + m.proprio + '</td>'
-          + '<td style="font-size:.73rem">' + m.agent + '</td>'
-          + '<td>' + typeTag + '</td>'
-          + '<td>' + statutTag + '</td>'
-          + '<td style="white-space:nowrap">'
-          + (m.statut === 'en_cours' ? '<button class="btn bs" style="padding:.12rem .35rem;font-size:.5rem;margin-right:.2rem" onclick="validerMandatVendu(' + m.id + ')">✔ Vendu</button>' : '')
-          + '<button class="delbtn" onclick="supprimerMandat(' + m.id + ')" title="Supprimer">✕</button>'
-          + '</td></tr>';
-      }).join('')
-    + '</tbody></table>';
+      const j = joursDepuisRelance(m);
+      let relBadge = '';
+      if (m.statut === 'en_cours') {
+        if (j > 15) relBadge = '<span style="font-size:.59rem;background:#fdf2f2;color:#c0392b;border-radius:4px;padding:.08rem .3rem;font-weight:600;margin-left:.3rem">🔴 Retard</span>';
+        else if (j >= 12) relBadge = '<span style="font-size:.59rem;background:#fef9f0;color:#e67e22;border-radius:4px;padding:.08rem .3rem;font-weight:600;margin-left:.3rem">🟠 ' + (15-j) + 'j</span>';
+        else relBadge = '<span style="font-size:.59rem;background:#f0faf4;color:#27ae60;border-radius:4px;padding:.08rem .3rem;font-weight:600;margin-left:.3rem">🟢</span>';
+      }
+      const typeTag   = m.type === 'exclusif' ? '<span class="tag" style="background:#fff3e0;color:#b45309">EXCLUSIF</span>' : '<span class="tag" style="background:#e8f0fe;color:#1a56d6">SIMPLE</span>';
+      const statutTag = m.statut === 'vendu' ? '<span class="tag tgl">Vendu</span>' : '<span class="tag tgcr">En cours</span>';
+      const prixLine  = (m.prix_demande || m.prix_conseille)
+        ? '<div style="font-size:.64rem;color:var(--gm);margin-top:.12rem">'
+          + (m.prix_demande ? '💰 ' + m.prix_demande.toLocaleString('fr-FR') + '€ dem.' : '')
+          + (m.prix_demande && m.prix_conseille ? ' · ' : '')
+          + (m.prix_conseille ? m.prix_conseille.toLocaleString('fr-FR') + '€ cons.' : '')
+          + '</div>' : '';
+      const noteLine  = m.note_relance ? '<div style="font-size:.64rem;color:#5a6370;font-style:italic;margin-top:.08rem">💬 ' + m.note_relance + '</div>' : '';
+      return '<div style="background:var(--bg);border:1px solid var(--b);border-radius:10px;padding:.65rem .9rem;display:flex;gap:.6rem;align-items:flex-start">'
+        + '<div style="flex:1;min-width:0">'
+        + '<div style="display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;margin-bottom:.18rem">'
+        + '<span style="font-weight:600;font-size:.77rem">' + m.vehicule + '</span>' + typeTag + statutTag + relBadge
+        + '</div>'
+        + '<div style="font-size:.69rem;color:var(--gm)">' + m.agent + ' · ' + m.proprio + ' · ' + fmtDate(m.date) + '</div>'
+        + prixLine + noteLine + '</div>'
+        + '<div style="display:flex;flex-direction:column;gap:.25rem;align-items:flex-end;flex-shrink:0">'
+        + (m.statut === 'en_cours' ? '<button class="btn bs" style="padding:.1rem .32rem;font-size:.63rem" onclick="contacterMandat(' + m.id + ')">✉ Contacté</button>' : '')
+        + (m.statut === 'en_cours' ? '<button class="btn bs" style="padding:.1rem .32rem;font-size:.63rem" onclick="validerMandatVendu(' + m.id + ')">✔ Vendu</button>' : '')
+        + '<button class="delbtn" onclick="supprimerMandat(' + m.id + ')" title="Supprimer">✕</button>'
+        + '</div></div>';
+    }).join('')
+    + '</div>';
 
+  // ── AGENT STATS ──
   const agentStats = AGENTS.map(a => {
     const am = dm.filter(m => m.agent === a);
     if (!am.length) return '';
@@ -1222,18 +1330,14 @@ function afficherMandats() {
     return '<div style="background:var(--bg);border:1px solid var(--b);padding:.65rem .85rem;flex:1;min-width:180px">'
       + '<div style="font-family:\'Libre Baskerville\',serif;font-size:.75rem;font-weight:700;margin-bottom:.4rem">👤 ' + a + '</div>'
       + '<div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600">' + am.length + ' mandat(s)</div>'
-      + '<div style="font-size:.62rem;color:var(--gm);margin:.2rem 0">' + ae + ' excl. · ' + as2 + ' simple · ' + pE + '% excl.</div>'
-      + '<div style="height:6px;background:var(--gc);border-radius:3px;overflow:hidden;margin-top:.3rem"><div style="width:' + pE + '%;height:100%;background:linear-gradient(90deg,var(--ad),var(--a))"></div></div>'
+      + '<div style="font-size:.68rem;color:var(--gm)">' + ae + ' excl. / ' + as2 + ' simple — ' + pE + '% excl.</div>'
       + (pE < 50 && am.length ? '<div style="font-size:.58rem;color:#b45309;margin-top:.22rem">⚠️ Objectif exclusifs non atteint</div>' : (am.length ? '<div style="font-size:.58rem;color:var(--v);margin-top:.22rem">✅ Bon ratio exclusifs</div>' : ''))
       + '</div>';
   }).filter(Boolean).join('');
 
-  zone.innerHTML = barHtml
-    + (agentStats ? '<div style="display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:1rem">' + agentStats + '</div>' : '')
-    + '<div class="stl" style="margin-bottom:.65rem">Mandats de ' + lblMois(mois) + ' (' + total + ')</div>'
-    + tableHtml;
+  zone.innerHTML = relHtml + barHtml + cardsHtml
+    + (agentStats ? '<div style="margin-top:.5rem"><div style="font-family:\'Libre Baskerville\',serif;font-size:.77rem;font-weight:700;margin-bottom:.5rem">Répartition par agent</div><div style="display:flex;gap:.7rem;flex-wrap:wrap">' + agentStats + '</div></div>' : '');
 }
-
 // ═══ NAVIGATION
 function nav(id) {
   document.querySelectorAll('.pg').forEach(e => e.classList.remove('on'));
