@@ -1218,7 +1218,8 @@ function afficherMandats() {
 
   // ── RELANCES SECTION ──
   const actifs = mandats.filter(m => m.statut === 'en_cours');
-  const myActifs = MANAGERS.includes(CURRENT_USER) ? actifs : actifs.filter(m => m.agent === CURRENT_USER);
+  const myActifs = (MANAGERS.includes(CURRENT_USER) ? actifs : actifs.filter(m => m.agent === CURRENT_USER))
+    .filter(m => !!m.derniere_relance);
 
   const enRetard = myActifs.filter(m => joursDepuisRelance(m) > 15);
   const urgents  = myActifs.filter(m => { const j = joursDepuisRelance(m); return j >= 12 && j <= 15; });
