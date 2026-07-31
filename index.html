@@ -1017,8 +1017,10 @@ function getObjForMonth(agent, mois) {
 
 function updateMandatBadge() {
   const mandats = loadMandats();
-  const curMois = getMois(new Date().toISOString().slice(0,10));
-  const n = mandats.filter(m => m.mois === curMois && m.statut === 'en_cours').length;
+  const isManager = typeof MANAGERS !== 'undefined' && MANAGERS.includes(CURRENT_USER);
+  const actifs = mandats.filter(m => m.statut === 'en_cours');
+  const myActifs = isManager ? actifs : actifs.filter(m => m.agent === CURRENT_USER);
+  const n = myActifs.length;
   const b = document.getElementById('mand-badge');
   if (b) { b.textContent = n; b.style.display = n > 0 ? '' : 'none'; }
 }
@@ -1146,6 +1148,18 @@ function validerMandatVendu(id) {
   toast('Mandat marqué vendu');
 }
 
+function marquerMandatPerdu(id) {
+  if (!confirm('Marquer ce mandat comme perdu ?')) return;
+  const mandats = loadMandats();
+  const idx = mandats.findIndex(m => m.id === id);
+  if (idx < 0) return;
+  mandats[idx].statut = 'perdu';
+  saveMandats(mandats, mandats[idx]);
+  updateMandatBadge();
+  afficherMandats();
+  toast('Mandat marqué perdu');
+}
+
 function supprimerMandat(id) {
   if (!confirm('Supprimer ce mandat ?')) return;
   addDeleted(MK, id);
@@ -1268,9 +1282,11 @@ function afficherMandats() {
   // ── MANDATS À AFFICHER ──
   // Managers : filtre par mois sélectionné, tous agents
   // Commerciaux : tous leurs mandats, tous mois
+  const statutOrder = { en_cours: 0, vendu: 1, perdu: 2 };
   const displayMandats = isManager
-    ? mandats.filter(m => m.mois === mois)
-    : mandats.filter(m => m.agent === CURRENT_USER).sort((a,b) => new Date(b.date) - new Date(a.date));
+    ? mandats.filter(m => m.mois === mois).sort((a,b) => (statutOrder[a.statut]||0) - (statutOrder[b.statut]||0))
+    : mandats.filter(m => m.agent === CURRENT_USER)
+        .sort((a,b) => (statutOrder[a.statut]||0) - (statutOrder[b.statut]||0) || new Date(b.date) - new Date(a.date));
 
   // Stats du mois sélectionné (pour tous)
   const dm     = isManager ? displayMandats : displayMandats.filter(m => m.mois === mois);
@@ -1281,7 +1297,9 @@ function afficherMandats() {
   const pctS   = total ? Math.round(simple.length / total * 100) : 0;
 
   const cpt = document.getElementById('mand-cpt');
-  if (cpt) cpt.textContent = (isManager ? total : displayMandats.length) + ' mandat(s) · ' + excl.length + ' excl. ce mois · ' + simple.length + ' simple(s) ce mois';
+  const totalActifs = displayMandats.filter(m => m.statut === 'en_cours').length;
+  const totalPerdus = displayMandats.filter(m => m.statut === 'perdu').length;
+  if (cpt) cpt.textContent = totalActifs + ' actif(s) · ' + excl.length + ' excl. ce mois · ' + simple.length + ' simple(s) ce mois' + (totalPerdus ? ' · ' + totalPerdus + ' perdu(s)' : '');
 
   if (!displayMandats.length) {
     zone.innerHTML = relHtml + '<div style="text-align:center;padding:2rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucun mandat.</div>';
@@ -1310,7 +1328,8 @@ function afficherMandats() {
       else relBadge = '<span style="font-size:.59rem;background:#f0faf4;color:#27ae60;border-radius:4px;padding:.08rem .3rem;font-weight:600;margin-left:.3rem">🟢</span>';
     }
     const typeTag   = m.type === 'exclusif' ? '<span class="tag" style="background:#fff3e0;color:#b45309">EXCLUSIF</span>' : '<span class="tag" style="background:#e8f0fe;color:#1a56d6">SIMPLE</span>';
-    const statutTag = m.statut === 'vendu' ? '<span class="tag tgl">Vendu</span>' : '<span class="tag tgcr">En cours</span>';
+    const statutTag = m.statut === 'vendu' ? '<span class="tag tgl">Vendu</span>' : m.statut === 'perdu' ? '<span class="tag" style="background:#f0f0f0;color:#888">Perdu</span>' : '<span class="tag tgcr">En cours</span>';
+    const isPerdu = m.statut === 'perdu';
     const prixLine  = (m.prix_demande || m.prix_conseille)
       ? '<div style="font-size:.64rem;color:var(--gm);margin-top:.12rem">'
         + (m.prix_demande ? '💰 ' + m.prix_demande.toLocaleString('fr-FR') + '€ dem.' : '')
@@ -1318,7 +1337,7 @@ function afficherMandats() {
         + (m.prix_conseille ? m.prix_conseille.toLocaleString('fr-FR') + '€ cons.' : '')
         + '</div>' : '';
     const noteLine  = m.note_relance ? '<div style="font-size:.64rem;color:#5a6370;font-style:italic;margin-top:.08rem">💬 ' + m.note_relance + '</div>' : '';
-    return '<div style="background:var(--bg);border:1px solid var(--b);border-radius:10px;padding:.65rem .9rem;display:flex;gap:.6rem;align-items:flex-start">'
+    return '<div style="background:var(--bg);border:1px solid var(--b);border-radius:10px;padding:.65rem .9rem;display:flex;gap:.6rem;align-items:flex-start' + (isPerdu ? ';opacity:.5' : '') + '">'
       + '<div style="flex:1;min-width:0">'
       + '<div style="display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;margin-bottom:.18rem">'
       + '<span style="font-weight:600;font-size:.77rem">' + m.vehicule + '</span>' + typeTag + statutTag + relBadge
@@ -1328,6 +1347,7 @@ function afficherMandats() {
       + '<div style="display:flex;flex-direction:column;gap:.25rem;align-items:flex-end;flex-shrink:0">'
       + (m.statut === 'en_cours' ? '<button class="btn bs" style="padding:.1rem .32rem;font-size:.63rem" onclick="contacterMandat(' + m.id + ')">✉ Contacté</button>' : '')
       + (m.statut === 'en_cours' ? '<button class="btn bs" style="padding:.1rem .32rem;font-size:.63rem" onclick="validerMandatVendu(' + m.id + ')">✔ Vendu</button>' : '')
+      + (m.statut === 'en_cours' ? '<button class="btn bs" style="padding:.1rem .32rem;font-size:.63rem;background:#888;border-color:#888" onclick="marquerMandatPerdu(' + m.id + ')">✗ Perdu</button>' : '')
       + '<button class="delbtn" onclick="supprimerMandat(' + m.id + ')" title="Supprimer">✕</button>'
       + '</div></div>';
   }
