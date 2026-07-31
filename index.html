@@ -1332,28 +1332,10 @@ function afficherMandats() {
       + '</div></div>';
   }
 
-  // Pour les commerciaux : grouper par mois pour la lisibilité
-  let cardsHtml = '';
-  if (!isManager) {
-    const byMonth = {};
-    displayMandats.forEach(m => {
-      if (!byMonth[m.mois]) byMonth[m.mois] = [];
-      byMonth[m.mois].push(m);
-    });
-    const months = Object.keys(byMonth).sort().reverse();
-    cardsHtml = months.map(mo => {
-      const nb = byMonth[mo].length;
-      return '<div style="margin-bottom:.4rem;font-family:\'IBM Plex Mono\',monospace;font-size:.65rem;color:var(--gm);text-transform:uppercase;letter-spacing:.06em;margin-top:.9rem">'
-        + lblMois(mo) + ' — ' + nb + ' mandat(s)</div>'
-        + '<div style="display:flex;flex-direction:column;gap:.45rem">'
-        + byMonth[mo].map(buildCard).join('')
-        + '</div>';
-    }).join('');
-  } else {
-    cardsHtml = '<div style="display:flex;flex-direction:column;gap:.45rem;margin-bottom:1rem">'
-      + displayMandats.map(buildCard).join('')
-      + '</div>';
-  }
+  // Liste plate pour tous (pas de groupage par mois)
+  const cardsHtml = '<div style="display:flex;flex-direction:column;gap:.45rem;margin-bottom:1rem">'
+    + displayMandats.map(buildCard).join('')
+    + '</div>';
 
   // Stats par agent (managers uniquement)
   let agentStatsHtml = '';
