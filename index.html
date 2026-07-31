@@ -1205,6 +1205,7 @@ function afficherMandats() {
   const zone    = document.getElementById('mand-zone');
   if (!zone) return;
 
+  const isManager = MANAGERS.includes(CURRENT_USER);
   const today = new Date();
   today.setHours(0,0,0,0);
 
@@ -1216,9 +1217,9 @@ function afficherMandats() {
     return Math.floor((today - d) / 86400000);
   }
 
-  // ── RELANCES SECTION ──
-  const actifs = mandats.filter(m => m.statut === 'en_cours');
-  const myActifs = (MANAGERS.includes(CURRENT_USER) ? actifs : actifs.filter(m => m.agent === CURRENT_USER))
+  // ── RELANCES ──
+  const actifs   = mandats.filter(m => m.statut === 'en_cours');
+  const myActifs = (isManager ? actifs : actifs.filter(m => m.agent === CURRENT_USER))
     .filter(m => !!m.derniere_relance);
 
   const enRetard = myActifs.filter(m => joursDepuisRelance(m) > 15);
@@ -1235,7 +1236,7 @@ function afficherMandats() {
       + '<span>' + ico + '</span>'
       + '<div style="flex:1;min-width:0">'
       + '<div style="font-weight:600;font-size:.75rem">' + m.vehicule + ' — ' + m.proprio + pInfo + '</div>'
-      + '<div style="font-size:.67rem;color:var(--gm)">' + m.agent + ' · ' + lbl + '</div>'
+      + '<div style="font-size:.67rem;color:var(--gm)">' + (isManager ? m.agent + ' · ' : '') + lbl + '</div>'
       + nInfo + '</div>'
       + '<button class="btn bs" style="padding:.18rem .45rem;font-size:.64rem;white-space:nowrap;background:' + btn + ';color:#fff;border:none;border-radius:6px" onclick="contacterMandat(' + m.id + ')">✉ Contacté</button>'
       + '</div>';
@@ -1245,27 +1246,34 @@ function afficherMandats() {
   if (myActifs.length) {
     relHtml = '<div style="background:var(--bg);border:1px solid var(--b);border-radius:12px;padding:.9rem 1rem;margin-bottom:1.1rem">'
       + '<div style="font-family:\'Libre Baskerville\',serif;font-size:.82rem;font-weight:700;margin-bottom:.6rem">📋 Suivi des relances</div>';
+    const cap = 15;
     if (enRetard.length) {
       relHtml += '<div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#c0392b;margin-bottom:.3rem">🔴 En retard (' + enRetard.length + ')</div>';
-      const cap = 15;
       relHtml += enRetard.slice(0,cap).map(m => relCard(m,'#fdf2f2','#c0392b','#c0392b','🔴')).join('');
-      if (enRetard.length > cap) relHtml += '<div style="font-size:.65rem;color:#c0392b;padding:.25rem .4rem">... et ' + (enRetard.length - cap) + ' autres en retard</div>';
+      if (enRetard.length > cap) relHtml += '<div style="font-size:.65rem;color:#c0392b;padding:.25rem .4rem">... et ' + (enRetard.length-cap) + ' autres en retard</div>';
     }
     if (urgents.length) {
       relHtml += '<div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#e67e22;margin-bottom:.3rem' + (enRetard.length?';margin-top:.6rem':'') + '">🟠 À relancer bientôt (' + urgents.length + ')</div>';
       relHtml += urgents.slice(0,cap).map(m => relCard(m,'#fef9f0','#e67e22','#e67e22','🟠')).join('');
-      if (urgents.length > cap) relHtml += '<div style="font-size:.65rem;color:#e67e22;padding:.25rem .4rem">... et ' + (urgents.length - cap) + ' autres</div>';
+      if (urgents.length > cap) relHtml += '<div style="font-size:.65rem;color:#e67e22;padding:.25rem .4rem">... et ' + (urgents.length-cap) + ' autres</div>';
     }
     if (recents.length) {
       relHtml += '<div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#27ae60;margin-bottom:.3rem' + ((enRetard.length||urgents.length)?';margin-top:.6rem':'') + '">🟢 À jour (' + recents.length + ')</div>';
       relHtml += recents.slice(0,cap).map(m => relCard(m,'#f0faf4','#27ae60','#27ae60','🟢')).join('');
-      if (recents.length > cap) relHtml += '<div style="font-size:.65rem;color:#27ae60;padding:.25rem .4rem">... et ' + (recents.length - cap) + ' autres à jour</div>';
+      if (recents.length > cap) relHtml += '<div style="font-size:.65rem;color:#27ae60;padding:.25rem .4rem">... et ' + (recents.length-cap) + ' autres à jour</div>';
     }
     relHtml += '</div>';
   }
 
-  // ── MONTHLY STATS ──
-  const dm     = mandats.filter(m => m.mois === mois);
+  // ── MANDATS À AFFICHER ──
+  // Managers : filtre par mois sélectionné, tous agents
+  // Commerciaux : tous leurs mandats, tous mois
+  const displayMandats = isManager
+    ? mandats.filter(m => m.mois === mois)
+    : mandats.filter(m => m.agent === CURRENT_USER).sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  // Stats du mois sélectionné (pour tous)
+  const dm     = isManager ? displayMandats : displayMandats.filter(m => m.mois === mois);
   const excl   = dm.filter(m => m.type === 'exclusif');
   const simple = dm.filter(m => m.type === 'simple');
   const total  = dm.length;
@@ -1273,75 +1281,102 @@ function afficherMandats() {
   const pctS   = total ? Math.round(simple.length / total * 100) : 0;
 
   const cpt = document.getElementById('mand-cpt');
-  if (cpt) cpt.textContent = total + ' mandat(s) · ' + excl.length + ' exclusif(s) · ' + simple.length + ' simple(s)';
+  if (cpt) cpt.textContent = (isManager ? total : displayMandats.length) + ' mandat(s) · ' + excl.length + ' excl. ce mois · ' + simple.length + ' simple(s) ce mois';
 
-  if (!total) {
-    zone.innerHTML = relHtml + '<div style="text-align:center;padding:2rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucun mandat ce mois.</div>';
+  if (!displayMandats.length) {
+    zone.innerHTML = relHtml + '<div style="text-align:center;padding:2rem;color:var(--gm);font-family:IBM Plex Mono,monospace;font-size:.76rem">Aucun mandat.</div>';
     return;
   }
 
-  const barHtml = '<div style="background:var(--bg);border:1px solid var(--b);border-radius:12px;padding:.9rem 1rem;margin-bottom:1rem">'
-    + '<div style="font-family:\'Libre Baskerville\',serif;font-size:.82rem;font-weight:700;margin-bottom:.5rem">' + (pctE >= 50 ? '✅' : '⚠️') + ' Mandats ' + mois + ' — ' + total + ' au total</div>'
+  // Barre stats mensuelle
+  const barHtml = total ? '<div style="background:var(--bg);border:1px solid var(--b);border-radius:12px;padding:.9rem 1rem;margin-bottom:1rem">'
+    + '<div style="font-family:\'Libre Baskerville\',serif;font-size:.82rem;font-weight:700;margin-bottom:.5rem">' + (pctE >= 50 ? '✅' : '⚠️') + ' ' + mois + ' — ' + total + ' mandat(s)</div>'
     + '<div style="height:10px;background:var(--gc);border-radius:5px;overflow:hidden;display:flex">'
     + '<div style="width:' + pctE + '%;background:linear-gradient(90deg,var(--ad),var(--a));transition:width .6s"></div>'
     + '<div style="width:' + pctS + '%;background:#c0cfe0"></div></div>'
     + '<div style="display:flex;gap:1.2rem;margin-top:.4rem">'
     + '<span style="font-family:IBM Plex Mono,monospace;font-size:.6rem;color:var(--ad)">■ Exclusif ' + pctE + '%</span>'
     + '<span style="font-family:IBM Plex Mono,monospace;font-size:.6rem;color:#5a7a9a">■ Simple ' + pctS + '%</span></div>'
-    + (pctE < 50 ? '<div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#b45309;margin-top:.4rem">⚠️ Moins de 50% d\'exclusifs ce mois — à améliorer</div>' : '')
-    + '</div>';
+    + (pctE < 50 ? '<div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#b45309;margin-top:.4rem">⚠️ Moins de 50% d\'exclusifs ce mois</div>' : '')
+    + '</div>' : '';
 
-  // ── MANDAT CARDS ──
-  const cardsHtml = '<div style="display:flex;flex-direction:column;gap:.45rem;margin-bottom:1rem">'
-    + dm.map(m => {
-      const j = joursDepuisRelance(m);
-      let relBadge = '';
-      if (m.statut === 'en_cours') {
-        if (j > 15) relBadge = '<span style="font-size:.59rem;background:#fdf2f2;color:#c0392b;border-radius:4px;padding:.08rem .3rem;font-weight:600;margin-left:.3rem">🔴 Retard</span>';
-        else if (j >= 12) relBadge = '<span style="font-size:.59rem;background:#fef9f0;color:#e67e22;border-radius:4px;padding:.08rem .3rem;font-weight:600;margin-left:.3rem">🟠 ' + (15-j) + 'j</span>';
-        else relBadge = '<span style="font-size:.59rem;background:#f0faf4;color:#27ae60;border-radius:4px;padding:.08rem .3rem;font-weight:600;margin-left:.3rem">🟢</span>';
-      }
-      const typeTag   = m.type === 'exclusif' ? '<span class="tag" style="background:#fff3e0;color:#b45309">EXCLUSIF</span>' : '<span class="tag" style="background:#e8f0fe;color:#1a56d6">SIMPLE</span>';
-      const statutTag = m.statut === 'vendu' ? '<span class="tag tgl">Vendu</span>' : '<span class="tag tgcr">En cours</span>';
-      const prixLine  = (m.prix_demande || m.prix_conseille)
-        ? '<div style="font-size:.64rem;color:var(--gm);margin-top:.12rem">'
-          + (m.prix_demande ? '💰 ' + m.prix_demande.toLocaleString('fr-FR') + '€ dem.' : '')
-          + (m.prix_demande && m.prix_conseille ? ' · ' : '')
-          + (m.prix_conseille ? m.prix_conseille.toLocaleString('fr-FR') + '€ cons.' : '')
-          + '</div>' : '';
-      const noteLine  = m.note_relance ? '<div style="font-size:.64rem;color:#5a6370;font-style:italic;margin-top:.08rem">💬 ' + m.note_relance + '</div>' : '';
-      return '<div style="background:var(--bg);border:1px solid var(--b);border-radius:10px;padding:.65rem .9rem;display:flex;gap:.6rem;align-items:flex-start">'
-        + '<div style="flex:1;min-width:0">'
-        + '<div style="display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;margin-bottom:.18rem">'
-        + '<span style="font-weight:600;font-size:.77rem">' + m.vehicule + '</span>' + typeTag + statutTag + relBadge
-        + '</div>'
-        + '<div style="font-size:.69rem;color:var(--gm)">' + m.agent + ' · ' + m.proprio + ' · ' + fmtDate(m.date) + '</div>'
-        + prixLine + noteLine + '</div>'
-        + '<div style="display:flex;flex-direction:column;gap:.25rem;align-items:flex-end;flex-shrink:0">'
-        + (m.statut === 'en_cours' ? '<button class="btn bs" style="padding:.1rem .32rem;font-size:.63rem" onclick="contacterMandat(' + m.id + ')">✉ Contacté</button>' : '')
-        + (m.statut === 'en_cours' ? '<button class="btn bs" style="padding:.1rem .32rem;font-size:.63rem" onclick="validerMandatVendu(' + m.id + ')">✔ Vendu</button>' : '')
-        + '<button class="delbtn" onclick="supprimerMandat(' + m.id + ')" title="Supprimer">✕</button>'
-        + '</div></div>';
-    }).join('')
-    + '</div>';
+  // ── CARTES ──
+  function buildCard(m) {
+    const j = joursDepuisRelance(m);
+    let relBadge = '';
+    if (m.statut === 'en_cours' && m.derniere_relance) {
+      if (j > 15) relBadge = '<span style="font-size:.59rem;background:#fdf2f2;color:#c0392b;border-radius:4px;padding:.08rem .3rem;font-weight:600;margin-left:.3rem">🔴 Retard</span>';
+      else if (j >= 12) relBadge = '<span style="font-size:.59rem;background:#fef9f0;color:#e67e22;border-radius:4px;padding:.08rem .3rem;font-weight:600;margin-left:.3rem">🟠 ' + (15-j) + 'j</span>';
+      else relBadge = '<span style="font-size:.59rem;background:#f0faf4;color:#27ae60;border-radius:4px;padding:.08rem .3rem;font-weight:600;margin-left:.3rem">🟢</span>';
+    }
+    const typeTag   = m.type === 'exclusif' ? '<span class="tag" style="background:#fff3e0;color:#b45309">EXCLUSIF</span>' : '<span class="tag" style="background:#e8f0fe;color:#1a56d6">SIMPLE</span>';
+    const statutTag = m.statut === 'vendu' ? '<span class="tag tgl">Vendu</span>' : '<span class="tag tgcr">En cours</span>';
+    const prixLine  = (m.prix_demande || m.prix_conseille)
+      ? '<div style="font-size:.64rem;color:var(--gm);margin-top:.12rem">'
+        + (m.prix_demande ? '💰 ' + m.prix_demande.toLocaleString('fr-FR') + '€ dem.' : '')
+        + (m.prix_demande && m.prix_conseille ? ' · ' : '')
+        + (m.prix_conseille ? m.prix_conseille.toLocaleString('fr-FR') + '€ cons.' : '')
+        + '</div>' : '';
+    const noteLine  = m.note_relance ? '<div style="font-size:.64rem;color:#5a6370;font-style:italic;margin-top:.08rem">💬 ' + m.note_relance + '</div>' : '';
+    return '<div style="background:var(--bg);border:1px solid var(--b);border-radius:10px;padding:.65rem .9rem;display:flex;gap:.6rem;align-items:flex-start">'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;margin-bottom:.18rem">'
+      + '<span style="font-weight:600;font-size:.77rem">' + m.vehicule + '</span>' + typeTag + statutTag + relBadge
+      + '</div>'
+      + '<div style="font-size:.69rem;color:var(--gm)">' + (isManager ? m.agent + ' · ' : '') + m.proprio + ' · ' + fmtDate(m.date) + '</div>'
+      + prixLine + noteLine + '</div>'
+      + '<div style="display:flex;flex-direction:column;gap:.25rem;align-items:flex-end;flex-shrink:0">'
+      + (m.statut === 'en_cours' ? '<button class="btn bs" style="padding:.1rem .32rem;font-size:.63rem" onclick="contacterMandat(' + m.id + ')">✉ Contacté</button>' : '')
+      + (m.statut === 'en_cours' ? '<button class="btn bs" style="padding:.1rem .32rem;font-size:.63rem" onclick="validerMandatVendu(' + m.id + ')">✔ Vendu</button>' : '')
+      + '<button class="delbtn" onclick="supprimerMandat(' + m.id + ')" title="Supprimer">✕</button>'
+      + '</div></div>';
+  }
 
-  // ── AGENT STATS ──
-  const agentStats = AGENTS.map(a => {
-    const am = dm.filter(m => m.agent === a);
-    if (!am.length) return '';
-    const ae  = am.filter(m => m.type === 'exclusif').length;
-    const as2 = am.filter(m => m.type === 'simple').length;
-    const pE  = am.length ? Math.round(ae / am.length * 100) : 0;
-    return '<div style="background:var(--bg);border:1px solid var(--b);padding:.65rem .85rem;flex:1;min-width:180px">'
-      + '<div style="font-family:\'Libre Baskerville\',serif;font-size:.75rem;font-weight:700;margin-bottom:.4rem">👤 ' + a + '</div>'
-      + '<div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600">' + am.length + ' mandat(s)</div>'
-      + '<div style="font-size:.68rem;color:var(--gm)">' + ae + ' excl. / ' + as2 + ' simple — ' + pE + '% excl.</div>'
-      + (pE < 50 && am.length ? '<div style="font-size:.58rem;color:#b45309;margin-top:.22rem">⚠️ Objectif exclusifs non atteint</div>' : (am.length ? '<div style="font-size:.58rem;color:var(--v);margin-top:.22rem">✅ Bon ratio exclusifs</div>' : ''))
+  // Pour les commerciaux : grouper par mois pour la lisibilité
+  let cardsHtml = '';
+  if (!isManager) {
+    const byMonth = {};
+    displayMandats.forEach(m => {
+      if (!byMonth[m.mois]) byMonth[m.mois] = [];
+      byMonth[m.mois].push(m);
+    });
+    const months = Object.keys(byMonth).sort().reverse();
+    cardsHtml = months.map(mo => {
+      const nb = byMonth[mo].length;
+      return '<div style="margin-bottom:.4rem;font-family:\'IBM Plex Mono\',monospace;font-size:.65rem;color:var(--gm);text-transform:uppercase;letter-spacing:.06em;margin-top:.9rem">'
+        + lblMois(mo) + ' — ' + nb + ' mandat(s)</div>'
+        + '<div style="display:flex;flex-direction:column;gap:.45rem">'
+        + byMonth[mo].map(buildCard).join('')
+        + '</div>';
+    }).join('');
+  } else {
+    cardsHtml = '<div style="display:flex;flex-direction:column;gap:.45rem;margin-bottom:1rem">'
+      + displayMandats.map(buildCard).join('')
       + '</div>';
-  }).filter(Boolean).join('');
+  }
 
-  zone.innerHTML = relHtml + barHtml + cardsHtml
-    + (agentStats ? '<div style="margin-top:.5rem"><div style="font-family:\'Libre Baskerville\',serif;font-size:.77rem;font-weight:700;margin-bottom:.5rem">Répartition par agent</div><div style="display:flex;gap:.7rem;flex-wrap:wrap">' + agentStats + '</div></div>' : '');
+  // Stats par agent (managers uniquement)
+  let agentStatsHtml = '';
+  if (isManager) {
+    const agentStats = AGENTS.map(a => {
+      const am = dm.filter(m => m.agent === a);
+      if (!am.length) return '';
+      const ae  = am.filter(m => m.type === 'exclusif').length;
+      const as2 = am.filter(m => m.type === 'simple').length;
+      const pE  = am.length ? Math.round(ae / am.length * 100) : 0;
+      return '<div style="background:var(--bg);border:1px solid var(--b);padding:.65rem .85rem;flex:1;min-width:180px">'
+        + '<div style="font-family:\'Libre Baskerville\',serif;font-size:.75rem;font-weight:700;margin-bottom:.4rem">👤 ' + a + '</div>'
+        + '<div style="font-family:IBM Plex Mono,monospace;font-size:.82rem;font-weight:600">' + am.length + ' mandat(s)</div>'
+        + '<div style="font-size:.68rem;color:var(--gm)">' + ae + ' excl. / ' + as2 + ' simple — ' + pE + '% excl.</div>'
+        + (pE < 50 && am.length ? '<div style="font-size:.58rem;color:#b45309;margin-top:.22rem">⚠️ Objectif non atteint</div>' : (am.length ? '<div style="font-size:.58rem;color:var(--v);margin-top:.22rem">✅ Bon ratio</div>' : ''))
+        + '</div>';
+    }).filter(Boolean).join('');
+    if (agentStats) {
+      agentStatsHtml = '<div style="margin-top:.5rem"><div style="font-family:\'Libre Baskerville\',serif;font-size:.77rem;font-weight:700;margin-bottom:.5rem">Répartition par agent</div><div style="display:flex;gap:.7rem;flex-wrap:wrap">' + agentStats + '</div></div>';
+    }
+  }
+
+  zone.innerHTML = relHtml + barHtml + cardsHtml + agentStatsHtml;
 }
 // ═══ NAVIGATION
 function nav(id) {
