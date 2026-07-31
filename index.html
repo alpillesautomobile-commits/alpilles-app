@@ -1138,9 +1138,10 @@ function contacterMandat(id) {
   saveMandats(mandats, mandats[idx]);
   toast('✅ Contact enregistré — prochain rappel dans 15 jours');
   afficherMandats();
+  ghPush();
 }
 
-function validerMandatVendu(id) {
+async function validerMandatVendu(id) {
   const mandats = loadMandats();
   const idx = mandats.findIndex(m => m.id === id);
   if (idx < 0) return;
@@ -1150,9 +1151,10 @@ function validerMandatVendu(id) {
   afficherMandats();
   if (document.getElementById('pg-recap')?.classList.contains('on')) afficherRecap();
   toast('Mandat marqué vendu');
+  await ghPush();
 }
 
-function marquerMandatPerdu(id) {
+async function marquerMandatPerdu(id) {
   if (!confirm('Marquer ce mandat comme perdu ?')) return;
   const mandats = loadMandats();
   const idx = mandats.findIndex(m => m.id === id);
@@ -1162,9 +1164,10 @@ function marquerMandatPerdu(id) {
   updateMandatBadge();
   afficherMandats();
   toast('Mandat marqué perdu');
+  await ghPush();
 }
 
-function supprimerMandat(id) {
+async function supprimerMandat(id) {
   if (!confirm('Supprimer ce mandat ?')) return;
   addDeleted(MK, id);
   const mandats = loadMandats().filter(m => m.id !== id);
@@ -1174,6 +1177,7 @@ function supprimerMandat(id) {
   afficherMandats();
   if (document.getElementById('pg-recap')?.classList.contains('on')) afficherRecap();
   toast('Mandat supprimé');
+  await ghPush();
 }
 
 function reclamerMandat(id) {
