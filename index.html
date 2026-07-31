@@ -377,6 +377,8 @@ tbody td:not(:first-child){text-align:right}
         <div style="flex:1"><label>Prix conseillé (€)</label><input id="m-prix-conseille" type="number" min="0" step="100" placeholder="ex: 8800" oninput="calcEcartMandat()"></div>
       </div>
       <div id="m-ecart-zone" style="display:none;margin:.3rem 0;font-family:'IBM Plex Mono',monospace;font-size:.72rem"></div>
+      <div class="fl"><label>Commentaire <span style="font-weight:400;color:var(--gm);font-size:.7rem">(optionnel)</span></label>
+        <textarea id="m-commentaire" rows="2" placeholder="Ex : proprio hésitant, rappeler en septembre, voiture en bon état…" style="resize:vertical;font-size:.78rem"></textarea></div>
       <div class="acts" style="margin-bottom:0">
         <div style="margin:.5rem 0;padding:.7rem .8rem;background:#fff3e0;border-radius:10px;border:3px solid #ff9800">
           <div style="font-weight:700;font-size:.87rem;margin-bottom:.4rem;color:#e65100">📞 Mandat via téléprospectrice ? <span style="color:#d32f2f;font-size:.72rem">obligatoire</span></div>
@@ -1082,6 +1084,7 @@ function enregistrerMandat() {
   const agence   = document.getElementById('m-agence')?.value;
   const prixDemande   = parseFloat(document.getElementById('m-prix-demande')?.value) || null;
   const prixConseille = parseFloat(document.getElementById('m-prix-conseille')?.value) || null;
+  const commentaire   = document.getElementById('m-commentaire')?.value?.trim() || '';
   if (!document.querySelector('input[name="via-prosp-m"]:checked')) return toast('📞 Indique si mandat via téléprospectrice (OUI / NON)', true);
   if (!agent)    return toast('Sélectionne un agent', true);
   if (!dateStr)  return toast('Indique la date du mandat', true);
@@ -1092,7 +1095,7 @@ function enregistrerMandat() {
     const mandats2 = loadMandats();
     const idx2 = mandats2.findIndex(m => m.id === _editingMandatId);
     if (idx2 >= 0) {
-      mandats2[idx2] = { ...mandats2[idx2], date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, prix_demande: prixDemande, prix_conseille: prixConseille };
+      mandats2[idx2] = { ...mandats2[idx2], date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, prix_demande: prixDemande, prix_conseille: prixConseille, commentaire };
       saveMandats(mandats2, mandats2[idx2]);
       toast('\u2705 Mandat modifi\u00e9 \u2014 ' + vehicule);
     }
@@ -1102,7 +1105,7 @@ function enregistrerMandat() {
     updateMandatBadge(); afficherMandats();
     return;
   }
-  const mandat = { id: Date.now(), date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, statut: 'en_cours', via_prospectrice: document.querySelector('input[name="via-prosp-m"]:checked')?.value === 'oui', prix_demande: prixDemande, prix_conseille: prixConseille, derniere_relance: dateStr, note_relance: '' };
+  const mandat = { id: Date.now(), date: dateStr, mois: getMois(dateStr), agent, vehicule, proprio, type, agence, statut: 'en_cours', via_prospectrice: document.querySelector('input[name="via-prosp-m"]:checked')?.value === 'oui', prix_demande: prixDemande, prix_conseille: prixConseille, derniere_relance: dateStr, note_relance: '', commentaire };
   const mandats = loadMandats();
   mandats.push(mandat);
   saveMandats(mandats, mandat);
@@ -1119,6 +1122,7 @@ function enregistrerMandat() {
   document.getElementById('m-prix-conseille').value = '';
   const ecartZ = document.getElementById('m-ecart-zone');
   if (ecartZ) ecartZ.style.display = 'none';
+  document.getElementById('m-commentaire').value = '';
   if (!MANAGERS.includes(CURRENT_USER)) autoAgenceMandat();
 }
 
@@ -1337,13 +1341,14 @@ function afficherMandats() {
         + (m.prix_conseille ? m.prix_conseille.toLocaleString('fr-FR') + '€ cons.' : '')
         + '</div>' : '';
     const noteLine  = m.note_relance ? '<div style="font-size:.64rem;color:#5a6370;font-style:italic;margin-top:.08rem">💬 ' + m.note_relance + '</div>' : '';
+    const commLine  = m.commentaire ? '<div style="font-size:.68rem;color:var(--gt,#374151);background:var(--gc,#f3f4f6);border-radius:6px;padding:.25rem .4rem;margin-top:.2rem">📝 ' + m.commentaire + '</div>' : '';
     return '<div style="background:var(--bg);border:1px solid var(--b);border-radius:10px;padding:.65rem .9rem;display:flex;gap:.6rem;align-items:flex-start' + (isPerdu ? ';opacity:.5' : '') + '">'
       + '<div style="flex:1;min-width:0">'
       + '<div style="display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;margin-bottom:.18rem">'
       + '<span style="font-weight:600;font-size:.77rem">' + m.vehicule + '</span>' + typeTag + statutTag + relBadge
       + '</div>'
       + '<div style="font-size:.69rem;color:var(--gm)">' + (isManager ? m.agent + ' · ' : '') + m.proprio + ' · ' + fmtDate(m.date) + '</div>'
-      + prixLine + noteLine + '</div>'
+      + prixLine + noteLine + commLine + '</div>'
       + '<div style="display:flex;flex-direction:column;gap:.25rem;align-items:flex-end;flex-shrink:0">'
       + (m.statut === 'en_cours' ? '<button class="btn bs" style="padding:.1rem .32rem;font-size:.63rem" onclick="contacterMandat(' + m.id + ')">✉ Contacté</button>' : '')
       + (m.statut === 'en_cours' ? '<button class="btn bs" style="padding:.1rem .32rem;font-size:.63rem" onclick="validerMandatVendu(' + m.id + ')">✔ Vendu</button>' : '')
