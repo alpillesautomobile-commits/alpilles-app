@@ -891,14 +891,23 @@ function calcPrimeRapidite(dateVente, dateEntreeStock, marge) {
 // Primes trimestrielles (3 mois glissants, actives à partir de 2026-05)
 // Retourne { prime, marge, prochainPalier, manquant, moisList, bestAgent }
 function calcPrimeTrim(agent, moisRef) {
-  if (moisRef < '2026-05') return { prime:0, marge:0, prochainPalier:30000, manquant:0, moisList:[] };
+  // Trimestres fiscaux fixes (exercice démarrant en juillet) :
+  // T1 : Juillet–Août–Septembre
+  // T2 : Octobre–Novembre–Décembre
+  // T3 : Janvier–Février–Mars
+  // T4 : Avril–Mai–Juin
+  if (moisRef < '2026-07') return { prime:0, marge:0, prochainPalier:30000, manquant:0, moisList:[] };
   const [y, m] = moisRef.split('-').map(Number);
-  const moisList = [];
-  for (let i = 0; i < 3; i++) {
-    let mm = m - i, yy = y;
-    if (mm <= 0) { mm += 12; yy--; }
-    moisList.push(yy + '-' + String(mm).padStart(2,'0'));
-  }
+  // Déterminer le début du trimestre
+  let qStart, qYear = y;
+  if      (m >= 7  && m <= 9)  qStart = 7;
+  else if (m >= 10 && m <= 12) qStart = 10;
+  else if (m >= 1  && m <= 3)  qStart = 1;
+  else                          qStart = 4;
+  const moisList = [0,1,2].map(i => {
+    const mo = qStart + i;
+    return qYear + '-' + String(mo).padStart(2,'0');
+  });
   const ventes = loadVentes();
   const marge = ventes
     .filter(v => v.agent === agent && moisList.includes(v.mois_livraison))
