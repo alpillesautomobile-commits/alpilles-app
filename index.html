@@ -859,10 +859,9 @@ function lblMois(k) {
 function fmtDate(s) { if (!s) return '—'; const [y,m,d] = s.split('-'); return d+'/'+m+'/'+y; }
 // Palier mensuel supprimé — remplacé par primes trimestrielles
 function palier(m) {
-  if (m >= 25000) return 650;
-  if (m >= 20000) return 400;
-  if (m >= 15000) return 250;
-  if (m >= 10000) return 100;
+  if (m >= 70000) return 850;
+  if (m >= 50000) return 600;
+  if (m >= 30000) return 300;
   return 0;
 }
 
@@ -2085,7 +2084,7 @@ function afficherRecap() {
   const obj_m = ag.obj_mandats||8;
   const pctV    = obj_v ? Math.min(100,Math.round(nb/obj_v*100)) : 0;
   const pctM    = obj_m ? Math.min(100,Math.round(nbM/obj_m*100)) : 0;
-  const pctMarge= Math.min(100,Math.round(marge/25000*100));
+  const pctMarge= Math.min(100,Math.round(marge/30000*100));
 
   // Motivational unlock: how many more orders to reach 80% and unlock 40%
   const seuil80V = Math.ceil(obj_v * 0.80);
@@ -2480,7 +2479,7 @@ function afficherAgent(vm, agent, params) {
   const primeBest= isBest ? 150 : 0;
   const total    = comm+commM+avisGain+primeRapid+excep+opteven+primePal+primeOv+primeOm+bonus+trimData.prime+primeBest;
   const pctV     = obj_v?Math.min(100,Math.round(nb/obj_v*100)):0;
-  const pctMarg  = Math.min(100,Math.round(marge/25000*100));
+  const pctMarg  = Math.min(100,Math.round(marge/30000*100));
   const pctMand  = obj_m?Math.min(100,Math.round(nbM/obj_m*100)):0;
   const barV     = nb>=obj_v?'linear-gradient(90deg,#1e5a3a,var(--v))':'linear-gradient(90deg,var(--ad),var(--a))';
 
