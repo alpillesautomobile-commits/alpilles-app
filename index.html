@@ -1587,8 +1587,7 @@ function enregistrer() {
       prix_vente: pv, prix_achat: pa, marge_nette_ht: mnHt, total_frais_ht: tfHt,
       comm_vendeur: cv, comm_mandant: cm, prime_excep: pe, prime_opteven: pot, prime_rapidite: prRapid,
       date_entree_stock: dateStock, resultat_societe_ht: msh, frais_detail: fraisDetail };
-    localStorage.setItem(SK, JSON.stringify(ventes));
-    gasUpdateVente(ventes[idx]);
+    saveVentes(ventes, ventes[idx]);
     EDITING_ID = null;
     const btn = document.getElementById('btn-enreg');
     if (btn) { btn.textContent = '✔ Enregistrer au tableau de bord'; btn.style.background = ''; btn.style.borderColor = ''; }
