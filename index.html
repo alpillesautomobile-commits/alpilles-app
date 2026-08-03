@@ -1003,10 +1003,12 @@ function loadParams()  {
 function saveVentes(v, newItem)  {
   localStorage.setItem(SK, JSON.stringify(v));
   if (newItem) gasSaveVente(newItem);
+  ghPush();
 }
 function saveMandats(m, newItem) {
   localStorage.setItem(MK, JSON.stringify(m));
   if (newItem) gasSaveMandat(newItem);
+  ghPush();
 }
 function saveParams(p)  { localStorage.setItem(PK, JSON.stringify(p)); }
 
