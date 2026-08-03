@@ -2563,7 +2563,7 @@ function afficherAgent(vm, agent, params) {
     + ventesHtml;
 }
 
-function supprimerVente(id) {
+async function supprimerVente(id) {
   if (!confirm('Supprimer cette vente définitivement ?')) return;
   addDeleted(SK, id);
   const ventes = loadVentes().filter(v => v.id !== id);
@@ -2572,9 +2572,10 @@ function supprimerVente(id) {
   updateBadge();
   afficherDashboard();
   toast('Vente supprimée');
+  await ghPush();
 }
 
-function supprimerVenteRecap(id) {
+async function supprimerVenteRecap(id) {
   if (!confirm('Supprimer cette vente définitivement ?')) return;
   addDeleted(SK, id);
   const ventes = loadVentes().filter(v => v.id !== id);
@@ -2583,6 +2584,7 @@ function supprimerVenteRecap(id) {
   updateBadge();
   afficherRecap();
   toast('Vente supprimée');
+  await ghPush();
 }
 
 function afficherGhStatus() {
