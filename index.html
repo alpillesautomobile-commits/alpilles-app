@@ -1587,7 +1587,7 @@ function enregistrer() {
     comm_vendeur: cv, comm_mandant: cm,
     prime_excep: pe,
     prime_opteven: pot,
-    prime_rapidite: prRapid,
+    prime_rapidite: calcPrimeRapidite(dateStr, dateStock, mnHt),
     via_prospectrice: document.querySelector('input[name="via-prosp"]:checked')?.value === 'oui',
     date_entree_stock: dateStock,
     resultat_societe_ht: msh,
@@ -1607,7 +1607,7 @@ function enregistrer() {
     ventes[idx] = { ...existing, date: dateStr, mois: moisVente, agence, agent,
       client: document.getElementById('client')?.value || '', vehicule, type, mandant,
       prix_vente: pv, prix_achat: pa, marge_nette_ht: mnHt, total_frais_ht: tfHt,
-      comm_vendeur: cv, comm_mandant: cm, prime_excep: pe, prime_opteven: pot, prime_rapidite: prRapid,
+      comm_vendeur: cv, comm_mandant: cm, prime_excep: pe, prime_opteven: pot, prime_rapidite: calcPrimeRapidite(dateStr, dateStock, mnHt),
       date_entree_stock: dateStock, resultat_societe_ht: msh, frais_detail: fraisDetail };
     saveVentes(ventes, ventes[idx]);
     EDITING_ID = null;
