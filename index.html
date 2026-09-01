@@ -2521,7 +2521,7 @@ function afficherAgent(vm, agent, params) {
           + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
           + '<td><span class="tag '+(v.type==='classique'?'tgc':v.type==='stock'?'tgs':'tgcr')+'">'+v.type+'</span></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:'+(v.marge_nette_ht>=0?'var(--v)':'var(--r)')+'">'+fmt(v.marge_nette_ht)+'</td>'
-          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+'</td>'
+          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+(v.prime_rapidite>0?' <span style="color:#f59e0b;font-size:10px;font-weight:700">⚡+30€</span>':'')+'</td>'
           + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='Livrée'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
           + '<td><button class="delbtn" onclick="supprimerVente('+v.id+')" title="Supprimer">✕</button></td>'
           + '</tr>').join('')
