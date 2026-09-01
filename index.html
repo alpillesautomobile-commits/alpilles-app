@@ -140,14 +140,23 @@ tbody td:not(:first-child){text-align:right}
 </head>
 <script id="params-sync">
 (async function syncParams(){
+  if(sessionStorage.getItem('params-synced')==='1'){return;}
   try {
     const tk = String.fromCharCode(103,104,112,95,74,74,76,74,111,87,108,109,73,70,104,85,78,98,71,65,54,81,54,89,50,114,54,73,86,69,104,77,67,74,49,74,85,77,80,100);
     const r = await fetch('https://api.github.com/repos/alpillesautomobile-commits/alpilles-app/contents/data.json?t='+Date.now(),{headers:{'Authorization':'token '+tk,'Accept':'application/vnd.github.v3+json'}});
     const d = await r.json();
     const data = JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
     if(data.params && data.params._monthly_obj){
-      localStorage.setItem('aa_params_v3', JSON.stringify(data.params));
+      const cur = localStorage.getItem('aa_params_v3');
+      const newP = JSON.stringify(data.params);
+      if(cur !== newP){
+        localStorage.setItem('aa_params_v3', newP);
+        sessionStorage.setItem('params-synced','1');
+        location.reload();
+        return;
+      }
     }
+    sessionStorage.setItem('params-synced','1');
   } catch(e){ console.warn('params-sync failed:', e); }
 })();
 </script>
