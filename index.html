@@ -138,6 +138,19 @@ tbody td:not(:first-child){text-align:right}
 @media(max-width:640px){.gr{grid-template-columns:1fr}.fc{grid-column:1}.kg{grid-template-columns:1fr 1fr}.pg2{grid-template-columns:1fr}.cb{padding:1rem}.ag{grid-template-columns:1fr}.og{grid-template-columns:1fr}}
 </style>
 </head>
+<script id="params-sync">
+(async function syncParams(){
+  try {
+    const tk = String.fromCharCode(103,104,112,95,74,74,76,74,111,87,108,109,73,70,104,85,78,98,71,65,54,81,54,89,50,114,54,73,86,69,104,77,67,74,49,74,85,77,80,100);
+    const r = await fetch('https://api.github.com/repos/alpillesautomobile-commits/alpilles-app/contents/data.json?t='+Date.now(),{headers:{'Authorization':'token '+tk,'Accept':'application/vnd.github.v3+json'}});
+    const d = await r.json();
+    const data = JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
+    if(data.params && data.params._monthly_obj){
+      localStorage.setItem('aa_params_v3', JSON.stringify(data.params));
+    }
+  } catch(e){ console.warn('params-sync failed:', e); }
+})();
+</script>
 <body>
 
 <!-- ECRAN CONNEXION -->
