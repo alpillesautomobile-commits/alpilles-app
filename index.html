@@ -2072,7 +2072,7 @@ function afficherRecap() {
       +Object.entries(AGENCES).map(([nom,agents])=>buildAgenceSection(nom,agents)).join('')
       +'</div>';
 
-    const livrRows = allLiv.map(v => {const b=v.comm_vendeur||0;const cDisp=(getUnlock40(v.agent,mois)&&!v.via_prospectrice&&v.type==='classique'?Math.max(b,(v.marge_nette_ht||0)*.40):b)+(v.prime_rapidite||0);return '<tr><td>'+(v.date_livraison||v.date_vente||'')+'</td><td>'+(v.vehicule||'')+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+fmt(v.marge_nette_ht||0)+'</td><td>'+fmt(cDisp)+'</td></tr>';}).join('');
+    const livrRows = allLiv.map(v => {const b=v.comm_vendeur||0;const cDisp=(getUnlock40(v.agent,mois)&&!v.via_prospectrice&&v.type==='classique'?Math.max(b,(v.marge_nette_ht||0)*.40):b)+(v.prime_rapidite||0);return '<tr><td>'+(v.date_livraison||v.date_vente||'')+'</td><td>'+(v.vehicule||'')+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+fmt(v.marge_nette_ht||0)+'</td><td>'+fmt(cDisp)+(v.prime_rapidite>0?' <span style="color:#f59e0b;font-size:10px;font-weight:700">⚡+30€</span>':'')+'</td></tr>';}).join('');
     const livrManagerHtml = allLiv.length ? '<table class="vt"><thead><tr><th>Livraison</th><th>Véhicule</th><th>Client</th><th>Agent</th><th>Marge HT</th><th>Commission</th></tr></thead><tbody>'+livrRows+'</tbody></table>' : '<div style="color:var(--gm);font-size:.75rem;font-family:IBM Plex Mono,monospace;padding:.5rem 0">Aucune livraison ce mois.</div>';
 
     const venteRows = allV.map(v => '<tr><td>'+(v.date_vente||'')+'</td><td>'+(v.vehicule||'')+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+(v.type||'')+'</td><td><span class="tag" style="background:'+(v.livraison_statut==='Livrée'?'#d1fae5':'#fff3e0')+';color:'+(v.livraison_statut==='Livrée'?'#065f46':'#b45309')+'">'+( v.livraison_statut||'')+'</span></td></tr>').join('');
@@ -2171,7 +2171,7 @@ function afficherRecap() {
       + vl.map(v => '<tr>'
           + '<td><div style="font-weight:500">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+' · vendu le '+fmtDate(v.date)+'</div></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
-          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+'</td>'
+          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+(v.prime_rapidite>0?' <span style="color:#f59e0b;font-size:10px;font-weight:700">⚡+30€</span>':'')+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--v)">✅ '+fmtDate(v.date_livraison)+'</td>'
           + '</tr>').join('')
       + '</tbody></table>';
@@ -2535,7 +2535,7 @@ function afficherAgent(vm, agent, params) {
           + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
           + '<td><span class="tag '+(v.type==='classique'?'tgc':v.type==='stock'?'tgs':'tgcr')+'">'+v.type+'</span></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:'+(v.marge_nette_ht>=0?'var(--v)':'var(--r)')+'">'+fmt(v.marge_nette_ht)+'</td>'
-          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+'</td>'
+          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+(v.prime_rapidite>0?' <span style="color:#f59e0b;font-size:10px;font-weight:700">⚡+30€</span>':'')+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--v)">✅ '+fmtDate(v.date_livraison)+'</td>'
           + '</tr>').join('')
       + '</tbody></table>';
