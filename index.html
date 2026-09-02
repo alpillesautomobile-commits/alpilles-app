@@ -263,7 +263,7 @@ tbody td:not(:first-child){text-align:right}
             <option value="classique">Vente classique (30% ou 40%)</option>
             <option value="stock">Stock société (20%)</option>
             <option value="croise">Mandat croisé (20%/20%)</option>
-            <option value="direct">Vente en direct (0%)</option></select></div>
+            <option value="direct">Vente en direct (0%)</option><option value="carburant">Carburant (20%)</option></select></div>
         <div class="fl" id="bloc-mandant" style="display:none"><label>Agent mandant</label>
           <select id="agent_mandant"><option value="">— Sélectionner —</option>
             <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option><option>Jeremy</option></select></div>
@@ -1518,6 +1518,11 @@ function calcFiche() {
     document.getElementById('comm-info').textContent = 'Stock société — ' + agent + ' perçoit 20%';
     document.getElementById('row-croise').style.display = 'none';
     document.getElementById('comm-lbl').textContent = 'Commission ' + agent + ' (20%)';
+  } else if (type === 'carburant') {
+    cv = mnHt * 0.20;
+    document.getElementById('comm-info').textContent = 'Carburant — ' + agent + ' perçoit 20%';
+    document.getElementById('row-croise').style.display = 'none';
+    document.getElementById('comm-lbl').textContent = 'Commission ' + agent + ' (carburant 20%)';
   } else {
     cv = mnHt * 0.20;
     const cm = mnHt * 0.20;
@@ -1571,6 +1576,7 @@ function enregistrer() {
   if (type === 'direct')        { cv = 0; cm = 0; }
   else if (type === 'classique') { const t = calcTauxComm(mnHt, agent, moisVente); cv = mnHt * t; }
   else if (type === 'stock')     { cv = mnHt * 0.20; }
+  else if (type === 'carburant') { cv = mnHt * 0.20; }
   else { cv = mnHt * 0.20; cm = mnHt * 0.20; }
   const pe  = getNum('prime_excep');
   const pot = getNum('prime_opteven');
