@@ -2017,7 +2017,7 @@ function afficherRecap() {
       const seuil80M=ag.obj_mandats?Math.ceil(ag.obj_mandats*.8):0;
       const manqueV=Math.max(0,seuil80V-nb);
       const manqueM=Math.max(0,seuil80M-nbM);
-      const at40=at40Manual||(ag.obj_ventes?nb/ag.obj_ventes:1)>=.8&&(ag.obj_mandats?nbM/ag.obj_mandats:1)>=.8;if(at40&&!at40Manual){cv=al.reduce((s,v)=>{if(v.via_prospectrice||v.type!=='classique')return s+(v.comm_vendeur||0);return s+Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*.40);},0);}
+      const at40=at40Manual||(ag.obj_ventes?nb/ag.obj_ventes:1)>=.8&&(ag.obj_mandats?nbM/ag.obj_mandats:1)>=.8;if(at40&&!at40Manual){cv=al.reduce((s,v)=>{if(v.via_prospectrice||v.type!=='classique'||v.mois!==mois)return s+(v.comm_vendeur||0);return s+Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*.40);},0);}
       const pendingA=ventes.filter(v=>v.agent===a&&v.mois===mois&&v.livraison_statut==='En attente'&&(v.marge_nette_ht||0)>=1000);
       const gainPotA=pendingA.reduce((s,v)=>s+Math.round((v.marge_nette_ht||0)*.10),0);
       const manqueV100=ag.obj_ventes?Math.max(0,ag.obj_ventes-nb):0;
@@ -2175,7 +2175,7 @@ function afficherRecap() {
       + vl.map(v => '<tr>'
           + '<td><div style="font-weight:500">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+' · vendu le '+fmtDate(v.date)+'</div></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:var(--v)">'+fmt(v.marge_nette_ht)+'</td>'
-          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+(v.prime_rapidite>0?' <span style="color:#f59e0b;font-size:10px;font-weight:700">⚡+30€</span>':'')+'</td>'
+          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'&&v.mois===mois?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+(v.prime_rapidite>0?' <span style="color:#f59e0b;font-size:10px;font-weight:700">⚡+30€</span>':'')+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--v)">✅ '+fmtDate(v.date_livraison)+'</td>'
           + '</tr>').join('')
       + '</tbody></table>';
@@ -2525,7 +2525,7 @@ function afficherAgent(vm, agent, params) {
           + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
           + '<td><span class="tag '+(v.type==='classique'?'tgc':v.type==='stock'?'tgs':'tgcr')+'">'+v.type+'</span></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:'+(v.marge_nette_ht>=0?'var(--v)':'var(--r)')+'">'+fmt(v.marge_nette_ht)+'</td>'
-          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+(v.prime_rapidite>0?' <span style="color:#f59e0b;font-size:10px;font-weight:700">⚡+30€</span>':'')+'</td>'
+          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'&&v.mois===mois?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+(v.prime_rapidite>0?' <span style="color:#f59e0b;font-size:10px;font-weight:700">⚡+30€</span>':'')+'</td>'
           + '<td style="text-align:right"><span class="tag '+(v.livraison_statut==='Livrée'?'tgl':'tga')+'">'+v.livraison_statut+'</span></td>'
           + '<td><button class="delbtn" onclick="supprimerVente('+v.id+')" title="Supprimer">✕</button></td>'
           + '</tr>').join('')
@@ -2539,13 +2539,13 @@ function afficherAgent(vm, agent, params) {
           + '<td><div style="font-weight:500;font-size:.76rem">'+v.vehicule+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</div><div style="font-size:.65rem;color:var(--gm)">'+v.client+'</div></td>'
           + '<td><span class="tag '+(v.type==='classique'?'tgc':v.type==='stock'?'tgs':'tgcr')+'">'+v.type+'</span></td>'
           + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;color:'+(v.marge_nette_ht>=0?'var(--v)':'var(--r)')+'">'+fmt(v.marge_nette_ht)+'</td>'
-          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+(v.prime_rapidite>0?' <span style="color:#f59e0b;font-size:10px;font-weight:700">⚡+30€</span>':'')+'</td>'
+          + '<td style="font-family:IBM Plex Mono,monospace;text-align:right;font-weight:600;color:var(--v)">'+fmt((typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'&&v.mois===mois?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0))+(v.prime_rapidite>0?' <span style="color:#f59e0b;font-size:10px;font-weight:700">⚡+30€</span>':'')+'</td>'
           + '<td style="font-family:IBM Plex Mono,monospace;font-size:.68rem;text-align:right;color:var(--v)">✅ '+fmtDate(v.date_livraison)+'</td>'
           + '</tr>').join('')
       + '</tbody></table>';
 
   window._payData=window._payData||{};
-  window._payData[agent]={agent,moisSel,comm:comm||0,commM:commM||0,avisGain:avisGain||0,avisAtt:avisAtt||0,primePal:primePal||0,excep:excep||0,primeOv:primeOv||0,primeOm:primeOm||0,bonus:bonus||0,trimData:{prime:trimData.prime||0,manquant:trimData.manquant||0,prochainPalier:trimData.prochainPalier||0},primeBest:primeBest||0,primeRapid:primeRapid||0,opteven:opteven||0,nbOpt:nbOpt||0,nbOptVendu:nbOptVendu||0,total:total||0,nb:nb||0,nbM:nbM||0,ventes:ventesLivr.map(v=>({voiture:v.vehicule||'',hasOpt:(v.prime_opteven||0)>0,type:v.type||'classique',margeHT:v.marge_nette_ht||0,comm:(typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0),dateLivr:v.date_livraison||''}))};
+  window._payData[agent]={agent,moisSel,comm:comm||0,commM:commM||0,avisGain:avisGain||0,avisAtt:avisAtt||0,primePal:primePal||0,excep:excep||0,primeOv:primeOv||0,primeOm:primeOm||0,bonus:bonus||0,trimData:{prime:trimData.prime||0,manquant:trimData.manquant||0,prochainPalier:trimData.prochainPalier||0},primeBest:primeBest||0,primeRapid:primeRapid||0,opteven:opteven||0,nbOpt:nbOpt||0,nbOptVendu:nbOptVendu||0,total:total||0,nb:nb||0,nbM:nbM||0,ventes:ventesLivr.map(v=>({voiture:v.vehicule||'',hasOpt:(v.prime_opteven||0)>0,type:v.type||'classique',margeHT:v.marge_nette_ht||0,comm:(typeof at40!=='undefined'&&at40&&!v.via_prospectrice&&v.type==='classique'&&v.mois===mois?Math.max(v.comm_vendeur||0,(v.marge_nette_ht||0)*0.40):(v.comm_vendeur||0))+(v.prime_rapidite||0),dateLivr:v.date_livraison||''}))};
   zone.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem">'
     + '<div>'
     + '<div class="stl" style="margin-bottom:.65rem">Progression</div>'
