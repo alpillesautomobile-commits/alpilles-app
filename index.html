@@ -263,7 +263,6 @@ tbody td:not(:first-child){text-align:right}
             <option value="classique">Vente classique (30% ou 40%)</option>
             <option value="stock">Stock société (20%)</option>
             <option value="croise">Mandat croisé (20%/20%)</option>
-            <option value="direct">Vente en direct (0%)</option><option value="carburant">Carburant (20%)</option></select></div>
         <div class="fl" id="bloc-mandant" style="display:none"><label>Agent mandant</label>
           <select id="agent_mandant"><option value="">— Sélectionner —</option>
             <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option><option>Jeremy</option></select></div>
@@ -296,6 +295,7 @@ tbody td:not(:first-child){text-align:right}
         <tr id="row-croise" style="display:none"><td colspan="2"><div class="cb2" id="croise-det">—</div></td></tr>
         <tr><td class="tdl">Prime exceptionnelle</td><td><input class="ni" type="number" id="prime_excep" placeholder="0" step="1" oninput="calcFiche()"></td></tr>
         <tr><td class="tdl">Prime contrat OPTEVEN 48 mois</td><td><input class="ni" type="number" id="prime_opteven" placeholder="0" step="1" oninput="calcFiche()"></td></tr>
+        <tr><td class="tdl">Carburant HT</td><td><input class="ni" type="number" id="frais_carburant" placeholder="0" step="0.01" oninput="calcFiche()"></td></tr>
         <tr id="row-rapidite" style="display:none"><td class="tdl" style="color:var(--v)">⚡ Prime rapidité (≤15j stock)</td><td class="cmp pos" id="r-rapidite">+30,00 €</td></tr>
         <tr class="ct2"><td id="total-lbl">Total à verser</td><td class="cmp" id="r-total">—</td></tr>
       </tbody></table>
@@ -1518,11 +1518,6 @@ function calcFiche() {
     document.getElementById('comm-info').textContent = 'Stock société — ' + agent + ' perçoit 20%';
     document.getElementById('row-croise').style.display = 'none';
     document.getElementById('comm-lbl').textContent = 'Commission ' + agent + ' (20%)';
-  } else if (type === 'carburant') {
-    cv = mnHt * 0.20;
-    document.getElementById('comm-info').textContent = 'Carburant — ' + agent + ' perçoit 20%';
-    document.getElementById('row-croise').style.display = 'none';
-    document.getElementById('comm-lbl').textContent = 'Commission ' + agent + ' (carburant 20%)';
   } else {
     cv = mnHt * 0.20;
     const cm = mnHt * 0.20;
@@ -1535,6 +1530,8 @@ function calcFiche() {
   setTxt('r-comm', cv);
   const pe  = getNum('prime_excep');
   const pot = getNum('prime_opteven');
+  const carbHt = getNum('frais_carburant');
+  const prCarb = Math.round(carbHt * 0.20 * 100) / 100;
   setTxt('r-total', cv + pe + pot + prRapid);
   document.getElementById('total-lbl').textContent = type === 'croise' ? 'Total à verser à ' + agent + ' (vendeur)' : 'Total à verser à ' + agent;
 }
@@ -1576,11 +1573,10 @@ function enregistrer() {
   if (type === 'direct')        { cv = 0; cm = 0; }
   else if (type === 'classique') { const t = calcTauxComm(mnHt, agent, moisVente); cv = mnHt * t; }
   else if (type === 'stock')     { cv = mnHt * 0.20; }
-  else if (type === 'carburant') { cv = mnHt * 0.20; }
   else { cv = mnHt * 0.20; cm = mnHt * 0.20; }
   const pe  = getNum('prime_excep');
   const pot = getNum('prime_opteven');
-  const msh = Math.round((mnHt - cv - cm - pe - pot + (pot > 0 ? 480 : 0)) * 100) / 100;
+  const msh = Math.round((mnHt - cv - cm - pe - pot - prCarb + (pot > 0 ? 480 : 0)) * 100) / 100;
 
   const vente = {
     id: Date.now(),
@@ -1593,6 +1589,8 @@ function enregistrer() {
     comm_vendeur: cv, comm_mandant: cm,
     prime_excep: pe,
     prime_opteven: pot,
+    frais_carburant: carbHt,
+    prime_carburant: prCarb,
     prime_rapidite: calcPrimeRapidite(dateStr, dateStock, mnHt),
     via_prospectrice: document.querySelector('input[name="via-prosp"]:checked')?.value === 'oui',
     date_entree_stock: dateStock,
@@ -2078,7 +2076,7 @@ function afficherRecap() {
       +Object.entries(AGENCES).map(([nom,agents])=>buildAgenceSection(nom,agents)).join('')
       +'</div>';
 
-    const livrRows = allLiv.map(v => {const b=v.comm_vendeur||0;const cDisp=(getUnlock40(v.agent,mois)&&!v.via_prospectrice&&v.type==='classique'?Math.max(b,(v.marge_nette_ht||0)*.40):b)+(v.prime_rapidite||0);return '<tr><td>'+(v.date_livraison||v.date_vente||'')+'</td><td>'+(v.vehicule||'')+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+fmt(v.marge_nette_ht||0)+'</td><td>'+fmt(cDisp)+(v.prime_rapidite>0?' <span style="color:#f59e0b;font-size:10px;font-weight:700">⚡+30€</span>':'')+'</td></tr>';}).join('');
+    const livrRows = allLiv.map(v => {const b=v.comm_vendeur||0;const cDisp=(getUnlock40(v.agent,mois)&&!v.via_prospectrice&&v.type==='classique'&&v.mois===mois?Math.max(b,(v.marge_nette_ht||0)*.40):b)+(v.prime_rapidite||0);return '<tr><td>'+(v.date_livraison||v.date_vente||'')+'</td><td>'+(v.vehicule||'')+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+fmt(v.marge_nette_ht||0)+'</td><td>'+fmt(cDisp)+(v.prime_rapidite>0?' <span style="color:#f59e0b;font-size:10px;font-weight:700">⚡+30€</span>':'')+'</td></tr>';}).join('');
     const livrManagerHtml = allLiv.length ? '<table class="vt"><thead><tr><th>Livraison</th><th>Véhicule</th><th>Client</th><th>Agent</th><th>Marge HT</th><th>Commission</th></tr></thead><tbody>'+livrRows+'</tbody></table>' : '<div style="color:var(--gm);font-size:.75rem;font-family:IBM Plex Mono,monospace;padding:.5rem 0">Aucune livraison ce mois.</div>';
 
     const venteRows = allV.map(v => '<tr><td>'+(v.date_vente||'')+'</td><td>'+(v.vehicule||'')+(v.prime_opteven>0?' <span style="font-size:.6rem;color:#2a9;font-weight:700">OPTEVEN</span>':'')+'</td><td>'+(v.client||'')+'</td><td>'+(v.agent||'')+'</td><td>'+(v.type||'')+'</td><td><span class="tag" style="background:'+(v.livraison_statut==='Livrée'?'#d1fae5':'#fff3e0')+';color:'+(v.livraison_statut==='Livrée'?'#065f46':'#b45309')+'">'+( v.livraison_statut||'')+'</span></td></tr>').join('');
