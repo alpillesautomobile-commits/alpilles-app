@@ -1449,7 +1449,7 @@ function initFraisTable() {
       +'<td><input class="ni" type="number" id="f_'+f.id+'" placeholder="0" step="0.01"'+defVal+' oninput="calcFiche()"></td>'
       +'<td class="cmp neg" id="fh_'+f.id+'">—</td></tr>';
   }).join('');
-  tbody.insertAdjacentHTML('beforeend','<tr><td class="tdl">Carburant HT</td><td><input class="ni" type="number" id="frais_carburant" placeholder="0" step="0.01" oninput="calcFiche()"></td></tr>');
+  tbody.insertAdjacentHTML('beforeend','<tr><td class="tdl">TVA</td><td><select class="tva-sel" id="tva_carburant" onchange="calcFiche()"><option value="oui">Oui (20%)</option><option value="non">Non</option></select></td></tr><tr><td class="tdl">Carburant</td><td><input class="ni" type="number" id="frais_carburant" placeholder="0" step="0.01" oninput="calcFiche()"></td></tr>');
 }
 
 // ═══ CALCUL FICHE
@@ -1531,7 +1531,8 @@ function calcFiche() {
   const pe  = getNum('prime_excep');
   const pot = getNum('prime_opteven');
   const carbHt = getNum('frais_carburant');
-  const prCarb = Math.round(carbHt * 0.20 * 100) / 100;
+  const tvaCarb = document.getElementById('tva_carburant')?.value||'oui';
+  const prCarb = tvaCarb!=='non' ? Math.round(carbHt * 0.20 * 100) / 100 : 0;
   setTxt('r-total', cv + pe + pot + prRapid);
   document.getElementById('total-lbl').textContent = type === 'croise' ? 'Total à verser à ' + agent + ' (vendeur)' : 'Total à verser à ' + agent;
 }
@@ -1589,6 +1590,7 @@ function enregistrer() {
     comm_vendeur: cv, comm_mandant: cm,
     prime_excep: pe,
     prime_opteven: pot,
+    tva_carburant: document.getElementById('tva_carburant')?.value||'oui',
     frais_carburant: carbHt,
     prime_carburant: prCarb,
     prime_rapidite: calcPrimeRapidite(dateStr, dateStock, mnHt),
