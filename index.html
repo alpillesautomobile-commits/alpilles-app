@@ -263,7 +263,7 @@ tbody td:not(:first-child){text-align:right}
             <option value="classique">Vente classique (30% ou 40%)</option>
             <option value="stock">Stock société (20%)</option>
             <option value="croise">Mandat croisé (20%/20%)</option>
-        <div class="fl" id="bloc-mandant" style="display:none"><label>Agent mandant</label>
+        <div class="fl" id="bloc-mandant" style="display:none"><label>Croisé avec *</label>
           <select id="agent_mandant"><option value="">— Sélectionner —</option>
             <option>Jules</option><option>Adrien</option><option>Léo</option><option>Aurélien</option><option>Tom</option><option>Nael</option><option>Julien</option><option>Jeremy</option></select></div>
         <div class="fl"><label>Prix de vente TTC (€)</label><input type="number" id="prix_vente" placeholder="0" min="0" step="1" oninput="calcFiche()"></div>
@@ -1564,6 +1564,7 @@ function enregistrer() {
   const mnHt  = mvHt - tfHt;
   const type  = document.getElementById('type_vente')?.value || 'classique';
   const mandant = document.getElementById('agent_mandant')?.value || '';
+  if (type === 'croise' && !mandant) return toast('Indiquez avec qui le mandat a été croisé', true);
   const dateStock = document.getElementById('date_entree_stock')?.value || null;
   const prRapid   = calcPrimeRapidite(dateStr, dateStock);
   const moisVente = getMois(dateStr);
