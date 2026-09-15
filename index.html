@@ -1575,6 +1575,8 @@ function enregistrer() {
   else { cv = mnHt * 0.20; cm = mnHt * 0.20; }
   const pe  = getNum('prime_excep');
   const pot = getNum('prime_opteven');
+  const carbHt = getNum('f_carburant');
+  const prCarb = Math.round(carbHt * (document.getElementById('tva_carburant')?.value === 'oui' ? 1.20 : 1) * 100) / 100;
   const msh = Math.round((mnHt - cv - cm - pe - pot - prCarb + (pot > 0 ? 480 : 0)) * 100) / 100;
 
   const vente = {
