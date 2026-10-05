@@ -1478,7 +1478,7 @@ function calcFiche() {
   setTxt('r-vttc', mvTtc); setTxt('r-vht', mvHt);
   setTxt('r-fttc', -tfTtc); setTxt('r-fht', -tfHt);
   const mnTtc = mvTtc - tfTtc;
-  const mnHt  = mvHt - tfHt;
+  const mnHt  = Math.round(mnTtc / TVA * 100) / 100;
   setTxt('r-mttc', mnTtc); setTxt('r-mht', mnHt);
   setTxt('r-base', mnHt);
 
