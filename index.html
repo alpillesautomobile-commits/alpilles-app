@@ -1561,7 +1561,7 @@ function enregistrer() {
     if (tvaEl) fraisDetail['tva_'+f.id] = tvaEl.value;
     tfHt += htDeTtc(val, f.fixe ? false : getTva('tva_'+f.id));
   });
-  const mnHt  = mvHt - tfHt;
+  const cgVal = getNum('f_cg_taxe'); const mnHt = Math.round(((pv - pa - cgVal) / TVA - (tfHt - cgVal)) * 100) / 100;
   const type  = document.getElementById('type_vente')?.value || 'classique';
   const mandant = document.getElementById('agent_mandant')?.value || '';
   if (type === 'croise' && !mandant) return toast('Indiquez avec qui le mandat a été croisé', true);
