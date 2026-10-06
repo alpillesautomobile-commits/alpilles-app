@@ -1570,7 +1570,7 @@ function enregistrer() {
   const moisVente = getMois(dateStr);
   let cv = 0, cm = 0;
   if (type === 'direct')        { cv = 0; cm = 0; }
-  else if (type === 'classique') { const t = calcTauxComm(mnHt, agent, moisVente); cv = mnHt * t; }
+  else if (type === 'classique') { const t = getUnlock40(agent, moisVente) ? 0.40 : calcTauxComm(mnHt, agent, moisVente); cv = mnHt * t; }
   else if (type === 'stock')     { cv = mnHt * 0.20; }
   else { cv = mnHt * 0.20; cm = mnHt * 0.20; }
   const pe  = getNum('prime_excep');
@@ -1581,7 +1581,7 @@ function enregistrer() {
 
   const vente = {
     id: Date.now(),
-    date: dateStr, mois: moisVente,
+    date: dateStr, mois: moisVente, taux: mnHt > 0 ? Math.round(cv/mnHt*100)/100 : 0,
     agence, agent,
     client: document.getElementById('client')?.value || '',
     vehicule, type, mandant,
@@ -1608,7 +1608,7 @@ function enregistrer() {
     const idx = ventes.findIndex(v => v.id === EDITING_ID);
     if (idx < 0) { EDITING_ID = null; return toast('Vente introuvable', true); }
     const existing = ventes[idx];
-    ventes[idx] = { ...existing, date: dateStr, mois: moisVente, agence, agent,
+    ventes[idx] = { ...existing, date: dateStr, mois: moisVente, taux: mnHt > 0 ? Math.round(cv/mnHt*100)/100 : 0, agence, agent,
       client: document.getElementById('client')?.value || '', vehicule, type, mandant,
       prix_vente: pv, prix_achat: pa, marge_nette_ht: mnHt, total_frais_ht: tfHt,
       comm_vendeur: cv, comm_mandant: cm, prime_excep: pe, prime_opteven: pot, prime_rapidite: calcPrimeRapidite(dateStr, dateStock, mnHt),
