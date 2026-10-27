@@ -1984,9 +1984,11 @@ function afficherRecap() {
 
   if (isManager) {
     // ── VUE MANAGER ──────────────────────────────────────────────────
-    const allV   = ventes.filter(v => v.mois === mois);
-    const allLiv = ventes.filter(v => v.mois_livraison === mois);
-    const allM   = mandats.filter(m => m.mois === mois);
+    const myAgents = CURRENT_USER === 'Julien' ? null : Object.values(AGENCES).find(a => a.includes(CURRENT_USER));
+    const agF = v => !myAgents || myAgents.includes(v.agent);
+    const allV   = ventes.filter(v => v.mois === mois && agF(v));
+    const allLiv = ventes.filter(v => v.mois_livraison === mois && agF(v));
+    const allM   = mandats.filter(m => m.mois === mois && agF(m));
     const attente= ventes.filter(v => v.livraison_statut === 'En attente');
 
     const totalVentes   = allV.length;
