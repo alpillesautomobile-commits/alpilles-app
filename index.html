@@ -2438,6 +2438,10 @@ function afficherDashboard() {
         : (v.marge_nette_ht||0) - (v.comm_vendeur||0) - (v.comm_mandant||0) - (v.prime_excep||0) - (v.prime_opteven||0) + ((v.prime_opteven||0)>0?380:0);
       return s + r;
     }, 0);
+    const rsDisplay = CURRENT_USER === 'Julien' ? rs : vla.reduce((s,v) => {
+      const r = v.resultat_societe_ht != null ? v.resultat_societe_ht - ((v.prime_opteven||0)>0?480:0) : (v.marge_nette_ht||0) - (v.comm_vendeur||0) - (v.comm_mandant||0) - (v.prime_excep||0) - (v.prime_opteven||0);
+      return s + r;
+    }, 0);
     return '<div class="ac"><h4>'+ag+'</h4>'
       + '<div class="ar"><span>Ventes</span><span style="font-family:IBM Plex Mono,monospace">'+va.length+'</span></div>'
       + '<div class="ar"><span>Livraisons</span><span style="font-family:IBM Plex Mono,monospace">'+vla.length+'</span></div>'
