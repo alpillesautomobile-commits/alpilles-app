@@ -1980,7 +1980,7 @@ function calcPayeTotal(agent,moisSel){
     var obj_v=p.obj_ventes||10;var obj_m=p.obj_mandats||8;
     var primeOv=nb>=obj_v?(p.prime_obj_ventes||250):0;
     var primeOm=nbM>=obj_m?(p.prime_obj_mandats||150):0;
-    var bonus=nb>obj_v?((nb-obj_v)*(p.bonus_dep||100)):0;
+    var bonus=(nb-obj_v)>=8?((nb-obj_v)*(p.bonus_dep||100)):0;
     var primePal=palier(marge);
     var trimData=calcPrimeTrim(agent,moisSel);
     var isBest=calcPrimeBestAgent(agent,moisSel);
