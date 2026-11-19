@@ -1472,7 +1472,7 @@ function initFraisTable() {
 
 // ═══ CALCUL FICHE
 document.getElementById('type_vente')?.addEventListener('change', function() {
-  document.getElementById('bloc-mandant').style.display = this.value === 'croise' ? '' : 'none';
+  document.getElementById('bloc-mandant').style.display = (['croise','stock_croise'].includes(this.value)) ? '' : 'none';
   calcFiche();
 });
 
@@ -1512,10 +1512,12 @@ function calcFiche() {
   if (rowRap) rowRap.style.display = prRapid > 0 ? '' : 'none';
 
   if (type === 'stock_croise') {
-    cv = Math.round(mnHt * 0.10 * 100) / 100; cm = 0;
-    document.getElementById('comm-lbl').textContent = 'Stock croisé (10%)';
-    document.getElementById('row-croise').style.display = 'none';
-    document.getElementById('comm-info').textContent = agent + ' percçoit 10% (stock croisé)';
+    cv = Math.round(mnHt * 0.10 * 100) / 100;
+    const cm_sc = Math.round(mnHt * 0.10 * 100) / 100;
+    document.getElementById('comm-lbl').textContent = 'Commission ' + agent + ' (stock croisé 10%)';
+    document.getElementById('row-croise').style.display = '';
+    document.getElementById('comm-info').textContent = 'Stock croisé — ' + agent + ' vend · ' + mandant + ' a apporté le stock';
+    document.getElementById('croise-det').innerHTML = agent + ' (vendeur) '+arrow+' <strong>' + fmt(cv) + '<\/strong><br>' + mandant + ' (apporteur) '+arrow+' <strong>' + fmt(cm_sc) + '<\/strong>';
   }
 
   if (type === 'direct') {
@@ -1590,14 +1592,15 @@ function enregistrer() {
   const cgVal = getNum('f_cg_taxe'); const mnHt = Math.round(((pv - pa - cgVal) / TVA - (tfHt - cgVal)) * 100) / 100;
   const type  = document.getElementById('type_vente')?.value || 'classique';
   const mandant = document.getElementById('agent_mandant')?.value || '';
-  if (type === 'croise' && !mandant) return toast('Indiquez avec qui le mandat a été croisé', true);
+  if ((type === 'croise' || type === 'stock_croise') && !mandant) return toast('Indiquez avec qui le mandat a été croisé', true);
   const dateStock = document.getElementById('date_entree_stock')?.value || null;
   const prRapid   = calcPrimeRapidite(dateStr, dateStock);
   const moisVente = getMois(dateStr);
   let cv = 0, cm = 0;
   if (type === 'direct')        { cv = 0; cm = 0; }
   else if (type === 'classique') { const t = getUnlock40(agent, moisVente) ? 0.40 : calcTauxComm(mnHt, agent, moisVente); cv = mnHt * t; }
-  else if (type === 'stock')     { cv = mnHt * 0.20; }
+  else if (type === 'stock')        { cv = mnHt * 0.20; }
+  else if (type === 'stock_croise') { cv = mnHt * 0.10; cm = mnHt * 0.10; }
   else { cv = mnHt * 0.20; cm = mnHt * 0.20; }
   const pe  = getNum('prime_excep');
   const pot = getNum('prime_opteven');
